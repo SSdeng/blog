@@ -5,7 +5,7 @@ import com.zyd.blog.business.entity.RoleResources;
 import com.zyd.blog.framework.object.AbstractService;
 
 /**
- * 角色资源
+ * 角色-资源服务接口类
  *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
@@ -16,17 +16,17 @@ import com.zyd.blog.framework.object.AbstractService;
 public interface SysRoleResourcesService extends AbstractService<RoleResources, Long> {
 
     /**
-     * 添加角色资源
+     * 添加角色-资源
      *
-     * @param roleId
-     * @param resourcesId
+     * @param roleId 角色id
+     * @param resourcesId 资源id
      */
     void addRoleResources(Long roleId, String resourcesId);
 
     /**
      * 通过角色id批量删除
      *
-     * @param roleId
+     * @param roleId 角色id
      */
     void removeByRoleId(Long roleId);
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 系统资源
+ * 资源服务接口类
  *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
@@ -21,47 +21,47 @@ public interface SysResourcesService extends AbstractService<Resources, Long> {
 
     /**
      * 分页查询
-     *
-     * @param vo
-     * @return
+     * 使用PageHelper开源项目
+     * @param vo 资源条件VO，包含分页参数
+     * @return PageInfo
      */
     PageInfo<Resources> findPageBreakByCondition(ResourceConditionVO vo);
 
     /**
      * 获取用户的资源列表
      *
-     * @param map
-     * @return
+     * @param map 存储了用户id和资源类型
+     * @return 资源列表
      */
     List<Resources> listUserResources(Map<String, Object> map);
 
     /**
      * 获取ztree使用的资源列表
      *
-     * @param rid
-     * @return
+     * @param rid 资源id
+     * @return 资源列表
      */
     List<Map<String, Object>> queryResourcesListWithSelected(Long rid);
 
     /**
      * 获取资源的url和permission
      *
-     * @return
+     * @return 只包含url和permission的资源列表
      */
     List<Resources> listUrlAndPermission();
 
     /**
      * 获取所有可用的菜单资源
      *
-     * @return
+     * @return 可用的菜单资源列表
      */
     List<Resources> listAllAvailableMenu();
 
     /**
      * 获取用户关联的所有资源
      *
-     * @param userId
-     * @return
+     * @param userId 用户id
+     * @return 用户关联的所有资源
      */
     List<Resources> listByUserId(Long userId);
 }

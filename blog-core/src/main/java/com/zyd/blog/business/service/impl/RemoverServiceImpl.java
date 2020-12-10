@@ -30,6 +30,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
+ * 搬运工服务实现类
+ * 基于开源项目blog-hunter实现
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @website https://www.zhyd.me
@@ -46,39 +48,64 @@ public class RemoverServiceImpl implements RemoverService {
     @Autowired
     private BizArticleTagsService articleTagsService;
 
+    /**
+     * 运行文章搬运工
+     * @param typeId 文章分类
+     * @param config 博客猎手配置信息
+     * @param writer 输出流
+     */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void run(Long typeId, @Validated HunterConfig config, PrintWriter writer) {
+        // 构建Hunter输出类实例
         HunterPrintWriter writerUtil = new HunterPrintWriter(writer);
         long start = System.currentTimeMillis();
+        // 如果文章分类为空，输出提示并退出
         if (null == typeId) {
             writerUtil.print("校验不通过！请选择文章分类......", String.format("共耗时 %s ms.", (System.currentTimeMillis() - start)));
             writerUtil.shutdown();
             return;
         }
+        // 配置HunterProcessor
         HunterProcessor hunter = new BlogHunterProcessor(config, writerUtil, String.valueOf(SessionUtil.getUser().getId()));
+        // 执行爬取文章，放入list
         CopyOnWriteArrayList<VirtualArticle> list = hunter.execute();
+        // 如何list为空，输出提示并退出
         if (CollectionUtils.isEmpty(list)) {
             writerUtil.print(String.format("未抓取到任何内容，请确保连接[<a href=\"%s\" target=\"_blank\">%s</a>]是否正确并能正常访问！共耗时 %s ms.", config.getEntryUrls().get(0), config.getEntryUrls().get(0), (System.currentTimeMillis() - start))).shutdown();
             return;
         }
+        // 打印输出爬取信息
         writerUtil.print("Congratulation ! 此次共整理到" + list.size() + "篇文章");
+        // 调用saveArticles（）保存文章列表
         saveArticles(typeId, config, writerUtil, list);
 
         writerUtil.print(String.format("搬家完成！耗时 %s ms.", (System.currentTimeMillis() - start)));
         writerUtil.shutdown();
     }
 
+    /**
+     * 停止文章搬运工
+     */
     @Override
     public void stop() {
         Hunter spider = Hunter.getHunter(String.valueOf(SessionUtil.getUser().getId()));
         spider.stop();
     }
 
+    /**
+     * 抓取文章
+     * @param typeId 文章分类
+     * @param urls 待抓取的多个文章地址
+     * @param convertImg 是否转存图片
+     * @param writer 输出流
+     */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void crawlSingle(Long typeId, String[] urls, boolean convertImg, PrintWriter writer) {
+        // 构建Hunter输出类实例
         HunterPrintWriter writerUtil = new HunterPrintWriter(writer);
+        // 遍历url，每个url都进行爬取文章并保存
         for (String url : urls) {
             HunterProcessor hunter = new BlogHunterProcessor(url, convertImg, writerUtil);
             CopyOnWriteArrayList<VirtualArticle> list = hunter.execute();
@@ -87,6 +114,13 @@ public class RemoverServiceImpl implements RemoverService {
         writerUtil.shutdown();
     }
 
+    /**
+     * 保存多个文章
+     * @param typeId 文章分类
+     * @param config 博客猎手配置信息
+     * @param writerUtil writer
+     * @param list 文章列表
+     */
     private void saveArticles(Long typeId, HunterConfig config, HunterPrintWriter writerUtil, CopyOnWriteArrayList<VirtualArticle> list) {
         // 获取数据库中的标签列表
         Map<String, Long> originalTags = tagsService.listAll().stream().collect(Collectors.toMap(tag -> tag.getName().toUpperCase(), Tags::getId));
@@ -101,8 +135,18 @@ public class RemoverServiceImpl implements RemoverService {
         }
     }
 
+    /**
+     * 保存单个文章
+     * @param typeId 文章分类
+     * @param isConvertImg 是否转存图片
+     * @param writerUtil writer
+     * @param user user
+     * @param virtualArticle 虚拟文章
+     * @return
+     */
     private Article saveArticle(Long typeId, boolean isConvertImg, HunterPrintWriter writerUtil, User user, VirtualArticle virtualArticle) {
         Article article = new Article();
+        // 设置文章属性
         article.setContent(isConvertImg ? parseImgForHtml(virtualArticle, writerUtil) : virtualArticle.getContent());
         article.setTitle(virtualArticle.getTitle());
         article.setCoverImage(CollectionUtils.isEmpty(virtualArticle.getImageLinks()) ? null : new ArrayList<>(virtualArticle.getImageLinks()).get(0).getSrcLink());
@@ -131,11 +175,14 @@ public class RemoverServiceImpl implements RemoverService {
     private void saveTags(HunterPrintWriter writerUtil, Map<String, Long> originalTags, Article article, VirtualArticle spiderVirtualArticle) {
         List<Long> tagIds = new ArrayList<>();
         Tags newTag;
+        // 遍历加入爬取到的虚拟文章的标签
         for (String tag : spiderVirtualArticle.getTags()) {
+            // 如果原始标签列表包含爬取到的标签，则加入临时map，不存入数据库
             if (originalTags.containsKey(tag.toUpperCase())) {
                 tagIds.add(originalTags.get(tag.toUpperCase()));
                 continue;
             }
+            // 否则，新建标签，并保存到数据库
             newTag = new Tags();
             newTag.setName(tag);
             newTag.setDescription(tag);
@@ -157,12 +204,17 @@ public class RemoverServiceImpl implements RemoverService {
      * @param writerUtil           打印输出的工具类
      */
     private String parseImgForHtml(VirtualArticle spiderVirtualArticle, HunterPrintWriter writerUtil) {
+        // 如果虚拟文章为空，则返回空
         if (null == spiderVirtualArticle) {
             return null;
         }
+        // 文章资源
         String source = spiderVirtualArticle.getSource();
+        // 图片链接集合
         Set<ImageLink> imageLinks = spiderVirtualArticle.getImageLinks();
+        // 文章html形式内容
         String html = spiderVirtualArticle.getContent();
+        // 如果图片链接集合非空，则迭代遍历，将其保存到七牛云
         if (!CollectionUtils.isEmpty(imageLinks)) {
             writerUtil.print(String.format("检测到存在%s张图片，即将转存图片到云存储服务器中...", imageLinks.size()));
             Iterator<ImageLink> it = imageLinks.iterator();
@@ -180,6 +232,7 @@ public class RemoverServiceImpl implements RemoverService {
                     it.remove();
                     continue;
                 }
+                // 转存之后需要替换原来的链接
                 html = html.replace(imageLink.getSrcLink(), resImgPath);
                 writerUtil.print(String.format("<a href=\"%s\" target=\"_blank\">原图片</a> 已经转存到 <a href=\"%s\" target=\"_blank\">云存储</a>...", imageLink.getSrcLink(), resImgPath));
             }

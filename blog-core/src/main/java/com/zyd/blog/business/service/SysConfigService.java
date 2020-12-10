@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 系统配置
+ * 配置服务接口类
  *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
@@ -21,7 +21,7 @@ public interface SysConfigService {
     /**
      * 获取系统配置
      *
-     * @return
+     * @return Map
      */
     Map<String, Object> getConfigs();
 

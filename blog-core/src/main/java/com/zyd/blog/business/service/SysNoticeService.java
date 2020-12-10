@@ -10,7 +10,7 @@ import com.zyd.blog.framework.object.AbstractService;
 import java.util.List;
 
 /**
- * 系统通知
+ * 通知服务接口类
  *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
@@ -22,16 +22,16 @@ public interface SysNoticeService extends AbstractService<Notice, Long> {
 
     /**
      * 分页查询
-     *
-     * @param vo
-     * @return
+     * 使用PageHelper开源项目实现
+     * @param vo 通知条件VO，包含分页参数
+     * @return PageInfo
      */
     PageInfo<Notice> findPageBreakByCondition(NoticeConditionVO vo);
 
     /**
      * 获取已发布的通知列表
      *
-     * @return
+     * @return 已发布的通知列表
      */
     List<SysNoticeDTO> listRelease();
 }

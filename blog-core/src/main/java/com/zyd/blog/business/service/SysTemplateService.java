@@ -8,7 +8,7 @@ import com.zyd.blog.business.vo.TemplateConditionVO;
 import com.zyd.blog.framework.object.AbstractService;
 
 /**
- * 系统模板
+ * 模板服务接口类
  *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
@@ -20,25 +20,25 @@ public interface SysTemplateService extends AbstractService<Template, Long> {
 
     /**
      * 分页查询
-     *
-     * @param vo
-     * @return
+     * 使用PageHelper开源项目实现分页
+     * @param vo 模板条件VO，包含分页参数
+     * @return PageInfo
      */
     PageInfo<Template> findPageBreakByCondition(TemplateConditionVO vo);
 
     /**
      * 通过key获取模板信息
      *
-     * @param key
-     * @return
+     * @param key key
+     * @return 模板
      */
     Template getTemplate(TemplateKeyEnum key);
 
     /**
      * 通过key获取模板信息
      *
-     * @param key
-     * @return
+     * @param key key
+     * @return 模板
      */
     Template getTemplate(String key);
 }
