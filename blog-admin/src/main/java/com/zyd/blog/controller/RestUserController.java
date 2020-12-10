@@ -33,10 +33,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class RestUserController {
     @Autowired
-    private SysUserService userService;
+    private SysUserService userService;//用户业务层
     @Autowired
-    private SysUserRoleService userRoleService;
+    private SysUserRoleService userRoleService;//用户角色业务层
 
+    /**
+     * 用户分页
+     * @param vo
+     * @return
+     */
     @RequiresPermissions("users")
     @PostMapping("/list")
     public PageResult list(UserConditionVO vo) {
@@ -64,6 +69,11 @@ public class RestUserController {
         return ResultUtil.success("成功");
     }
 
+    /**
+     * 添加用户
+     * @param user
+     * @return
+     */
     @RequiresPermissions("user:add")
     @PostMapping(value = "/add")
     @BussinessLog("添加用户")
@@ -82,6 +92,11 @@ public class RestUserController {
         }
     }
 
+    /**
+     * 删除用户
+     * @param ids
+     * @return
+     */
     @RequiresPermissions(value = {"user:batchDelete", "user:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除用户")
@@ -96,6 +111,11 @@ public class RestUserController {
         return ResultUtil.success("成功删除 [" + ids.length + "] 个用户");
     }
 
+    /**
+     * 获取用户详情
+     * @param id
+     * @return
+     */
     @RequiresPermissions("user:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取用户详情")
@@ -103,6 +123,11 @@ public class RestUserController {
         return ResultUtil.success(null, this.userService.getByPrimaryKey(id));
     }
 
+    /**
+     * 编辑用户
+     * @param user
+     * @return
+     */
     @RequiresPermissions("user:edit")
     @PostMapping("/edit")
     @BussinessLog("编辑用户")

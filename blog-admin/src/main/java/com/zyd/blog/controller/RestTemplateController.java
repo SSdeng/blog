@@ -30,8 +30,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/template")
 public class RestTemplateController {
     @Autowired
-    private SysTemplateService templateService;
+    private SysTemplateService templateService;//模板业务层
 
+    /**
+     * 模板分页
+     * @param vo
+     * @return
+     */
     @RequiresPermissions("templates")
     @PostMapping("/list")
     public PageResult list(TemplateConditionVO vo) {
@@ -39,6 +44,11 @@ public class RestTemplateController {
         return ResultUtil.tablePage(pageInfo);
     }
 
+    /**
+     * 添加模板
+     * @param template
+     * @return
+     */
     @RequiresPermissions("template:add")
     @PostMapping(value = "/add")
     @BussinessLog("添加模板")
@@ -47,6 +57,11 @@ public class RestTemplateController {
         return ResultUtil.success("成功");
     }
 
+    /**
+     * 删除模板
+     * @param ids
+     * @return
+     */
     @RequiresPermissions(value = {"template:batchDelete", "template:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除模板")
@@ -60,6 +75,11 @@ public class RestTemplateController {
         return ResultUtil.success("成功删除 [" + ids.length + "] 个模板");
     }
 
+    /**
+     * 获取模板详情
+     * @param id
+     * @return
+     */
     @RequiresPermissions("template:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取模板详情")
@@ -67,6 +87,11 @@ public class RestTemplateController {
         return ResultUtil.success(null, this.templateService.getByPrimaryKey(id));
     }
 
+    /**
+     * 编辑模板
+     * @param template
+     * @return
+     */
     @RequiresPermissions("template:edit")
     @PostMapping("/edit")
     @BussinessLog("编辑模板")

@@ -16,7 +16,12 @@ import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
  * @since 1.0
  */
 public class CredentialsMatcher extends SimpleCredentialsMatcher {
-
+    /**
+     * 执行密码的匹配验证
+     * @param token
+     * @param info
+     * @return
+     */
     @Override
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
         UsernamePasswordToken utoken = (UsernamePasswordToken) token;

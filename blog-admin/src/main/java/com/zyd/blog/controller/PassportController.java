@@ -28,7 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * 登录相关
+ * 登录相关控制类
  *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
@@ -42,14 +42,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class PassportController {
 
     @Autowired
-    private AppProperties config;
+    private AppProperties config;//配置对象
     @Autowired
-    private SysUserService userService;
+    private SysUserService userService;//用户业务层对象
 
     @BussinessLog("进入登录页面")
     @GetMapping("/login")
     public ModelAndView login(Model model) {
+        // 将是否启用验证码加入model
         model.addAttribute("enableKaptcha", config.isEnableKaptcha());
+        // 返回ModelAndView对象
         return ResultUtil.view("/login");
     }
 
@@ -64,14 +66,17 @@ public class PassportController {
     @PostMapping("/signin")
     @ResponseBody
     public ResponseVO submitLogin(String username, String password, boolean rememberMe, String kaptcha) {
+        // 判断是否启用验证码
         if (config.isEnableKaptcha()) {
+            // 若启用验证码，则判断验证码是否正确
             if (StringUtils.isEmpty(kaptcha) || !kaptcha.equals(SessionUtil.getKaptcha())) {
                 return ResultUtil.error("验证码错误！");
             }
+            // 判断正确后删除验证码
             SessionUtil.removeKaptcha();
         }
         UsernamePasswordToken token = new UsernamePasswordToken(username, password, rememberMe);
-        //获取当前的Subject
+        // 获取当前的Subject
         Subject currentUser = SecurityUtils.getSubject();
         try {
             // 在调用了login方法后,SecurityManager会收到AuthenticationToken,并将其发送给已配置的Realm执行必须的认证检查
@@ -105,7 +110,9 @@ public class PassportController {
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(bindingResult.getFieldError().getDefaultMessage());
         }
+        // 调用service的修改密码方法
         boolean result = userService.updatePwd(userPwd);
+        // 删除session里的登录信息
         SessionUtil.removeAllSession();
         return ResultUtil.success(result ? "密码已修改成功，请重新登录" : "密码修改失败");
     }

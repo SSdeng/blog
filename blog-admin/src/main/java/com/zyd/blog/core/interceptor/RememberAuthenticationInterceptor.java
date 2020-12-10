@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 实现自动登录的拦截器
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @website https://www.zhyd.me
@@ -28,8 +29,16 @@ import javax.servlet.http.HttpServletResponse;
 public class RememberAuthenticationInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private SysUserService userService;
+    private SysUserService userService;//用户业务层
 
+    /**
+     * preHandle会在一个控制器类的处理方法被调用之前执行此方法
+     * @param request
+     * @param response
+     * @param handler
+     * @return
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Subject subject = SecurityUtils.getSubject();

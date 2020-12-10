@@ -39,9 +39,9 @@ import java.util.Map;
 public class ShiroServiceImpl implements ShiroService {
 
     @Autowired
-    private SysResourcesService resourcesService;
+    private SysResourcesService resourcesService;//资源业务层对象
     @Autowired
-    private SysUserService userService;
+    private SysUserService userService;//用户业务层对象
 
     /**
      * 初始化权限

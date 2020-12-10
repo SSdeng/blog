@@ -35,8 +35,13 @@ import java.util.Map;
 public class RestApiController {
 
     @Autowired
-    private ZydWebsocketServer websocketServer;
+    private ZydWebsocketServer websocketServer;//web socket业务层对象
 
+    /**
+     * wangEditor编辑器中上传文件
+     * @param file
+     * @return
+     */
     @BussinessLog("wangEditor编辑器中上传文件")
     @RequiresPermissions("article:publish")
     @PostMapping("/uploadFile")
@@ -46,6 +51,11 @@ public class RestApiController {
         return ResultUtil.success("图片上传成功", virtualFile.getFullFilePath());
     }
 
+    /**
+     * simpleMD编辑器中上传文件
+     * @param file
+     * @return
+     */
     @BussinessLog("simpleMD编辑器中上传文件")
     @RequiresPermissions("article:publish")
     @PostMapping("/uploadFileForMd")

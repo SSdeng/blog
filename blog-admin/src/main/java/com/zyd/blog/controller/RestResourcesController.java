@@ -34,10 +34,15 @@ import java.util.List;
 public class RestResourcesController {
 
     @Autowired
-    private SysResourcesService resourcesService;
+    private SysResourcesService resourcesService;//资源业务层对象
     @Autowired
-    private ShiroService shiroService;
+    private ShiroService shiroService;//Shiro业务层对象
 
+    /**
+     * 资源分页
+     * @param vo
+     * @return
+     */
     @RequiresPermissions("resources")
     @PostMapping("/list")
     public PageResult getAll(ResourceConditionVO vo) {
@@ -46,12 +51,22 @@ public class RestResourcesController {
         return ResultUtil.tablePage(pageInfo);
     }
 
+    /**
+     * 显示选择的资源列表
+     * @param rid
+     * @return
+     */
     @RequiresPermissions("role:allotResource")
     @PostMapping("/resourcesWithSelected")
     public ResponseVO<List<Resources>> resourcesWithSelected(Long rid) {
         return ResultUtil.success(null, resourcesService.queryResourcesListWithSelected(rid));
     }
 
+    /**
+     * 添加资源
+     * @param resources
+     * @return
+     */
     @RequiresPermissions("resource:add")
     @PostMapping(value = "/add")
     @BussinessLog("添加资源")
@@ -62,6 +77,11 @@ public class RestResourcesController {
         return ResultUtil.success("成功");
     }
 
+    /**
+     * 删除资源
+     * @param ids
+     * @return
+     */
     @RequiresPermissions(value = {"resource:batchDelete", "resource:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除资源")
@@ -78,6 +98,11 @@ public class RestResourcesController {
         return ResultUtil.success("成功删除 [" + ids.length + "] 个资源");
     }
 
+    /**
+     * 获取资源详情
+     * @param id
+     * @return
+     */
     @RequiresPermissions("resource:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取资源详情")
@@ -85,6 +110,11 @@ public class RestResourcesController {
         return ResultUtil.success(null, this.resourcesService.getByPrimaryKey(id));
     }
 
+    /**
+     * 编辑资源
+     * @param resources
+     * @return
+     */
     @RequiresPermissions("resource:edit")
     @PostMapping("/edit")
     @BussinessLog("编辑资源")

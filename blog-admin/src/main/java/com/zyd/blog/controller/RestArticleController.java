@@ -41,10 +41,15 @@ import java.util.Map;
 @RequestMapping("/article")
 public class RestArticleController {
     @Autowired
-    private BizArticleService articleService;
+    private BizArticleService articleService;// 文章业务层对象
     @Autowired
-    private SysConfigService configService;
+    private SysConfigService configService;//配置业务层对象 面向接口
 
+    /**
+     * 文章分页
+     * @param vo
+     * @return
+     */
     @RequiresPermissions("articles")
     @PostMapping("/list")
     public PageResult list(ArticleConditionVO vo) {
@@ -52,6 +57,11 @@ public class RestArticleController {
         return ResultUtil.tablePage(pageInfo);
     }
 
+    /**
+     * 删除文章
+     * @param ids
+     * @return
+     */
     @RequiresPermissions(value = {"article:batchDelete", "article:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除文章[{1}]")
@@ -65,6 +75,11 @@ public class RestArticleController {
         return ResultUtil.success("成功删除 [" + ids.length + "] 篇文章");
     }
 
+    /**
+     * 获取文章详情
+     * @param id
+     * @return
+     */
     @RequiresPermissions("article:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取文章[{1}]详情")
@@ -72,6 +87,13 @@ public class RestArticleController {
         return ResultUtil.success(null, this.articleService.getByPrimaryKey(id));
     }
 
+    /**
+     * 发布文章
+     * @param article
+     * @param tags
+     * @param file
+     * @return
+     */
     @RequiresPermissions(value = {"article:edit", "article:publish"}, logical = Logical.OR)
     @PostMapping("/save")
     @BussinessLog("发布文章")
@@ -80,6 +102,12 @@ public class RestArticleController {
         return ResultUtil.success(ResponseStatus.SUCCESS);
     }
 
+    /**
+     * 修改文章的状态
+     * @param type
+     * @param id
+     * @return
+     */
     @RequiresPermissions(value = {"article:top", "article:recommend"}, logical = Logical.OR)
     @PostMapping("/update/{type}")
     @BussinessLog("修改文章[{2}]的状态[{1}]")
@@ -88,6 +116,12 @@ public class RestArticleController {
         return ResultUtil.success(ResponseStatus.SUCCESS);
     }
 
+    /**
+     * 推送文章到百度站长平台
+     * @param type
+     * @param ids
+     * @return
+     */
     @RequiresPermissions(value = {"article:batchPush", "article:push"}, logical = Logical.OR)
     @PostMapping(value = "/pushToBaidu/{type}")
     @BussinessLog("推送文章[{2}]到百度站长平台")
@@ -113,6 +147,11 @@ public class RestArticleController {
         return ResultUtil.success(null, result);
     }
 
+    /**
+     * 批量发布文章
+     * @param ids
+     * @return
+     */
     @RequiresPermissions(value = {"article:publish"}, logical = Logical.OR)
     @PostMapping(value = "/batchPublish")
     @BussinessLog("批量发布文章[{1}]")
