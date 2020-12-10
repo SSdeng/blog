@@ -25,95 +25,100 @@ public interface BizArticleService extends AbstractService<Article, Long> {
     /**
      * 分页查询
      *
-     * @param vo
-     * @return
+     * @param vo 文章状态规定
+     * @return PageInfo封装的符合条件的文章列表
      */
     PageInfo<Article> findPageBreakByCondition(ArticleConditionVO vo);
 
     /**
      * 站长推荐
      *
-     * @param pageSize
-     * @return
+     * @param pageSize 分页大小
+     * @return 站长推荐文章列表
      */
     List<Article> listRecommended(int pageSize);
 
     /**
      * 近期文章
      *
-     * @param pageSize
-     * @return
+     * @param pageSize 分页大小
+     * @return 近期文章列表
      */
     List<Article> listRecent(int pageSize);
 
     /**
      * 随机文章
      *
-     * @param pageSize
-     * @return
+     * @param pageSize 分页大小
+     * @return 随机文章列表
      */
     List<Article> listRandom(int pageSize);
 
     /**
      * 获取热门文章
      *
-     * @return
+     * @param pageSize 分页大小
+     * @return 热门文章列表
      */
     List<Article> listHotArticle(int pageSize);
 
     /**
-     * 根据某篇文章获取与该文章相关的文章
+     * 根据某篇文章获取与该文章相关的文章<br>
+     * 搜索同类型、同标签下的文章
      *
-     * @return
+     * @param pageSize 分页大小
+     * @param article 原型文章
+     * @return 类似文章列表
      */
     List<Article> listRelatedArticle(int pageSize, Article article);
 
     /**
      * 获取上一篇和下一篇
      *
-     * @param insertTime
-     * @return
+     * @param insertTime 当前文章创建时间
+     * @return 存储两篇文章的Map对象
      */
     Map<String, Article> getPrevAndNextArticles(Date insertTime);
 
     /**
      * 文章点赞
      *
-     * @param id
+     * @param id 点赞文章id
      */
     void doPraise(Long id);
 
     /**
-     * 是否存在文章
+     * 查询是否存在文章
      *
-     * @param id
-     * @return
+     * @param id 查询文章id
+     * @return 存在返回true 否则返回false
      */
     boolean isExist(Long id);
 
     /**
      * 发布文章
-     * a
      *
-     * @param article
-     * @param tags
-     * @param file
-     * @return
+     * @param article 待发布文章
+     * @param tags 文章相关tag
+     * @param file 封面图片文件
+     * @return 发布结果
      */
     boolean publish(Article article, Long[] tags, MultipartFile file);
 
     /**
      * 修改置顶、推荐
      *
-     * @return
+     * @param type 操作类型
+     * @param id 文章id
+     * @return 操作结果
      */
     boolean updateTopOrRecommendedById(String type, Long id);
 
     /**
-     * 批量修改状态
+     * 批量修改status
      *
-     * @param ids
-     * @param status
+     * @param ids 待修改id表
+     * @param status 修改值
      */
     void batchUpdateStatus(Long[] ids, boolean status);
 

@@ -16,6 +16,12 @@ import java.util.List;
  */
 public interface BizArticleTagsService {
 
+    /**
+     * 通过文章id删除文章-标签关联数据
+     *
+     * @param articleId
+     * @return
+     */
     int removeByArticleId(Long articleId);
 
     void insertList(Long[] tagIds, Long articleId);
