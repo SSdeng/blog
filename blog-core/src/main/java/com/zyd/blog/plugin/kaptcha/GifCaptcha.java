@@ -17,21 +17,43 @@ public class GifCaptcha extends Captcha {
     public GifCaptcha() {
     }
 
+    /**
+     * 构造函数
+     * @param width
+     * @param height
+     */
     public GifCaptcha(int width, int height) {
         this.width = width;
         this.height = height;
     }
 
+    /**
+     * 构造函数
+     * @param width
+     * @param height
+     * @param len
+     */
     public GifCaptcha(int width, int height, int len) {
         this(width, height);
         this.len = len;
     }
 
+    /**
+     * 构造函数
+     * @param width
+     * @param height
+     * @param len
+     * @param font
+     */
     public GifCaptcha(int width, int height, int len, Font font) {
         this(width, height, len);
         this.font = font;
     }
 
+    /**
+     * gif验证码编码
+     * @param os
+     */
     @Override
     public void out(OutputStream os) {
         try {

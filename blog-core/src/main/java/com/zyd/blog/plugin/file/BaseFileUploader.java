@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import java.util.Map;
 
 /**
+ * 基础级文件上传
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @website https://www.zhyd.me
@@ -28,7 +29,11 @@ import java.util.Map;
  * @since 1.8
  */
 public class BaseFileUploader {
-
+    /**
+     * 获得api客户端
+     * @param uploadType
+     * @return
+     */
     ApiClient getApiClient(String uploadType) {
         SysConfigService configService = SpringContextHolder.getBean(SysConfigService.class);
         Map<String, Object> config = configService.getConfigs();
@@ -70,6 +75,13 @@ public class BaseFileUploader {
         return res;
     }
 
+    /**
+     * 保存文件
+     * @param virtualFile
+     * @param save
+     * @param uploadType
+     * @return
+     */
     VirtualFile saveFile(VirtualFile virtualFile, boolean save, String uploadType) {
         if (save) {
             BizFileService fileService = SpringContextHolder.getBean(BizFileService.class);
@@ -91,6 +103,13 @@ public class BaseFileUploader {
         return virtualFile;
     }
 
+    /**
+     * 删除文件
+     * @param apiClient
+     * @param filePath
+     * @param uploadType
+     * @return
+     */
     boolean removeFile(ApiClient apiClient, String filePath, String uploadType) {
         BizFileService fileService = SpringContextHolder.getBean(BizFileService.class);
         File file = fileService.selectFileByPathAndUploadType(filePath, uploadType);

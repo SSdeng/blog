@@ -21,6 +21,10 @@ public class ToutiaoRequest implements OauthRequest, InitializingBean {
     @Autowired
     private JustAuthProperties properties;
 
+    /**
+     * 获得头条网的请求
+     * @return
+     */
     @Override
     public AuthRequest getRequest() {
         AuthConfig authConfig = properties.getToutiao();
@@ -30,7 +34,10 @@ public class ToutiaoRequest implements OauthRequest, InitializingBean {
                 .redirectUri(authConfig.getRedirectUri())
                 .build());
     }
-
+    /**
+     * spring  afterPropertiesSet()方法
+     * @throws Exception
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         RequestFactory.registerRequest("toutiao", this);

@@ -2,7 +2,7 @@ package com.zyd.blog.plugin.kaptcha;
 
 /**
  * <p></p>
- *
+ * Quant工具类
  * @author: wuhongjun
  * @version:1.0
  */
@@ -90,6 +90,13 @@ public class Quant
 
     /* Initialise network in range (0,0,0) to (255,255,255) and set parameters
        ----------------------------------------------------------------------- */
+
+    /**
+     * 构造函数
+     * @param thepic
+     * @param len
+     * @param sample
+     */
     public Quant(byte[] thepic, int len, int sample) {
 
         int i;
@@ -109,6 +116,10 @@ public class Quant
         }
     }
 
+    /**
+     * 色彩图表
+     * @return
+     */
     public byte[] colorMap() {
         byte[] map = new byte[3 * netsize];
         int[] index = new int[netsize];
@@ -126,6 +137,7 @@ public class Quant
 
     /* Insertion sort of network and building of netindex[0..255] (to do after unbias)
        ------------------------------------------------------------------------------- */
+
     public void inxbuild() {
 
         int i, j, smallpos, smallval;
@@ -253,8 +265,14 @@ public class Quant
         //fprintf(stderr,"finished 1D learning: final alpha=%f !\n",((float)alpha)/initalpha);
     }
 
-    /* Search for BGR values 0..255 (after net is unbiased) and return colour index
-       ---------------------------------------------------------------------------- */
+
+    /**
+     * Search for BGR values 0..255 (after net is unbiased) and return colour index
+     * @param b
+     * @param g
+     * @param r
+     * @return
+     */
     public int map(int b, int g, int r) {
 
         int i, j, dist, a, bestd;
@@ -341,8 +359,16 @@ public class Quant
         }
     }
 
-    /* Move adjacent neurons by precomputed alpha*(1-((i-j)^2/[r]^2)) in radpower[|i-j|]
-       --------------------------------------------------------------------------------- */
+
+
+    /**
+     * Move adjacent neurons by precomputed alpha*(1-((i-j)^2/[r]^2)) in radpower[|i-j|]
+     * @param rad
+     * @param i
+     * @param b
+     * @param g
+     * @param r
+     */
     protected void alterneigh(int rad, int i, int b, int g, int r) {
 
         int j, k, lo, hi, a, m;
@@ -381,8 +407,14 @@ public class Quant
         }
     }
 
-    /* Move neuron i towards biased (b,g,r) by factor alpha
-       ---------------------------------------------------- */
+    /**
+     * Move neuron i towards biased (b,g,r) by factor alpha
+     * @param alpha
+     * @param i
+     * @param b
+     * @param g
+     * @param r
+     */
     protected void altersingle(int alpha, int i, int b, int g, int r) {
 
 		/* alter hit neuron */
@@ -392,8 +424,13 @@ public class Quant
         n[2] -= (alpha * (n[2] - r)) / initalpha;
     }
 
-    /* Search for biased BGR values
-       ---------------------------- */
+    /**
+     * Search for biased BGR values
+     * @param b
+     * @param g
+     * @param r
+     * @return
+     */
     protected int contest(int b, int g, int r) {
 
 		/* finds closest neuron (min dist) and updates freq */

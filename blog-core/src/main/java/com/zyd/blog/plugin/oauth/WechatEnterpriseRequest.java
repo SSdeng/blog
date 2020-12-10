@@ -21,6 +21,10 @@ public class WechatEnterpriseRequest implements OauthRequest, InitializingBean {
     @Autowired
     private JustAuthProperties properties;
 
+    /**
+     * 获得微信企业级的请求
+     * @return
+     */
     @Override
     public AuthRequest getRequest() {
         AuthConfig authConfig = properties.getWechatEnterprise();
@@ -31,7 +35,10 @@ public class WechatEnterpriseRequest implements OauthRequest, InitializingBean {
                 .agentId(authConfig.getAgentId())
                 .build());
     }
-
+    /**
+     * spring  afterPropertiesSet()方法
+     * @throws Exception
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         RequestFactory.registerRequest("wechatEnterprise", this);

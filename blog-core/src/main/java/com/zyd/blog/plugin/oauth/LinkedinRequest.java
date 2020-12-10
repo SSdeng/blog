@@ -21,6 +21,10 @@ public class LinkedinRequest implements OauthRequest, InitializingBean {
     @Autowired
     private JustAuthProperties properties;
 
+    /**
+     * 获得领英的请求
+     * @return
+     */
     @Override
     public AuthRequest getRequest() {
         AuthConfig authConfig = properties.getLinkedin();
@@ -30,7 +34,10 @@ public class LinkedinRequest implements OauthRequest, InitializingBean {
                 .redirectUri(authConfig.getRedirectUri())
                 .build());
     }
-
+    /**
+     * spring  afterPropertiesSet()方法
+     * @throws Exception
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         RequestFactory.registerRequest("linkedin", this);
