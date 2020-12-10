@@ -26,7 +26,7 @@ public interface BizArticleService extends AbstractService<Article, Long> {
      * 分页查询
      *
      * @param vo 文章状态规定
-     * @return PageInfo封装的符合条件的文章列表
+     * @return 符合条件的文章列表
      */
     PageInfo<Article> findPageBreakByCondition(ArticleConditionVO vo);
 

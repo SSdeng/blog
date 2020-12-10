@@ -69,7 +69,7 @@ public class BizArticleServiceImpl implements BizArticleService {
      * 分页查询
      *
      * @param vo 文章状态规定
-     * @return PageInfo封装的符合条件的文章列表
+     * @return 符合条件的文章列表
      */
     @Override
     public PageInfo<Article> findPageBreakByCondition(ArticleConditionVO vo) {
@@ -108,9 +108,9 @@ public class BizArticleServiceImpl implements BizArticleService {
             // 更新完毕后 将文章信息存入表中
             boList.add(new Article(bizArticle));
         }
-        // 封装list到pageInfo对象自动分页
+        // 封装list到pageInfo对象实现分页
         PageInfo bean = new PageInfo<BizArticle>(list);
-        // 将boList放入pageInfo对象
+        // 将boList放入pageInfo
         bean.setList(boList);
         return bean;
     }
@@ -131,7 +131,7 @@ public class BizArticleServiceImpl implements BizArticleService {
         vo.setStatus(ArticleStatusEnum.PUBLISHED.getCode());
         // 设定分页大小
         vo.setPageSize(pageSize);
-        // 调用分页查询 获取PageInfo类拆寻结果
+        // 调用分页查询 获取PageInfo类查询结果
         PageInfo pageInfo = this.findPageBreakByCondition(vo);
         // 为空返回空指针 否则返回pageInfo中封装的列表
         return null == pageInfo ? null : pageInfo.getList();
@@ -288,7 +288,9 @@ public class BizArticleServiceImpl implements BizArticleService {
     public void doPraise(Long id) {
         // 获取发起请求的ip地址
         String ip = IpUtil.getRealIp(RequestHolder.getRequest());
+        // 构建操作对应键值
         String key = ip + "_doPraise_" + id;
+        // 获取缓存值
         ValueOperations<String, Object> operations = redisTemplate.opsForValue();
         // redis中存有该操作key
         if (redisTemplate.hasKey(key)) {
@@ -312,7 +314,7 @@ public class BizArticleServiceImpl implements BizArticleService {
         love.setLoveTime(new Date());
         love.setCreateTime(new Date());
         love.setUpdateTime(new Date());
-        // 将点赞操作插入apper
+        // 将点赞操作插入数据库
         bizArticleLoveMapper.insert(love);
         // 记录点赞操作
         operations.set(key, id, 1, TimeUnit.HOURS);
@@ -326,7 +328,7 @@ public class BizArticleServiceImpl implements BizArticleService {
      */
     @Override
     public boolean isExist(Long id) {
-        // 查询
+        // 查询对应id文章 返回数量
         Integer count = bizArticleMapper.isExist(id);
         // 返回值不为空且数量大于0返回true 否则返回false
         return count != null && count > 0;
@@ -459,22 +461,33 @@ public class BizArticleServiceImpl implements BizArticleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeByPrimaryKey(Long primaryKey) {
-        // 从Mapper中删除 记录结果
+        // 从数据库中删除 记录结果
         boolean result = bizArticleMapper.deleteByPrimaryKey(primaryKey) > 0;
         // 删除标签记录
+        // 用Example类来实现sql语句的条件设置
         Example tagsExample = new Example(BizArticleTags.class);
         Example.Criteria tagsCriteria = tagsExample.createCriteria();
+        // where articleId = 'primaryKdy'
         tagsCriteria.andEqualTo("articleId", primaryKey);
+        // 从数据库中删除对应实体
         bizArticleTagsMapper.deleteByExample(tagsExample);
+
         // 删除查看记录
+        // 用Example类来实现sql语句的条件设置
         Example lookExample = new Example(BizArticleLook.class);
         Example.Criteria lookCriteria = lookExample.createCriteria();
+        // where articleId = 'primaryKdy'
         lookCriteria.andEqualTo("articleId", primaryKey);
+        // 从数据库中删除对应实体
         bizArticleLookMapper.deleteByExample(lookExample);
+
         // 删除赞记录
+        // 用Example类来实现sql语句的条件设置
         Example loveExample = new Example(BizArticleLove.class);
         Example.Criteria loveCriteria = loveExample.createCriteria();
+        // where articleId = 'primaryKdy'
         loveCriteria.andEqualTo("articleId", primaryKey);
+        // 从数据库中删除对应实体
         bizArticleLoveMapper.deleteByExample(loveExample);
         // 返回结果
         return result;
@@ -511,7 +524,7 @@ public class BizArticleServiceImpl implements BizArticleService {
     public Article getByPrimaryKey(Long primaryKey) {
         // 主键参数不可为空
         Assert.notNull(primaryKey, "PrimaryKey不可为空！");
-        // 在Mapper中查找文章
+        // 按主键查找文章实体
         BizArticle entity = bizArticleMapper.get(primaryKey);
         // 没有对应文章
         if (null == entity) {
