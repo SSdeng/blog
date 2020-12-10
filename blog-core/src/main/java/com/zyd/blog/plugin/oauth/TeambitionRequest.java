@@ -21,6 +21,10 @@ public class TeambitionRequest implements OauthRequest, InitializingBean {
     @Autowired
     private JustAuthProperties properties;
 
+    /**
+     * 获得Teambition的请求
+     * @return
+     */
     @Override
     public AuthRequest getRequest() {
         AuthConfig authConfig = properties.getTeambition();
@@ -30,7 +34,10 @@ public class TeambitionRequest implements OauthRequest, InitializingBean {
                 .redirectUri(authConfig.getRedirectUri())
                 .build());
     }
-
+    /**
+     * spring  afterPropertiesSet()方法
+     * @throws Exception
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         RequestFactory.registerRequest("teambition", this);

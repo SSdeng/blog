@@ -17,7 +17,7 @@ public interface BizArticleArchivesService {
     /**
      * 获取归档目录列表
      *
-     * @return
+     * @return 归档目录列表
      */
     Map<String, List> listArchives();
 }

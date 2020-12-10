@@ -35,12 +35,17 @@ import java.util.List;
 @RequestMapping("/roles")
 public class RestRoleController {
     @Autowired
-    private SysRoleService roleService;
+    private SysRoleService roleService;//角色业务层
     @Autowired
-    private SysRoleResourcesService roleResourcesService;
+    private SysRoleResourcesService roleResourcesService;//角色资源业务层
     @Autowired
-    private ShiroService shiroService;
+    private ShiroService shiroService;//Shiro业务层
 
+    /**
+     * 系统角色分页
+     * @param vo 封装好的角色对象
+     * @return bootstrap table用到的返回json格式
+     */
     @RequiresPermissions("roles")
     @PostMapping("/list")
     public PageResult getAll(RoleConditionVO vo) {
@@ -48,12 +53,23 @@ public class RestRoleController {
         return ResultUtil.tablePage(pageInfo);
     }
 
+    /**
+     * 显示选择的角色列表
+     * @param uid 用户id
+     * @return JSON
+     */
     @RequiresPermissions("user:allotRole")
     @PostMapping("/rolesWithSelected")
     public ResponseVO<List<Role>> rolesWithSelected(Integer uid) {
         return ResultUtil.success(null, roleService.queryRoleListWithSelected(uid));
     }
 
+    /**
+     * 分配角色拥有的资源
+     * @param roleId 角色id
+     * @param resourcesId 资源id
+     * @return JSON
+     */
     @RequiresPermissions("role:allotResource")
     @PostMapping("/saveRoleResources")
     @BussinessLog("分配角色拥有的资源")
@@ -67,6 +83,11 @@ public class RestRoleController {
         return ResultUtil.success("成功");
     }
 
+    /**
+     * 添加角色
+     * @param role 角色
+     * @return JSON
+     */
     @RequiresPermissions("role:add")
     @PostMapping(value = "/add")
     @BussinessLog("添加角色")
@@ -75,6 +96,11 @@ public class RestRoleController {
         return ResultUtil.success("成功");
     }
 
+    /**
+     * 删除角色
+     * @param ids id
+     * @return JSON
+     */
     @RequiresPermissions(value = {"role:batchDelete", "role:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除角色")
@@ -89,6 +115,11 @@ public class RestRoleController {
         return ResultUtil.success("成功删除 [" + ids.length + "] 个角色");
     }
 
+    /**
+     * 获取角色详情
+     * @param id id
+     * @return JSON
+     */
     @RequiresPermissions("role:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取角色详情")
@@ -96,6 +127,11 @@ public class RestRoleController {
         return ResultUtil.success(null, this.roleService.getByPrimaryKey(id));
     }
 
+    /**
+     * 编辑角色
+     * @param role 角色
+     * @return JSON
+     */
     @RequiresPermissions("role:edit")
     @PostMapping("/edit")
     @BussinessLog("编辑角色")

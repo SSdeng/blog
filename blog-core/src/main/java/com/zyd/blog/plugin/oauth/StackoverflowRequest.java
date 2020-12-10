@@ -21,6 +21,10 @@ public class StackoverflowRequest implements OauthRequest, InitializingBean {
     @Autowired
     private JustAuthProperties properties;
 
+    /**
+     * 获得Stackover的请求
+     * @return
+     */
     @Override
     public AuthRequest getRequest() {
         AuthConfig authConfig = properties.getStackoverflow();
@@ -31,7 +35,10 @@ public class StackoverflowRequest implements OauthRequest, InitializingBean {
                 .stackOverflowKey(authConfig.getStackOverflowKey())
                 .build());
     }
-
+    /**
+     * spring  afterPropertiesSet()方法
+     * @throws Exception
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         RequestFactory.registerRequest("stackoverflow", this);

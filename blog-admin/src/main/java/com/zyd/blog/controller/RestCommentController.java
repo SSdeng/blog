@@ -35,10 +35,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/comment")
 public class RestCommentController {
     @Autowired
-    private BizCommentService commentService;
+    private BizCommentService commentService;//评论业务层对象
     @Autowired
-    private MailService mailService;
+    private MailService mailService;//邮件业务层对象
 
+    /**
+     * 评论分页
+     * @param vo 封装好的评论对象
+     * @return bootstrap table用到的返回json格式
+     */
     @RequiresPermissions("comments")
     @PostMapping("/list")
     public PageResult list(CommentConditionVO vo) {
@@ -46,6 +51,11 @@ public class RestCommentController {
         return ResultUtil.tablePage(pageInfo);
     }
 
+    /**
+     * 回复评论
+     * @param comment 评论
+     * @return JSON
+     */
     @RequiresPermissions("comment:reply")
     @PostMapping(value = "/reply")
     @BussinessLog("回复评论")
@@ -58,6 +68,11 @@ public class RestCommentController {
         return ResultUtil.success("成功");
     }
 
+    /**
+     * 删除评论
+     * @param ids id
+     * @return JSON
+     */
     @RequiresPermissions(value = {"comment:batchDelete", "comment:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除评论[{1}]")
@@ -71,6 +86,11 @@ public class RestCommentController {
         return ResultUtil.success("成功删除 [" + ids.length + "] 条评论");
     }
 
+    /**
+     * 获取评论详情
+     * @param id id
+     * @return JSON
+     */
     @RequiresPermissions("comments")
     @PostMapping("/get/{id}")
     @BussinessLog("获取评论[{1}]详情")
@@ -78,6 +98,11 @@ public class RestCommentController {
         return ResultUtil.success(null, this.commentService.getByPrimaryKey(id));
     }
 
+    /**
+     * 编辑评论
+     * @param comment 评论
+     * @return JSON
+     */
     @RequiresPermissions("comments")
     @PostMapping("/edit")
     @BussinessLog("编辑评论")
@@ -91,6 +116,13 @@ public class RestCommentController {
         return ResultUtil.success(ResponseStatus.SUCCESS);
     }
 
+    /**
+     * 审核评论
+     * @param comment 评论
+     * @param contentText 内容
+     * @param sendEmail 是否发送邮件
+     * @return JSON
+     */
     @RequiresPermissions("comment:audit")
     @PostMapping("/audit")
     @BussinessLog("审核评论")
@@ -113,10 +145,10 @@ public class RestCommentController {
     }
 
     /**
-     * 正在审核的
+     * 正在审核的评论列表
      *
-     * @param comment
-     * @return
+     * @param comment 评论
+     * @return JSON
      */
     @RequiresUser
     @PostMapping("/listVerifying")

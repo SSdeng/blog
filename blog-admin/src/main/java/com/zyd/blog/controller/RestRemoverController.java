@@ -31,8 +31,16 @@ import java.util.Date;
 public class RestRemoverController {
 
     @Autowired
-    private RemoverService removerService;
+    private RemoverService removerService;//搬运工业务层对象
 
+    /**
+     * 运行文章搬运工
+     * @param typeId 类型id
+     * @param config 配置
+     * @param response http响应
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @PostMapping("/run")
     @ResponseBody
     @BussinessLog("运行文章搬运工")
@@ -40,6 +48,10 @@ public class RestRemoverController {
         removerService.run(typeId, config, response.getWriter());
     }
 
+    /**
+     * 停止文章搬运工
+     * @return JSON
+     */
     @PostMapping("/stop")
     @ResponseBody
     @BussinessLog("停止文章搬运工")
@@ -52,6 +64,15 @@ public class RestRemoverController {
         return ResultUtil.success("程序已停止运行，当前时间 " + DateUtil.format(new Date(), DateConst.YYYY_MM_DD_HH_MM_SS_EN));
     }
 
+    /**
+     * 抓取单个文章
+     * @param typeId 类型id
+     * @param url 链接
+     * @param convertImg 图片
+     * @param response http响应
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @PostMapping("/single")
     @ResponseBody
     @BussinessLog("抓取单个文章")

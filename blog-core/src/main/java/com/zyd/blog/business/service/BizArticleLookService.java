@@ -14,5 +14,11 @@ import com.zyd.blog.business.entity.ArticleLook;
  */
 public interface BizArticleLookService {
 
+    /**
+     * 插入文章浏览记录
+     *
+     * @param articleLook 浏览记录
+     * @return 更新后的articleLook
+     */
     ArticleLook insert(ArticleLook articleLook);
 }

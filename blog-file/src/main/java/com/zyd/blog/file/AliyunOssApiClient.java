@@ -13,6 +13,8 @@ import java.io.InputStream;
 import java.util.Date;
 
 /**
+ * 阿里云OSS API客户端
+ *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @website https://www.zhyd.me
@@ -20,16 +22,43 @@ import java.util.Date;
  * @since 1.8
  */
 public class AliyunOssApiClient extends BaseApiClient {
+
+    /**
+     * 默认前缀
+     */
     private static final String DEFAULT_PREFIX = "oneblog/";
+    /**
+     * 阿里云OSS API
+     */
     private OssApi ossApi;
+    /**
+     * url
+     */
     private String url;
+    /**
+     * 存储空间名
+     */
     private String bucketName;
+    /**
+     * 路径前缀
+     */
     private String pathPrefix;
 
     public AliyunOssApiClient() {
         super("阿里云OSS");
     }
 
+    /**
+     * 初始化方法
+     *
+     * @param endpoint          地区节点域名
+     * @param accessKeyId       AccessKeyID
+     * @param accessKeySecret   AccessKey密码
+     * @param url               url
+     * @param bucketName        存储空间名
+     * @param uploadType        上传类型
+     * @return
+     */
     public AliyunOssApiClient init(String endpoint, String accessKeyId, String accessKeySecret, String url, String bucketName, String uploadType) {
         ossApi = new OssApi(endpoint, accessKeyId, accessKeySecret);
         this.url = url;
@@ -39,6 +68,13 @@ public class AliyunOssApiClient extends BaseApiClient {
         return this;
     }
 
+    /**
+     * 上传图片
+     *
+     * @param is 要上传的输入流
+     * @param imageUrl 图片url
+     * @return 文件实体对象
+     */
     @Override
     public VirtualFile uploadImg(InputStream is, String imageUrl) {
         this.check();
@@ -48,7 +84,7 @@ public class AliyunOssApiClient extends BaseApiClient {
         Date startTime = new Date();
         try (InputStream uploadIs = StreamUtil.clone(is);
              InputStream fileHashIs = StreamUtil.clone(is)) {
-            ossApi.uploadFile(uploadIs, this.newFileName, bucketName);
+            ossApi.uploadFile(uploadIs, this.newFileName, bucketName);//通过输入流上传文件
             return new VirtualFile()
                     .setOriginalFileName(FileUtil.getName(key))
                     .setSuffix(this.suffix)
@@ -70,6 +106,12 @@ public class AliyunOssApiClient extends BaseApiClient {
         }
     }
 
+    /**
+     * 删除文件
+     *
+     * @param key 要删除的文件key
+     * @return 操作结果
+     */
     @Override
     public boolean removeFile(String key) {
         this.check();
@@ -86,6 +128,9 @@ public class AliyunOssApiClient extends BaseApiClient {
         }
     }
 
+    /**
+     * 检查阿里云OSS配置
+     */
     @Override
     public void check() {
         if (null == ossApi) {

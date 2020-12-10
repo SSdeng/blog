@@ -21,6 +21,10 @@ public class DingTalkRequest implements OauthRequest, InitializingBean {
     @Autowired
     private JustAuthProperties properties;
 
+    /**
+     * 获得钉钉的请求
+     * @return
+     */
     @Override
     public AuthRequest getRequest() {
         AuthConfig authConfig = properties.getDingtalk();
@@ -30,7 +34,10 @@ public class DingTalkRequest implements OauthRequest, InitializingBean {
                 .redirectUri(authConfig.getRedirectUri())
                 .build());
     }
-
+    /**
+     * spring  afterPropertiesSet()方法
+     * @throws Exception
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         RequestFactory.registerRequest("dingtalk", this);

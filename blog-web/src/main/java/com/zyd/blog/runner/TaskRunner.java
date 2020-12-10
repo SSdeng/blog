@@ -15,9 +15,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class TaskRunner implements ApplicationRunner {
 
+    /**
+     * 文章浏览记录保存
+     */
     @Autowired
     private ArticleLookTask articleLookTask;
 
+    /**
+     * 执行文章浏览记录保存任务
+     *
+     * @param args
+     */
     @Override
     public void run(ApplicationArguments args) {
         articleLookTask.save();

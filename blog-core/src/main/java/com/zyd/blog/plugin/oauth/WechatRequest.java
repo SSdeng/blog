@@ -22,6 +22,10 @@ public class WechatRequest implements OauthRequest, InitializingBean {
     @Autowired
     private JustAuthProperties properties;
 
+    /**
+     * 获得微信的请求
+     * @return
+     */
     @Override
     public AuthRequest getRequest() {
         AuthConfig authConfig = properties.getWechat();
@@ -31,7 +35,10 @@ public class WechatRequest implements OauthRequest, InitializingBean {
                 .redirectUri(authConfig.getRedirectUri())
                 .build());
     }
-
+    /**
+     * spring  afterPropertiesSet()方法
+     * @throws Exception
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         RequestFactory.registerRequest("wechat", this);

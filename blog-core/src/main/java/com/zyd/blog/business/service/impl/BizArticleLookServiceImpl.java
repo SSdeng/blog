@@ -25,13 +25,24 @@ public class BizArticleLookServiceImpl implements BizArticleLookService {
     @Autowired
     private BizArticleLookMapper bizArticleLookMapper;
 
+    /**
+     * 插入文章浏览记录
+     *
+     * @param entity 浏览记录
+     * @return 更新后entity
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ArticleLook insert(ArticleLook entity) {
+        // entity不能为空
         Assert.notNull(entity, "ArticleLook不可为空！");
+        // 更新时间设为当前时间
         entity.setUpdateTime(new Date());
+        // 创建时间设为当前时间
         entity.setCreateTime(new Date());
+        // 插入浏览记录
         bizArticleLookMapper.insertSelective(entity.getBizArticleLook());
+        // 返回更新后的entity
         return entity;
     }
 }

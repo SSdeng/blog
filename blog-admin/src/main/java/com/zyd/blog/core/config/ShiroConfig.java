@@ -43,12 +43,16 @@ import java.util.Map;
 public class ShiroConfig {
 
     @Autowired
-    private ShiroService shiroService;
+    private ShiroService shiroService;//Shiro业务层
     @Autowired
-    private RedisProperties redisProperties;
+    private RedisProperties redisProperties;//redis属性配置文件
     @Autowired
-    private ShiroProperties shiroProperties;
+    private ShiroProperties shiroProperties;//Shiro属性配置文件
 
+    /**
+     * 用来管理shiro一些bean的生命周期
+     * @return
+     */
     @Bean(name = "lifecycleBeanPostProcessor")
     public static LifecycleBeanPostProcessor getLifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();

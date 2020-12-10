@@ -1,6 +1,8 @@
 package com.zyd.blog.file.exception;
 
 /**
+ * 阿里云OSS API异常类
+ *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @website https://www.zhyd.me

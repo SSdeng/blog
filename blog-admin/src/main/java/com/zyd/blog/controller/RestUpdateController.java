@@ -30,8 +30,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/update")
 public class RestUpdateController {
     @Autowired
-    private SysUpdateRecordeService updateRecordeService;
+    private SysUpdateRecordeService updateRecordeService;//更新日志业务层
 
+    /**
+     * 更新日志分页
+     * @param vo 封装好的更新日志对象
+     * @return bootstrap table用到的返回json格式
+     */
     @RequiresPermissions("updateLogs")
     @PostMapping("/list")
     public PageResult list(UpdateRecordeConditionVO vo) {
@@ -39,6 +44,11 @@ public class RestUpdateController {
         return ResultUtil.tablePage(pageInfo);
     }
 
+    /**
+     * 添加更新日志
+     * @param updateRecorde 更新日志
+     * @return JSON
+     */
     @RequiresPermissions("updateLog:add")
     @PostMapping(value = "/add")
     @BussinessLog("添加更新日志")
@@ -47,6 +57,11 @@ public class RestUpdateController {
         return ResultUtil.success("成功");
     }
 
+    /**
+     * 删除更新日志
+     * @param ids id
+     * @return JSON
+     */
     @RequiresPermissions(value = {"updateLog:batchDelete", "updateLog:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除更新日志")
@@ -60,6 +75,11 @@ public class RestUpdateController {
         return ResultUtil.success("成功删除 [" + ids.length + "] 个更新记录");
     }
 
+    /**
+     * 获取更新日志详情
+     * @param id id
+     * @return JSON
+     */
     @RequiresPermissions("updateLog:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取更新日志详情")
@@ -67,6 +87,11 @@ public class RestUpdateController {
         return ResultUtil.success(null, this.updateRecordeService.getByPrimaryKey(id));
     }
 
+    /**
+     * 编辑更新日志
+     * @param updateRecorde 更新日志
+     * @return JSON
+     */
     @RequiresPermissions("updateLog:edit")
     @PostMapping("/edit")
     @BussinessLog("编辑更新日志")

@@ -1,6 +1,8 @@
 package com.zyd.blog.file.exception;
 
 /**
+ * 基础异常类，是其他三个异常的父类
+ *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @website https://www.zhyd.me

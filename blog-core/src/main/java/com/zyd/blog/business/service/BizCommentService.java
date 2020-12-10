@@ -21,8 +21,19 @@ import java.util.Map;
  */
 public interface BizCommentService extends AbstractService<Comment, Long> {
 
+    /**
+     * 分页查询
+     *
+     * @param vo 评论状态规定
+     * @return 符合条件的评论列表
+     */
     PageInfo<Comment> findPageBreakByCondition(CommentConditionVO vo);
 
+    /**
+     *
+     * @param vo
+     * @return
+     */
     Map<String, Object> list(CommentConditionVO vo);
 
     /**
