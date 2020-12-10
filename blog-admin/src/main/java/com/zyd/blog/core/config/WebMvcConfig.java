@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
+ * WebMVC配置类
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @website https://www.zhyd.me
@@ -17,8 +18,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
-    private RememberAuthenticationInterceptor rememberAuthenticationInterceptor;
+    private RememberAuthenticationInterceptor rememberAuthenticationInterceptor;//实现自动登录的拦截器
 
+    /**
+     * 添加拦截器
+     * @param registry 拦截器
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(rememberAuthenticationInterceptor)

@@ -76,9 +76,9 @@ me:
                 clientSecret:
                 redirectUri:
             github:
-                clientId:
-                clientSecret:
-                redirectUri:
+                clientId: 3f0bca4ff010bee068e5
+                clientSecret: 79785399bf61221e76b4d6190fd62a6a8b3a9c97
+                redirectUri: http://127.0.0.1:8443/oauth/callback
             weibo:
                 clientId:
                 clientSecret:

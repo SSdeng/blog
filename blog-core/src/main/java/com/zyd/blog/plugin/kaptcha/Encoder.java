@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * 验证码编码类
  * @author: wuhongjun
  * @version:1.0
  */
@@ -102,6 +103,14 @@ public class Encoder {
     private int curPixel;
 
     //----------------------------------------------------------------------------
+
+    /**
+     * 构造函数
+     * @param width
+     * @param height
+     * @param pixels
+     * @param color_depth
+     */
     Encoder(int width, int height, byte[] pixels, int color_depth) {
         imgW = width;
         imgH = height;
@@ -109,17 +118,28 @@ public class Encoder {
         initCodeSize = Math.max(2, color_depth);
     }
 
-    // Add a character to the end of the current packet, and if it is 254
-    // characters, flush the packet to disk.
+
+    /**
+     *
+      Add a character to the end of the current packet, and if it is 254
+      characters, flush the packet to disk.
+     * @param c
+     * @param outs
+     * @throws IOException
+     */
     void char_out(byte c, OutputStream outs) throws IOException {
         accum[a_count++] = c;
         if (a_count >= 254)
             flush_char(outs);
     }
 
-    // Clear out the hash table
 
-    // table clear for block compress
+
+    /**
+     * table clear for block compress
+     * @param outs
+     * @throws IOException
+     */
     void cl_block(OutputStream outs) throws IOException {
         cl_hash(hsize);
         free_ent = ClearCode + 2;
@@ -128,12 +148,23 @@ public class Encoder {
         output(ClearCode, outs);
     }
 
-    // reset code table
+
+
+    /**
+     * reset code table
+     * @param hsize
+     */
     void cl_hash(int hsize) {
         for (int i = 0; i < hsize; ++i)
             htab[i] = -1;
     }
 
+    /**
+     *
+     * @param init_bits
+     * @param outs
+     * @throws IOException
+     */
     void compress(int init_bits, OutputStream outs) throws IOException {
         int fcode;
         int i /* = 0 */;
@@ -206,6 +237,12 @@ public class Encoder {
     }
 
     //----------------------------------------------------------------------------
+
+    /**
+     * 编码
+     * @param os
+     * @throws IOException
+     */
     void encode(OutputStream os) throws IOException {
         os.write(initCodeSize); // write "initial code size" byte
 
@@ -217,7 +254,13 @@ public class Encoder {
         os.write(0); // write block terminator
     }
 
-    // Flush the packet to disk, and reset the accumulator
+
+
+    /**
+     * Flush the packet to disk, and reset the accumulator
+     * @param outs
+     * @throws IOException
+     */
     void flush_char(OutputStream outs) throws IOException {
         if (a_count > 0) {
             outs.write(a_count);
@@ -231,8 +274,13 @@ public class Encoder {
     }
 
     //----------------------------------------------------------------------------
-    // Return the next pixel from the image
+
     //----------------------------------------------------------------------------
+
+    /**
+     * Return the next pixel from the image
+     * @return
+     */
     private int nextPixel() {
         if (remaining == 0)
             return EOF;
@@ -244,6 +292,12 @@ public class Encoder {
         return pix & 0xff;
     }
 
+    /**
+     * 输出
+     * @param code
+     * @param outs
+     * @throws IOException
+     */
     void output(int code, OutputStream outs) throws IOException {
         cur_accum &= masks[cur_bits];
 

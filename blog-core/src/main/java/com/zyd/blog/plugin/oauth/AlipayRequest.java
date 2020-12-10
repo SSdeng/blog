@@ -22,6 +22,10 @@ public class AlipayRequest implements OauthRequest, InitializingBean {
     @Autowired
     private JustAuthProperties properties;
 
+    /**
+     * 获得阿里支付的请求
+     * @return
+     */
     @Override
     public AuthRequest getRequest() {
         AuthConfig authConfig = properties.getAlipay();
@@ -33,6 +37,10 @@ public class AlipayRequest implements OauthRequest, InitializingBean {
                 .build());
     }
 
+    /**
+     * spring  afterPropertiesSet()方法
+     * @throws Exception
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         RequestFactory.registerRequest("alipay", this);

@@ -43,12 +43,16 @@ import org.springframework.web.servlet.ModelAndView;
 public class RenderController {
 
     @Autowired
-    private BizArticleService articleService;
+    private BizArticleService articleService;//文章业务层对象
+/*    @Autowired
+    private SysConfigService configService;*/
     @Autowired
-    private SysConfigService configService;
-    @Autowired
-    private ZydWebsocketServer websocketServer;
+    private ZydWebsocketServer websocketServer;//web socket业务层对象
 
+    /**
+     * 进入首页
+     * @return ModelAndView
+     */
     @RequiresAuthentication
     @BussinessLog("进入首页")
     @GetMapping(value = {""})
@@ -56,6 +60,10 @@ public class RenderController {
         return ResultUtil.view("index");
     }
 
+    /**
+     * 进入用户列表页
+     * @return ModelAndView
+     */
     @RequiresPermissions("users")
     @BussinessLog("进入用户列表页")
     @GetMapping("/users")
@@ -63,6 +71,10 @@ public class RenderController {
         return ResultUtil.view("user/list");
     }
 
+    /**
+     * 进入资源列表页
+     * @return ModelAndView
+     */
     @RequiresPermissions("resources")
     @BussinessLog("进入资源列表页")
     @GetMapping("/resources")
@@ -70,6 +82,10 @@ public class RenderController {
         return ResultUtil.view("resources/list");
     }
 
+    /**
+     * 进入角色列表页
+     * @return ModelAndView
+     */
     @RequiresPermissions("roles")
     @BussinessLog("进入角色列表页")
     @GetMapping("/roles")
@@ -77,6 +93,10 @@ public class RenderController {
         return ResultUtil.view("role/list");
     }
 
+    /**
+     * 进入文章列表页
+     * @return ModelAndView
+     */
     @RequiresPermissions("articles")
     @BussinessLog("进入文章列表页")
     @GetMapping("/articles")
@@ -84,6 +104,10 @@ public class RenderController {
         return ResultUtil.view("article/list");
     }
 
+    /**
+     * 进入发表文章页，html形式
+     * @return ModelAndView
+     */
     @RequiresPermissions("article:publish")
     @BussinessLog(value = "进入发表文章页[html]")
     @GetMapping("/article/publish")
@@ -91,6 +115,10 @@ public class RenderController {
         return ResultUtil.view("article/publish");
     }
 
+    /**
+     * 进入发表文章页 markdown形式
+     * @return ModelAndView
+     */
     @RequiresPermissions("article:publish")
     @BussinessLog(value = "进入发表文章页[markdown]")
     @GetMapping("/article/publishMd")
@@ -98,6 +126,12 @@ public class RenderController {
         return ResultUtil.view("article/publish-md");
     }
 
+    /**
+     * 进入修改文章页
+     * @param id
+     * @param model
+     * @return ModelAndView
+     */
     @RequiresPermissions("article:publish")
     @BussinessLog(value = "进入修改文章页[id={1}]")
     @GetMapping("/article/update/{id}")
@@ -110,6 +144,10 @@ public class RenderController {
         return ResultUtil.view("article/publish");
     }
 
+    /**
+     * 进入分类列表页
+     * @return ModelAndView
+     */
     @RequiresPermissions("types")
     @BussinessLog("进入分类列表页")
     @GetMapping("/article/types")
@@ -117,6 +155,10 @@ public class RenderController {
         return ResultUtil.view("article/types");
     }
 
+    /**
+     * 进入标签列表页
+     * @return ModelAndView
+     */
     @RequiresPermissions("tags")
     @BussinessLog("进入标签列表页")
     @GetMapping("/article/tags")
@@ -124,6 +166,10 @@ public class RenderController {
         return ResultUtil.view("article/tags");
     }
 
+    /**
+     * 进入链接页
+     * @return ModelAndView
+     */
     @RequiresPermissions("links")
     @BussinessLog("进入链接页")
     @GetMapping("/links")
@@ -131,6 +177,10 @@ public class RenderController {
         return ResultUtil.view("link/list");
     }
 
+    /**
+     * 进入评论页
+     * @return ModelAndView
+     */
     @RequiresPermissions("comments")
     @BussinessLog("进入评论页")
     @GetMapping("/comments")
@@ -138,6 +188,10 @@ public class RenderController {
         return ResultUtil.view("comment/list");
     }
 
+    /**
+     * 进入系统通知页
+     * @return ModelAndView
+     */
     @RequiresPermissions("notices")
     @BussinessLog("进入系统通知页")
     @GetMapping("/notices")
@@ -145,6 +199,10 @@ public class RenderController {
         return ResultUtil.view("notice/list");
     }
 
+    /**
+     * 进入系统配置页
+     * @return ModelAndView
+     */
     @RequiresRoles("role:root")
     @BussinessLog("进入系统配置页")
     @GetMapping("/config")
@@ -152,6 +210,10 @@ public class RenderController {
         return ResultUtil.view("config");
     }
 
+    /**
+     * 进入模板管理页
+     * @return ModelAndView
+     */
     @RequiresPermissions("templates")
     @BussinessLog("进入模板管理页")
     @GetMapping("/templates")
@@ -159,6 +221,10 @@ public class RenderController {
         return ResultUtil.view("template/list");
     }
 
+    /**
+     * 进入更新记录管理页
+     * @return ModelAndView
+     */
     @RequiresPermissions("updateLogs")
     @BussinessLog("进入更新记录管理页")
     @GetMapping("/updates")
@@ -166,6 +232,11 @@ public class RenderController {
         return ResultUtil.view("update/list");
     }
 
+    /**
+     * 进入icons页
+     * @param model model
+     * @return ModelAndView
+     */
     @RequiresPermissions("icons")
     @BussinessLog(value = "进入icons页")
     @GetMapping("/icons")
@@ -173,6 +244,11 @@ public class RenderController {
         return ResultUtil.view("other/icons");
     }
 
+    /**
+     * 进入shiro示例页
+     * @param model model
+     * @return ModelAndView
+     */
     @RequiresPermissions("shiro")
     @BussinessLog(value = "进入shiro示例页")
     @GetMapping("/shiro")
@@ -180,6 +256,11 @@ public class RenderController {
         return ResultUtil.view("other/shiro");
     }
 
+    /**
+     * 进入编辑器测试用例页面
+     * @param model model
+     * @return ModelAndView
+     */
     @RequiresUser
     @BussinessLog("进入编辑器测试用例页面")
     @GetMapping("/editor")
@@ -187,6 +268,11 @@ public class RenderController {
         return ResultUtil.view("other/editor");
     }
 
+    /**
+     * 进入通知管理页
+     * @param model model
+     * @return ModelAndView
+     */
     @RequiresPermissions("notice")
     @BussinessLog("进入通知管理页")
     @GetMapping("/notice")
@@ -195,6 +281,11 @@ public class RenderController {
         return ResultUtil.view("laboratory/notification");
     }
 
+    /**
+     * 进入搬运工页面
+     * @param model
+     * @return
+     */
     @RequiresUser
     @BussinessLog("进入搬运工页面")
     @GetMapping("/remover")
@@ -205,6 +296,11 @@ public class RenderController {
         return ResultUtil.view("laboratory/remover");
     }
 
+    /**
+     * 进入文件管理页面
+     * @param model
+     * @return
+     */
     @RequiresPermissions("files")
     @BussinessLog("进入文件管理页面")
     @GetMapping("/files")

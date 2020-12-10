@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.InputStream;
 
 /**
+ * 全球级的文件上传
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @website https://www.zhyd.me
@@ -18,7 +19,14 @@ import java.io.InputStream;
  * @since 1.8
  */
 public class GlobalFileUploader extends BaseFileUploader implements FileUploader {
-
+    /**
+     * 以字节流上传文件
+     * @param is
+     * @param uploadType
+     * @param imageUrl
+     * @param save
+     * @return
+     */
     @Override
     public VirtualFile upload(InputStream is, String uploadType, String imageUrl, boolean save) {
         ApiClient apiClient = this.getApiClient(uploadType);
@@ -26,6 +34,13 @@ public class GlobalFileUploader extends BaseFileUploader implements FileUploader
         return this.saveFile(virtualFile, save, uploadType);
     }
 
+    /**
+     * 以file形式上传文件
+     * @param file
+     * @param uploadType
+     * @param save
+     * @return
+     */
     @Override
     public VirtualFile upload(File file, String uploadType, boolean save) {
         ApiClient apiClient = this.getApiClient(uploadType);
@@ -33,6 +48,13 @@ public class GlobalFileUploader extends BaseFileUploader implements FileUploader
         return this.saveFile(virtualFile, save, uploadType);
     }
 
+    /**
+     * 以MultipartFile形式上传文件
+     * @param file
+     * @param uploadType
+     * @param save
+     * @return
+     */
     @Override
     public VirtualFile upload(MultipartFile file, String uploadType, boolean save) {
         ApiClient apiClient = this.getApiClient(uploadType);
@@ -40,6 +62,12 @@ public class GlobalFileUploader extends BaseFileUploader implements FileUploader
         return this.saveFile(virtualFile, save, uploadType);
     }
 
+    /**
+     * 删除文件
+     * @param filePath
+     * @param uploadType
+     * @return
+     */
     @Override
     public boolean delete(String filePath, String uploadType) {
         if (StringUtils.isEmpty(filePath)) {

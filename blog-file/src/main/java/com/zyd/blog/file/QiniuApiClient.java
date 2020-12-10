@@ -27,18 +27,45 @@ import java.util.Date;
  */
 public class QiniuApiClient extends BaseApiClient {
 
+    /**
+     * 默认前缀
+     */
     private static final String DEFAULT_PREFIX = "oneblog/";
-
+    /**
+     * 账户AccessKey
+     */
     private String accessKey;
+    /**
+     * 账户密码
+     */
     private String secretKey;
+    /**
+     * 存储空间
+     */
     private String bucket;
+    /**
+     * 存储路径
+     */
     private String path;
+    /**
+     * 路径前缀
+     */
     private String pathPrefix;
 
     public QiniuApiClient() {
         super("七牛云");
     }
 
+    /**
+     * 初始化方法
+     *
+     * @param accessKey     账户AccessKey
+     * @param secretKey     账户密码
+     * @param bucketName    存储空间
+     * @param baseUrl       存储路径
+     * @param uploadType    上传类型
+     * @return
+     */
     public QiniuApiClient init(String accessKey, String secretKey, String bucketName, String baseUrl, String uploadType) {
         this.accessKey = accessKey;
         this.secretKey = secretKey;
@@ -66,8 +93,8 @@ public class QiniuApiClient extends BaseApiClient {
         //Zone.zone1:华北
         //Zone.zone2:华南
         //Zone.zoneNa0:北美
-        Configuration cfg = new Configuration(Region.autoRegion());
-        UploadManager uploadManager = new UploadManager(cfg);
+        Configuration cfg = new Configuration(Region.autoRegion());//存储对象地区自动设置
+        UploadManager uploadManager = new UploadManager(cfg);//创建上传对象
         try {
             Auth auth = Auth.create(this.accessKey, this.secretKey);
             String upToken = auth.uploadToken(this.bucket);
@@ -103,7 +130,7 @@ public class QiniuApiClient extends BaseApiClient {
         }
         Auth auth = Auth.create(this.accessKey, this.secretKey);
         Configuration config = new Configuration(Region.autoRegion());
-        BucketManager bucketManager = new BucketManager(auth, config);
+        BucketManager bucketManager = new BucketManager(auth, config);//创建存储对象
         try {
             Response re = bucketManager.delete(this.bucket, key);
             return re.isOK();
@@ -113,6 +140,9 @@ public class QiniuApiClient extends BaseApiClient {
         }
     }
 
+    /**
+     * 检查七牛云配置
+     */
     @Override
     public void check() {
         if (StringUtils.isNullOrEmpty(this.accessKey) || StringUtils.isNullOrEmpty(this.secretKey) || StringUtils.isNullOrEmpty(this.bucket)) {
@@ -120,6 +150,10 @@ public class QiniuApiClient extends BaseApiClient {
         }
     }
 
+    /**
+     * 返回存储路径
+     * @return
+     */
     public String getPath() {
         return this.path;
     }

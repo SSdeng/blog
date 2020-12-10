@@ -30,8 +30,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/type")
 public class RestTypeController {
     @Autowired
-    private BizTypeService typeService;
+    private BizTypeService typeService;//文章类型业务层
 
+    /**
+     * 文章类型分页显示
+     * @param vo 封装好的类型对象
+     * @return bootstrap table用到的返回json格式
+     */
     @RequiresPermissions("types")
     @PostMapping("/list")
     public PageResult list(TypeConditionVO vo) {
@@ -40,6 +45,11 @@ public class RestTypeController {
         return ResultUtil.tablePage(pageInfo);
     }
 
+    /**
+     * 添加分类
+     * @param type 类型
+     * @return JSON
+     */
     @RequiresPermissions("type:add")
     @PostMapping(value = "/add")
     @BussinessLog("添加分类")
@@ -48,6 +58,11 @@ public class RestTypeController {
         return ResultUtil.success("文章类型添加成功！新类型 - " + type.getName());
     }
 
+    /**
+     * 删除分类
+     * @param ids id
+     * @return JSON
+     */
     @RequiresPermissions(value = {"type:batchDelete", "type:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除分类")
@@ -61,6 +76,11 @@ public class RestTypeController {
         return ResultUtil.success("成功删除 [" + ids.length + "] 个文章类型");
     }
 
+    /**
+     * 获取分类详情
+     * @param id id
+     * @return JSON
+     */
     @RequiresPermissions("type:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取分类详情")
@@ -68,6 +88,11 @@ public class RestTypeController {
         return ResultUtil.success(null, this.typeService.getByPrimaryKey(id));
     }
 
+    /**
+     * 编辑分类
+     * @param type 类型
+     * @return JSON
+     */
     @RequiresPermissions("type:edit")
     @PostMapping("/edit")
     @BussinessLog("编辑分类")
@@ -81,11 +106,19 @@ public class RestTypeController {
         return ResultUtil.success(ResponseStatus.SUCCESS);
     }
 
+    /**
+     * 显示所有文章类型
+     * @return JSON
+     */
     @PostMapping("/listAll")
     public ResponseVO listType() {
         return ResultUtil.success(null, typeService.listTypeForMenu());
     }
 
+    /**
+     * 显示父类型
+     * @return JSON
+     */
     @PostMapping("/listParent")
     public ResponseVO listParent() {
         return ResultUtil.success(null, typeService.listParent());

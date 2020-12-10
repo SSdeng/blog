@@ -33,10 +33,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class RestUserController {
     @Autowired
-    private SysUserService userService;
+    private SysUserService userService;//用户业务层
     @Autowired
-    private SysUserRoleService userRoleService;
+    private SysUserRoleService userRoleService;//用户角色业务层
 
+    /**
+     * 用户分页
+     * @param vo 封装好的用户对象
+     * @return bootstrap table用到的返回json格式
+     */
     @RequiresPermissions("users")
     @PostMapping("/list")
     public PageResult list(UserConditionVO vo) {
@@ -51,7 +56,7 @@ public class RestUserController {
      * @param roleIds
      *         用户角色
      *         此处获取的参数的角色id是以 “,” 分隔的字符串
-     * @return
+     * @return JSON
      */
     @RequiresPermissions("user:allotRole")
     @PostMapping("/saveUserRoles")
@@ -64,6 +69,11 @@ public class RestUserController {
         return ResultUtil.success("成功");
     }
 
+    /**
+     * 添加用户
+     * @param user 用户
+     * @return JSON
+     */
     @RequiresPermissions("user:add")
     @PostMapping(value = "/add")
     @BussinessLog("添加用户")
@@ -82,6 +92,11 @@ public class RestUserController {
         }
     }
 
+    /**
+     * 删除用户
+     * @param ids id
+     * @return JSON
+     */
     @RequiresPermissions(value = {"user:batchDelete", "user:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除用户")
@@ -96,6 +111,11 @@ public class RestUserController {
         return ResultUtil.success("成功删除 [" + ids.length + "] 个用户");
     }
 
+    /**
+     * 获取用户详情
+     * @param id id
+     * @return JSON
+     */
     @RequiresPermissions("user:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取用户详情")
@@ -103,6 +123,11 @@ public class RestUserController {
         return ResultUtil.success(null, this.userService.getByPrimaryKey(id));
     }
 
+    /**
+     * 编辑用户
+     * @param user 用户
+     * @return JSON
+     */
     @RequiresPermissions("user:edit")
     @PostMapping("/edit")
     @BussinessLog("编辑用户")

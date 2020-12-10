@@ -26,18 +26,35 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Slf4j
 public class BraumIntercepter implements HandlerInterceptor {
+
     private static final int SUCCESS = 1;
+    /**
+     * Braum Web防护工具对象
+     *
+     * https://gitee.com/mybluedream/braum-spring-boot-starter
+     */
     @Autowired
     private BraumProcessor processor;
 
+    /**
+     * 拦截恶意请求
+     *
+     * @param request HTTP请求
+     * @param response HTTP响应
+     * @param handler
+     * @return
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        BraumResponse br = processor.process(request);
+
+        BraumResponse br = processor.process(request);//调用Braum进程判断请求
         if(br.getCode() == SUCCESS) {
             return true;
         }
         String errorMsg = String.format("第%s次被限制！", br.getLimitCount());
         log.warn(errorMsg);
+        //设置拦截响应报文
         if(RequestUtil.isAjax(request)) {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("text/html;charset=utf-8");

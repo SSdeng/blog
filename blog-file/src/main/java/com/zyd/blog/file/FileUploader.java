@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.InputStream;
 
 /**
+ * 文件上传接口
+ *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @website https://www.zhyd.me

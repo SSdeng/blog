@@ -34,20 +34,40 @@ import java.util.Date;
 @Order(1)
 public class ArticleLookAspects {
 
+    /**
+     * 文章浏览记录保存执行器
+     */
     @Autowired
     private ArticleLookTask task;
 
+    /**
+     * 设置匹配方法和切入点
+     *
+     *  格式：execution(modifiers-pattern? ret-type-pattern declaring-type-pattern? name-pattern(param-pattern)throws-pattern?)
+     * （1）execution(* *(..))
+     *  //表示匹配所有方法
+     * （2）execution(public * com. savage.service.UserService.*(..))
+     *  //表示匹配com.savage.server.UserService中所有的公有方法
+     * （3）execution(* com.savage.server..*.*(..))
+     *  //表示匹配com.savage.server包及其子包下的所有方法
+     */
     @Pointcut("execution(* com.zyd.blog.controller.RenderController.article(..))")
     public void pointcut() {
         // 切面切入点
     }
 
+    /**
+     * 切入前置通知
+     *
+     * @param joinPoint 切面方法对象
+     */
     @Before("pointcut()")
     public void doBefore(JoinPoint joinPoint) {
-        Object[] args = joinPoint.getArgs();
+        Object[] args = joinPoint.getArgs();//获取参数对象
         if (args != null && args.length > 0) {
-            String userIp = IpUtil.getRealIp(RequestHolder.getRequest());
-            Long articleId = (Long) args[1];
+            String userIp = IpUtil.getRealIp(RequestHolder.getRequest());//获取请求IP
+            Long articleId = (Long) args[1];//从参数对象中获取文章ID
+            //创建浏览记录对象并设置各项属性
             ArticleLook articleLook = new ArticleLook();
             articleLook.setArticleId(articleId);
             articleLook.setUserIp(userIp);
@@ -55,7 +75,7 @@ public class ArticleLookAspects {
             if (SessionUtil.getUser() != null) {
                 articleLook.setUserId(SessionUtil.getUser().getId());
             }
-            task.addLookRecordToQueue(articleLook);
+            task.addLookRecordToQueue(articleLook);//将包装好的浏览记录对象加入阻塞队列
         }
     }
 }

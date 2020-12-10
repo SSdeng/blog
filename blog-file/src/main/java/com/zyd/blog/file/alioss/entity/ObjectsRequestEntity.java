@@ -3,6 +3,8 @@ package com.zyd.blog.file.alioss.entity;
 import lombok.Data;
 
 /**
+ * 文件请求实体
+ *
  * https://help.aliyun.com/document_detail/32015.html?spm=5176.doc32021.6.665.PqGkRT
  *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
@@ -36,26 +38,56 @@ public class ObjectsRequestEntity {
      */
     private String encodingType;
 
+    /**
+     * 设置限定前缀
+     *
+     * @param prefix
+     * @return
+     */
     public ObjectsRequestEntity setPrefix(String prefix) {
         this.prefix = prefix;
         return this;
     }
 
+    /**
+     * 设置marker的值
+     *
+     * @param marker
+     * @return
+     */
     public ObjectsRequestEntity setMarker(String marker) {
         this.marker = marker;
         return this;
     }
 
+    /**
+     * 设置返回Objects最大数量
+     *
+     * @param maxKeys
+     * @return
+     */
     public ObjectsRequestEntity setMaxKeys(Integer maxKeys) {
         this.maxKeys = maxKeys;
         return this;
     }
 
+    /**
+     * 设置delimiter的值
+     *
+     * @param delimiter
+     * @return
+     */
     public ObjectsRequestEntity setDelimiter(String delimiter) {
         this.delimiter = delimiter;
         return this;
     }
 
+    /**
+     * 设置响应体中Object的编码方式
+     *
+     * @param encodingType
+     * @return
+     */
     public ObjectsRequestEntity setEncodingType(String encodingType) {
         this.encodingType = encodingType;
         return this;

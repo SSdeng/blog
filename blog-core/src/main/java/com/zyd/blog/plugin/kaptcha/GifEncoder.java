@@ -328,6 +328,8 @@ public class GifEncoder {
 
     /**
      * Returns index of palette color closest to c
+     * @param c
+     * @return
      */
     protected int findClosest(Color c) {
         if (colorTab == null) return -1;
@@ -374,6 +376,7 @@ public class GifEncoder {
 
     /**
      * Writes Graphic Control Extension
+     * @throws IOException
      */
     protected void writeGraphicCtrlExt() throws IOException {
         out.write(0x21); // extension introducer
@@ -405,6 +408,7 @@ public class GifEncoder {
 
     /**
      * Writes Image Descriptor
+     * @throws IOException
      */
     protected void writeImageDesc() throws IOException {
         out.write(0x2c); // image separator
@@ -428,6 +432,7 @@ public class GifEncoder {
 
     /**
      * Writes Logical Screen Descriptor
+     * @throws IOException
      */
     protected void writeLSD() throws IOException {
         // logical screen size
@@ -446,6 +451,7 @@ public class GifEncoder {
     /**
      * Writes Netscape application extension to define
      * repeat count.
+     * @throws IOException
      */
     protected void writeNetscapeExt() throws IOException {
         out.write(0x21); // extension introducer
@@ -460,6 +466,7 @@ public class GifEncoder {
 
     /**
      * Writes color table
+     * @throws IOException
      */
     protected void writePalette() throws IOException {
         out.write(colorTab, 0, colorTab.length);
@@ -471,6 +478,7 @@ public class GifEncoder {
 
     /**
      * Encodes and writes pixel data
+     * @throws IOException
      */
     protected void writePixels() throws IOException {
         Encoder encoder = new Encoder(width, height, indexedPixels, colorDepth);
@@ -479,6 +487,8 @@ public class GifEncoder {
 
     /**
      * Write 16-bit value to output stream, LSB first
+     * @param value
+     * @throws IOException
      */
     protected void writeShort(int value) throws IOException {
         out.write(value & 0xff);
@@ -487,6 +497,8 @@ public class GifEncoder {
 
     /**
      * Writes string to output stream
+     * @param s
+     * @throws IOException
      */
     protected void writeString(String s) throws IOException {
         for (int i = 0; i < s.length(); i++) {

@@ -34,31 +34,44 @@ import java.util.Map;
  */
 @Controller
 public class RenderController {
+
     /**
      * sidebar部分的推荐、近期和随机tab页中显示的文章数
      */
     private static final int SIDEBAR_ARTICLE_SIZE = 8;
     private static final String INDEX_URL = "index";
 
+    /**
+     * 文章列表
+     */
     @Autowired
     private BizArticleService bizArticleService;
+    /**
+     * 归档目录
+     */
     @Autowired
     private BizArticleArchivesService bizArticleArchivesService;
+    /**
+     * 友情链接
+     */
     @Autowired
     private SysLinkService sysLinkService;
+    /**
+     * 更新服务记录
+     */
     @Autowired
     private SysUpdateRecordeService updateRecordeService;
 
     /**
      * 加载首页的数据
      *
-     * @param vo
+     * @param vo 文章属性对象
      * @param model
      * @return
      */
     private void loadIndexPage(ArticleConditionVO vo, Model model) {
         vo.setStatus(ArticleStatusEnum.PUBLISHED.getCode());
-        PageInfo<Article> pageInfo = bizArticleService.findPageBreakByCondition(vo);
+        PageInfo<Article> pageInfo = bizArticleService.findPageBreakByCondition(vo);//分页查询处理
         model.addAttribute("page", pageInfo);
         model.addAttribute("model", vo);
         model.addAttribute("indexLinkList", sysLinkService.listOfIndex());
@@ -67,7 +80,7 @@ public class RenderController {
     /**
      * 首页
      *
-     * @param vo
+     * @param vo 文章属性对象
      * @param model
      * @return
      */
@@ -75,7 +88,7 @@ public class RenderController {
     @BussinessLog(value = "进入首页", platform = PlatformEnum.WEB)
     public ModelAndView home(ArticleConditionVO vo, Model model) {
         model.addAttribute("url", INDEX_URL);
-        loadIndexPage(vo, model);
+        loadIndexPage(vo, model);//加载首页内容
 
         return ResultUtil.view(INDEX_URL);
     }
@@ -83,8 +96,8 @@ public class RenderController {
     /**
      * 首页（分页）
      *
-     * @param pageNumber
-     * @param vo
+     * @param pageNumber 首页页码
+     * @param vo 文章属性对象
      * @param model
      * @return
      */
@@ -93,7 +106,7 @@ public class RenderController {
     public ModelAndView type(@PathVariable("pageNumber") Integer pageNumber, ArticleConditionVO vo, Model model) {
         vo.setPageNumber(pageNumber);
         model.addAttribute("url", INDEX_URL);
-        loadIndexPage(vo, model);
+        loadIndexPage(vo, model);//加载指定页内容
 
         return ResultUtil.view(INDEX_URL);
     }
@@ -101,7 +114,7 @@ public class RenderController {
     /**
      * 分类列表
      *
-     * @param typeId
+     * @param typeId 文章类别ID
      * @param model
      * @return
      */
@@ -111,7 +124,7 @@ public class RenderController {
         ArticleConditionVO vo = new ArticleConditionVO();
         vo.setTypeId(typeId);
         model.addAttribute("url", "type/" + typeId);
-        loadIndexPage(vo, model);
+        loadIndexPage(vo, model);//加载指定类别内容
 
         return ResultUtil.view(INDEX_URL);
     }
@@ -119,8 +132,8 @@ public class RenderController {
     /**
      * 分类列表（分页）
      *
-     * @param typeId
-     * @param pageNumber
+     * @param typeId 文章类别ID
+     * @param pageNumber 列表页码
      * @param model
      * @return
      */
@@ -131,7 +144,7 @@ public class RenderController {
         vo.setTypeId(typeId);
         vo.setPageNumber(pageNumber);
         model.addAttribute("url", "type/" + typeId);
-        loadIndexPage(vo, model);
+        loadIndexPage(vo, model);//加载指定类别指定页内容
 
         return ResultUtil.view(INDEX_URL);
     }
@@ -139,7 +152,7 @@ public class RenderController {
     /**
      * 标签列表
      *
-     * @param tagId
+     * @param tagId 标签ID
      * @param model
      * @return
      */
@@ -149,7 +162,7 @@ public class RenderController {
         ArticleConditionVO vo = new ArticleConditionVO();
         vo.setTagId(tagId);
         model.addAttribute("url", "tag/" + tagId);
-        loadIndexPage(vo, model);
+        loadIndexPage(vo, model);//加载指定标签内容
 
         return ResultUtil.view(INDEX_URL);
     }
@@ -157,8 +170,8 @@ public class RenderController {
     /**
      * 标签列表（分页）
      *
-     * @param tagId
-     * @param pageNumber
+     * @param tagId 标签ID
+     * @param pageNumber 列表页码
      * @param model
      * @return
      */
@@ -169,7 +182,7 @@ public class RenderController {
         vo.setTagId(tagId);
         vo.setPageNumber(pageNumber);
         model.addAttribute("url", "tag/" + tagId);
-        loadIndexPage(vo, model);
+        loadIndexPage(vo, model);//加载指定标签指定页内容
 
         return ResultUtil.view(INDEX_URL);
     }
@@ -178,7 +191,7 @@ public class RenderController {
      * 文章详情
      *
      * @param model
-     * @param articleId
+     * @param articleId 文章ID
      * @return
      */
     @GetMapping("/article/{articleId}")

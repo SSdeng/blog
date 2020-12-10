@@ -20,9 +20,9 @@ import java.io.*;
 public class ImageUtil {
 
     /**
-     * 获取图片信息
+     * 通过File对象获取图片信息
      *
-     * @param file
+     * @param file File对象
      * @throws IOException
      */
     public static VirtualFile getInfo(File file) {
@@ -41,9 +41,9 @@ public class ImageUtil {
     }
 
     /**
-     * 获取图片信息
+     * 根据MultipartFile对象获取图片信息
      *
-     * @param multipartFile
+     * @param multipartFile MultipartFile对象
      * @throws IOException
      */
     public static VirtualFile getInfo(MultipartFile multipartFile) {
@@ -62,9 +62,9 @@ public class ImageUtil {
     }
 
     /**
-     * 获取图片信息
+     * 根据输入流获取图片信息
      *
-     * @param inputStream
+     * @param inputStream 要提取的文件输入流
      * @throws IOException
      */
     public static VirtualFile getInfo(InputStream inputStream) {
