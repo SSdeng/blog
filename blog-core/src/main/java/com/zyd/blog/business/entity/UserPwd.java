@@ -12,6 +12,11 @@ import javax.validation.constraints.NotNull;
  * @website https://www.zhyd.me
  * @date 2018/6/6 16:34
  * @since 1.0
+ *
+ *
+ * Date注解相当于@Getter @Setter @RequiredArgsConstructor @ToString @EqualsAndHashCode这5个注解的合集。
+ * 让其生成的方法中调用父类的方法。
+ * 当parent是Object（即无parent）时，不要使用@EqualsAndHashCode注解（也就是默认值false），当parent是自定义类时，应该使用true
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
