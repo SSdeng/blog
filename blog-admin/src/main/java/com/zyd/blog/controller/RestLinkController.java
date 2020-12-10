@@ -39,8 +39,8 @@ public class RestLinkController {
 
     /**
      * 链接分页
-     * @param vo
-     * @return
+     * @param vo 封装好的链接对象
+     * @return bootstrap table用到的返回json格式
      */
     @RequiresPermissions("links")
     @PostMapping("/list")
@@ -51,8 +51,8 @@ public class RestLinkController {
 
     /**
      * 添加友情链接
-     * @param link
-     * @return
+     * @param link 链接
+     * @return JSON
      */
     @RequiresPermissions("link:add")
     @PostMapping(value = "/add")
@@ -66,8 +66,8 @@ public class RestLinkController {
 
     /**
      * 删除友情链接
-     * @param ids
-     * @return
+     * @param ids id
+     * @return JSON
      */
     @RequiresPermissions(value = {"link:batchDelete", "link:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
@@ -84,8 +84,8 @@ public class RestLinkController {
 
     /**
      * 获取友情链接详情
-     * @param id
-     * @return
+     * @param id id
+     * @return JSON
      */
     @RequiresPermissions("link:get")
     @PostMapping("/get/{id}")
@@ -96,8 +96,8 @@ public class RestLinkController {
 
     /**
      * 编辑友情链接
-     * @param link
-     * @return
+     * @param link 链接
+     * @return JSON
      */
     @RequiresPermissions("link:edit")
     @PostMapping("/edit")

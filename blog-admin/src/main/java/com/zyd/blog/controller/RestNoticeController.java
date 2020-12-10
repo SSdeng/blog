@@ -38,8 +38,8 @@ public class RestNoticeController {
 
     /**
      * 通知分页
-     * @param vo
-     * @return
+     * @param vo 封装好的公告对象
+     * @return bootstrap table用到的返回json格式
      */
     @RequiresPermissions("notices")
     @PostMapping("/list")
@@ -50,8 +50,8 @@ public class RestNoticeController {
 
     /**
      * 添加公告通知
-     * @param notice
-     * @return
+     * @param notice 公告
+     * @return JSON
      */
     @RequiresPermissions("notice:add")
     @PostMapping(value = "/add")
@@ -67,8 +67,8 @@ public class RestNoticeController {
 
     /**
      * 删除公告通知
-     * @param ids
-     * @return
+     * @param ids id
+     * @return JSON
      */
     @RequiresPermissions(value = {"notice:batchDelete", "notice:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
@@ -85,8 +85,8 @@ public class RestNoticeController {
 
     /**
      * 获取公告通知详情
-     * @param id
-     * @return
+     * @param id id
+     * @return JSON
      */
     @RequiresPermissions("notice:get")
     @PostMapping("/get/{id}")
@@ -97,8 +97,8 @@ public class RestNoticeController {
 
     /**
      * 编辑公告通知
-     * @param notice
-     * @return
+     * @param notice 公告
+     * @return JSON
      */
     @RequiresPermissions("notice:edit")
     @PostMapping("/edit")
@@ -115,8 +115,8 @@ public class RestNoticeController {
 
     /**
      * 发布公告通知
-     * @param id
-     * @return
+     * @param id id
+     * @return JSON
      */
     @RequiresPermissions("notice:release")
     @PostMapping("/release/{id}")
@@ -136,8 +136,8 @@ public class RestNoticeController {
 
     /**
      * 撤回公告通知
-     * @param id
-     * @return
+     * @param id id
+     * @return JSON
      */
     @RequiresPermissions("notice:withdraw")
     @PostMapping("/withdraw/{id}")

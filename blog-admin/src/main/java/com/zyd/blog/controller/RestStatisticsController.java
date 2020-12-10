@@ -28,7 +28,7 @@ public class RestStatisticsController {
 
     /**
      * 获取网站信息
-     * @return
+     * @return JSON
      */
     @RequestMapping("/siteInfo")
     public ResponseVO getSiteInfo(){
@@ -37,7 +37,7 @@ public class RestStatisticsController {
 
     /**
      * 获取爬虫统计
-     * @return
+     * @return JSON
      */
     @RequestMapping("/listSpider")
     public ResponseVO listSpider(){
@@ -46,7 +46,7 @@ public class RestStatisticsController {
 
     /**
      * 获取文章分类统计
-     * @return
+     * @return JSON
      */
     @RequestMapping("/listType")
     public ResponseVO listType(){

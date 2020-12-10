@@ -39,8 +39,8 @@ public class RestUserController {
 
     /**
      * 用户分页
-     * @param vo
-     * @return
+     * @param vo 封装好的用户对象
+     * @return bootstrap table用到的返回json格式
      */
     @RequiresPermissions("users")
     @PostMapping("/list")
@@ -56,7 +56,7 @@ public class RestUserController {
      * @param roleIds
      *         用户角色
      *         此处获取的参数的角色id是以 “,” 分隔的字符串
-     * @return
+     * @return JSON
      */
     @RequiresPermissions("user:allotRole")
     @PostMapping("/saveUserRoles")
@@ -71,8 +71,8 @@ public class RestUserController {
 
     /**
      * 添加用户
-     * @param user
-     * @return
+     * @param user 用户
+     * @return JSON
      */
     @RequiresPermissions("user:add")
     @PostMapping(value = "/add")
@@ -94,8 +94,8 @@ public class RestUserController {
 
     /**
      * 删除用户
-     * @param ids
-     * @return
+     * @param ids id
+     * @return JSON
      */
     @RequiresPermissions(value = {"user:batchDelete", "user:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
@@ -113,8 +113,8 @@ public class RestUserController {
 
     /**
      * 获取用户详情
-     * @param id
-     * @return
+     * @param id id
+     * @return JSON
      */
     @RequiresPermissions("user:get")
     @PostMapping("/get/{id}")
@@ -125,8 +125,8 @@ public class RestUserController {
 
     /**
      * 编辑用户
-     * @param user
-     * @return
+     * @param user 用户
+     * @return JSON
      */
     @RequiresPermissions("user:edit")
     @PostMapping("/edit")

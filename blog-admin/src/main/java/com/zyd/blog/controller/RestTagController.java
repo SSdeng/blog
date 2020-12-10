@@ -34,8 +34,8 @@ public class RestTagController {
 
     /**
      * 标签分页
-     * @param vo
-     * @return
+     * @param vo 封装好的标签对象
+     * @return bootstrap table用到的返回json格式
      */
     @RequiresPermissions("tags")
     @PostMapping("/list")
@@ -46,8 +46,8 @@ public class RestTagController {
 
     /**
      * 添加标签
-     * @param tags
-     * @return
+     * @param tags 标签
+     * @return JSON
      */
     @RequiresPermissions("tag:add")
     @PostMapping(value = "/add")
@@ -59,8 +59,8 @@ public class RestTagController {
 
     /**
      * 删除标签
-     * @param ids
-     * @return
+     * @param ids id
+     * @return JSON
      */
     @RequiresPermissions(value = {"tag:batchDelete", "tag:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
@@ -77,8 +77,8 @@ public class RestTagController {
 
     /**
      * 获取标签详情
-     * @param id
-     * @return
+     * @param id id
+     * @return JSON
      */
     @RequiresPermissions("tag:get")
     @PostMapping("/get/{id}")
@@ -89,8 +89,8 @@ public class RestTagController {
 
     /**
      * 编辑标签
-     * @param tags
-     * @return
+     * @param tags 标签
+     * @return JSON
      */
     @RequiresPermissions("tag:edit")
     @PostMapping("/edit")
@@ -107,7 +107,7 @@ public class RestTagController {
 
     /**
      * 显示所有标签
-     * @return
+     * @return JSON
      */
     @PostMapping("/listAll")
     public ResponseVO list() {

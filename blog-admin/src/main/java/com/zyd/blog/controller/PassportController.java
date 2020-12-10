@@ -58,8 +58,8 @@ public class PassportController {
     /**
      * 登录
      *
-     * @param username
-     * @param password
+     * @param username 用户名
+     * @param password 密码
      * @return
      */
     @BussinessLog("[{1}]登录系统")
@@ -101,7 +101,7 @@ public class PassportController {
     /**
      * 修改密码
      *
-     * @return
+     * @return JSON
      */
     @BussinessLog("修改密码")
     @PostMapping("/updatePwd")
@@ -120,8 +120,8 @@ public class PassportController {
     /**
      * 使用权限管理工具进行用户的退出，跳出登录，给出提示信息
      *
-     * @param redirectAttributes
-     * @return
+     * @param redirectAttributes 跳转属性
+     * @return JSON
      */
     @BussinessLog("退出系统")
     @GetMapping("/logout")

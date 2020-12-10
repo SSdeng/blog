@@ -35,9 +35,9 @@ public class RestRemoverController {
 
     /**
      * 运行文章搬运工
-     * @param typeId
-     * @param config
-     * @param response
+     * @param typeId 类型id
+     * @param config 配置
+     * @param response http响应
      * @throws IOException
      * @throws InterruptedException
      */
@@ -50,7 +50,7 @@ public class RestRemoverController {
 
     /**
      * 停止文章搬运工
-     * @return
+     * @return JSON
      */
     @PostMapping("/stop")
     @ResponseBody
@@ -66,10 +66,10 @@ public class RestRemoverController {
 
     /**
      * 抓取单个文章
-     * @param typeId
-     * @param url
-     * @param convertImg
-     * @param response
+     * @param typeId 类型id
+     * @param url 链接
+     * @param convertImg 图片
+     * @param response http响应
      * @throws IOException
      * @throws InterruptedException
      */

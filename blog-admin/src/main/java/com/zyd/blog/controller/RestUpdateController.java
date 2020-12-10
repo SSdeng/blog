@@ -34,8 +34,8 @@ public class RestUpdateController {
 
     /**
      * 更新日志分页
-     * @param vo
-     * @return
+     * @param vo 封装好的更新日志对象
+     * @return bootstrap table用到的返回json格式
      */
     @RequiresPermissions("updateLogs")
     @PostMapping("/list")
@@ -46,8 +46,8 @@ public class RestUpdateController {
 
     /**
      * 添加更新日志
-     * @param updateRecorde
-     * @return
+     * @param updateRecorde 更新日志
+     * @return JSON
      */
     @RequiresPermissions("updateLog:add")
     @PostMapping(value = "/add")
@@ -59,8 +59,8 @@ public class RestUpdateController {
 
     /**
      * 删除更新日志
-     * @param ids
-     * @return
+     * @param ids id
+     * @return JSON
      */
     @RequiresPermissions(value = {"updateLog:batchDelete", "updateLog:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
@@ -77,8 +77,8 @@ public class RestUpdateController {
 
     /**
      * 获取更新日志详情
-     * @param id
-     * @return
+     * @param id id
+     * @return JSON
      */
     @RequiresPermissions("updateLog:get")
     @PostMapping("/get/{id}")
@@ -89,8 +89,8 @@ public class RestUpdateController {
 
     /**
      * 编辑更新日志
-     * @param updateRecorde
-     * @return
+     * @param updateRecorde 更新日志
+     * @return JSON
      */
     @RequiresPermissions("updateLog:edit")
     @PostMapping("/edit")

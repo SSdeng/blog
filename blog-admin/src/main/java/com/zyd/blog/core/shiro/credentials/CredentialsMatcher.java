@@ -20,7 +20,7 @@ public class CredentialsMatcher extends SimpleCredentialsMatcher {
      * 执行密码的匹配验证
      * @param token
      * @param info
-     * @return
+     * @return 是否正确
      */
     @Override
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {

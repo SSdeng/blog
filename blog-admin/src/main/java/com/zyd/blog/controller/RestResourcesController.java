@@ -40,8 +40,8 @@ public class RestResourcesController {
 
     /**
      * 资源分页
-     * @param vo
-     * @return
+     * @param vo 封装好的资源对象
+     * @return bootstrap table用到的返回json格式
      */
     @RequiresPermissions("resources")
     @PostMapping("/list")
@@ -53,8 +53,8 @@ public class RestResourcesController {
 
     /**
      * 显示选择的资源列表
-     * @param rid
-     * @return
+     * @param rid 资源id
+     * @return JSON
      */
     @RequiresPermissions("role:allotResource")
     @PostMapping("/resourcesWithSelected")
@@ -64,8 +64,8 @@ public class RestResourcesController {
 
     /**
      * 添加资源
-     * @param resources
-     * @return
+     * @param resources 资源
+     * @return JSON
      */
     @RequiresPermissions("resource:add")
     @PostMapping(value = "/add")
@@ -79,8 +79,8 @@ public class RestResourcesController {
 
     /**
      * 删除资源
-     * @param ids
-     * @return
+     * @param ids id
+     * @return JSON
      */
     @RequiresPermissions(value = {"resource:batchDelete", "resource:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
@@ -100,8 +100,8 @@ public class RestResourcesController {
 
     /**
      * 获取资源详情
-     * @param id
-     * @return
+     * @param id id
+     * @return JSON
      */
     @RequiresPermissions("resource:get")
     @PostMapping("/get/{id}")
@@ -112,8 +112,8 @@ public class RestResourcesController {
 
     /**
      * 编辑资源
-     * @param resources
-     * @return
+     * @param resources 资源
+     * @return JSON
      */
     @RequiresPermissions("resource:edit")
     @PostMapping("/edit")

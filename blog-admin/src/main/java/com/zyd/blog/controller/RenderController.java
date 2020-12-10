@@ -51,7 +51,7 @@ public class RenderController {
 
     /**
      * 进入首页
-     * @return
+     * @return ModelAndView
      */
     @RequiresAuthentication
     @BussinessLog("进入首页")
@@ -62,7 +62,7 @@ public class RenderController {
 
     /**
      * 进入用户列表页
-     * @return
+     * @return ModelAndView
      */
     @RequiresPermissions("users")
     @BussinessLog("进入用户列表页")
@@ -73,7 +73,7 @@ public class RenderController {
 
     /**
      * 进入资源列表页
-     * @return
+     * @return ModelAndView
      */
     @RequiresPermissions("resources")
     @BussinessLog("进入资源列表页")
@@ -84,7 +84,7 @@ public class RenderController {
 
     /**
      * 进入角色列表页
-     * @return
+     * @return ModelAndView
      */
     @RequiresPermissions("roles")
     @BussinessLog("进入角色列表页")
@@ -95,7 +95,7 @@ public class RenderController {
 
     /**
      * 进入文章列表页
-     * @return
+     * @return ModelAndView
      */
     @RequiresPermissions("articles")
     @BussinessLog("进入文章列表页")
@@ -106,7 +106,7 @@ public class RenderController {
 
     /**
      * 进入发表文章页，html形式
-     * @return
+     * @return ModelAndView
      */
     @RequiresPermissions("article:publish")
     @BussinessLog(value = "进入发表文章页[html]")
@@ -117,7 +117,7 @@ public class RenderController {
 
     /**
      * 进入发表文章页 markdown形式
-     * @return
+     * @return ModelAndView
      */
     @RequiresPermissions("article:publish")
     @BussinessLog(value = "进入发表文章页[markdown]")
@@ -130,7 +130,7 @@ public class RenderController {
      * 进入修改文章页
      * @param id
      * @param model
-     * @return
+     * @return ModelAndView
      */
     @RequiresPermissions("article:publish")
     @BussinessLog(value = "进入修改文章页[id={1}]")
@@ -146,7 +146,7 @@ public class RenderController {
 
     /**
      * 进入分类列表页
-     * @return
+     * @return ModelAndView
      */
     @RequiresPermissions("types")
     @BussinessLog("进入分类列表页")
@@ -157,7 +157,7 @@ public class RenderController {
 
     /**
      * 进入标签列表页
-     * @return
+     * @return ModelAndView
      */
     @RequiresPermissions("tags")
     @BussinessLog("进入标签列表页")
@@ -168,7 +168,7 @@ public class RenderController {
 
     /**
      * 进入链接页
-     * @return
+     * @return ModelAndView
      */
     @RequiresPermissions("links")
     @BussinessLog("进入链接页")
@@ -179,7 +179,7 @@ public class RenderController {
 
     /**
      * 进入评论页
-     * @return
+     * @return ModelAndView
      */
     @RequiresPermissions("comments")
     @BussinessLog("进入评论页")
@@ -190,7 +190,7 @@ public class RenderController {
 
     /**
      * 进入系统通知页
-     * @return
+     * @return ModelAndView
      */
     @RequiresPermissions("notices")
     @BussinessLog("进入系统通知页")
@@ -201,7 +201,7 @@ public class RenderController {
 
     /**
      * 进入系统配置页
-     * @return
+     * @return ModelAndView
      */
     @RequiresRoles("role:root")
     @BussinessLog("进入系统配置页")
@@ -212,7 +212,7 @@ public class RenderController {
 
     /**
      * 进入模板管理页
-     * @return
+     * @return ModelAndView
      */
     @RequiresPermissions("templates")
     @BussinessLog("进入模板管理页")
@@ -223,7 +223,7 @@ public class RenderController {
 
     /**
      * 进入更新记录管理页
-     * @return
+     * @return ModelAndView
      */
     @RequiresPermissions("updateLogs")
     @BussinessLog("进入更新记录管理页")
@@ -234,8 +234,8 @@ public class RenderController {
 
     /**
      * 进入icons页
-     * @param model
-     * @return
+     * @param model model
+     * @return ModelAndView
      */
     @RequiresPermissions("icons")
     @BussinessLog(value = "进入icons页")
@@ -246,8 +246,8 @@ public class RenderController {
 
     /**
      * 进入shiro示例页
-     * @param model
-     * @return
+     * @param model model
+     * @return ModelAndView
      */
     @RequiresPermissions("shiro")
     @BussinessLog(value = "进入shiro示例页")
@@ -258,8 +258,8 @@ public class RenderController {
 
     /**
      * 进入编辑器测试用例页面
-     * @param model
-     * @return
+     * @param model model
+     * @return ModelAndView
      */
     @RequiresUser
     @BussinessLog("进入编辑器测试用例页面")
@@ -270,8 +270,8 @@ public class RenderController {
 
     /**
      * 进入通知管理页
-     * @param model
-     * @return
+     * @param model model
+     * @return ModelAndView
      */
     @RequiresPermissions("notice")
     @BussinessLog("进入通知管理页")

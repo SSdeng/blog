@@ -34,8 +34,8 @@ public class RestTypeController {
 
     /**
      * 文章类型分页显示
-     * @param vo
-     * @return
+     * @param vo 封装好的类型对象
+     * @return bootstrap table用到的返回json格式
      */
     @RequiresPermissions("types")
     @PostMapping("/list")
@@ -47,8 +47,8 @@ public class RestTypeController {
 
     /**
      * 添加分类
-     * @param type
-     * @return
+     * @param type 类型
+     * @return JSON
      */
     @RequiresPermissions("type:add")
     @PostMapping(value = "/add")
@@ -60,8 +60,8 @@ public class RestTypeController {
 
     /**
      * 删除分类
-     * @param ids
-     * @return
+     * @param ids id
+     * @return JSON
      */
     @RequiresPermissions(value = {"type:batchDelete", "type:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
@@ -78,8 +78,8 @@ public class RestTypeController {
 
     /**
      * 获取分类详情
-     * @param id
-     * @return
+     * @param id id
+     * @return JSON
      */
     @RequiresPermissions("type:get")
     @PostMapping("/get/{id}")
@@ -90,8 +90,8 @@ public class RestTypeController {
 
     /**
      * 编辑分类
-     * @param type
-     * @return
+     * @param type 类型
+     * @return JSON
      */
     @RequiresPermissions("type:edit")
     @PostMapping("/edit")
@@ -108,7 +108,7 @@ public class RestTypeController {
 
     /**
      * 显示所有文章类型
-     * @return
+     * @return JSON
      */
     @PostMapping("/listAll")
     public ResponseVO listType() {
@@ -117,7 +117,7 @@ public class RestTypeController {
 
     /**
      * 显示父类型
-     * @return
+     * @return JSON
      */
     @PostMapping("/listParent")
     public ResponseVO listParent() {

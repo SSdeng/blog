@@ -43,8 +43,8 @@ public class RestRoleController {
 
     /**
      * 系统角色分页
-     * @param vo
-     * @return
+     * @param vo 封装好的角色对象
+     * @return bootstrap table用到的返回json格式
      */
     @RequiresPermissions("roles")
     @PostMapping("/list")
@@ -55,8 +55,8 @@ public class RestRoleController {
 
     /**
      * 显示选择的角色列表
-     * @param uid
-     * @return
+     * @param uid 用户id
+     * @return JSON
      */
     @RequiresPermissions("user:allotRole")
     @PostMapping("/rolesWithSelected")
@@ -66,9 +66,9 @@ public class RestRoleController {
 
     /**
      * 分配角色拥有的资源
-     * @param roleId
-     * @param resourcesId
-     * @return
+     * @param roleId 角色id
+     * @param resourcesId 资源id
+     * @return JSON
      */
     @RequiresPermissions("role:allotResource")
     @PostMapping("/saveRoleResources")
@@ -85,8 +85,8 @@ public class RestRoleController {
 
     /**
      * 添加角色
-     * @param role
-     * @return
+     * @param role 角色
+     * @return JSON
      */
     @RequiresPermissions("role:add")
     @PostMapping(value = "/add")
@@ -98,8 +98,8 @@ public class RestRoleController {
 
     /**
      * 删除角色
-     * @param ids
-     * @return
+     * @param ids id
+     * @return JSON
      */
     @RequiresPermissions(value = {"role:batchDelete", "role:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
@@ -117,8 +117,8 @@ public class RestRoleController {
 
     /**
      * 获取角色详情
-     * @param id
-     * @return
+     * @param id id
+     * @return JSON
      */
     @RequiresPermissions("role:get")
     @PostMapping("/get/{id}")
@@ -129,8 +129,8 @@ public class RestRoleController {
 
     /**
      * 编辑角色
-     * @param role
-     * @return
+     * @param role 角色
+     * @return JSON
      */
     @RequiresPermissions("role:edit")
     @PostMapping("/edit")

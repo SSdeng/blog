@@ -47,8 +47,8 @@ public class RestArticleController {
 
     /**
      * 文章分页
-     * @param vo
-     * @return
+     * @param vo 封装好的文章对象
+     * @return bootstrap table用到的返回json格式
      */
     @RequiresPermissions("articles")
     @PostMapping("/list")
@@ -59,8 +59,8 @@ public class RestArticleController {
 
     /**
      * 删除文章
-     * @param ids
-     * @return
+     * @param ids id
+     * @return JSON
      */
     @RequiresPermissions(value = {"article:batchDelete", "article:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
@@ -77,8 +77,8 @@ public class RestArticleController {
 
     /**
      * 获取文章详情
-     * @param id
-     * @return
+     * @param id id
+     * @return JSON
      */
     @RequiresPermissions("article:get")
     @PostMapping("/get/{id}")
@@ -89,10 +89,10 @@ public class RestArticleController {
 
     /**
      * 发布文章
-     * @param article
-     * @param tags
-     * @param file
-     * @return
+     * @param article 文章
+     * @param tags 标签
+     * @param file 文件
+     * @return JSON
      */
     @RequiresPermissions(value = {"article:edit", "article:publish"}, logical = Logical.OR)
     @PostMapping("/save")
@@ -104,9 +104,9 @@ public class RestArticleController {
 
     /**
      * 修改文章的状态
-     * @param type
-     * @param id
-     * @return
+     * @param type 要修改的文章状态
+     * @param id 要修改的文章id
+     * @return JSON
      */
     @RequiresPermissions(value = {"article:top", "article:recommend"}, logical = Logical.OR)
     @PostMapping("/update/{type}")
@@ -118,9 +118,9 @@ public class RestArticleController {
 
     /**
      * 推送文章到百度站长平台
-     * @param type
-     * @param ids
-     * @return
+     * @param type 文章的状态
+     * @param ids 文章的id
+     * @return JSON
      */
     @RequiresPermissions(value = {"article:batchPush", "article:push"}, logical = Logical.OR)
     @PostMapping(value = "/pushToBaidu/{type}")
@@ -149,8 +149,8 @@ public class RestArticleController {
 
     /**
      * 批量发布文章
-     * @param ids
-     * @return
+     * @param ids 文章的id
+     * @return JSON
      */
     @RequiresPermissions(value = {"article:publish"}, logical = Logical.OR)
     @PostMapping(value = "/batchPublish")

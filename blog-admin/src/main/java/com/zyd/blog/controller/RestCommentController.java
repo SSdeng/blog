@@ -41,8 +41,8 @@ public class RestCommentController {
 
     /**
      * 评论分页
-     * @param vo
-     * @return
+     * @param vo 封装好的评论对象
+     * @return bootstrap table用到的返回json格式
      */
     @RequiresPermissions("comments")
     @PostMapping("/list")
@@ -53,8 +53,8 @@ public class RestCommentController {
 
     /**
      * 回复评论
-     * @param comment
-     * @return
+     * @param comment 评论
+     * @return JSON
      */
     @RequiresPermissions("comment:reply")
     @PostMapping(value = "/reply")
@@ -70,8 +70,8 @@ public class RestCommentController {
 
     /**
      * 删除评论
-     * @param ids
-     * @return
+     * @param ids id
+     * @return JSON
      */
     @RequiresPermissions(value = {"comment:batchDelete", "comment:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
@@ -88,8 +88,8 @@ public class RestCommentController {
 
     /**
      * 获取评论详情
-     * @param id
-     * @return
+     * @param id id
+     * @return JSON
      */
     @RequiresPermissions("comments")
     @PostMapping("/get/{id}")
@@ -100,8 +100,8 @@ public class RestCommentController {
 
     /**
      * 编辑评论
-     * @param comment
-     * @return
+     * @param comment 评论
+     * @return JSON
      */
     @RequiresPermissions("comments")
     @PostMapping("/edit")
@@ -118,10 +118,10 @@ public class RestCommentController {
 
     /**
      * 审核评论
-     * @param comment
-     * @param contentText
-     * @param sendEmail
-     * @return
+     * @param comment 评论
+     * @param contentText 内容
+     * @param sendEmail 是否发送邮件
+     * @return JSON
      */
     @RequiresPermissions("comment:audit")
     @PostMapping("/audit")
@@ -147,8 +147,8 @@ public class RestCommentController {
     /**
      * 正在审核的评论列表
      *
-     * @param comment
-     * @return
+     * @param comment 评论
+     * @return JSON
      */
     @RequiresUser
     @PostMapping("/listVerifying")

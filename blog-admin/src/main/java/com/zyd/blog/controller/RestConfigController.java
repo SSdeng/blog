@@ -31,7 +31,7 @@ public class RestConfigController {
 
     /**
      * 将配置封装为ResponseVO对象并返回
-     * @return
+     * @return JSON
      */
     @RequiresRoles("role:root")
     @PostMapping("/get")
@@ -41,10 +41,10 @@ public class RestConfigController {
 
     /**
      * 修改系统配置
-     * @param configs
-     * @param wxPraiseCode
-     * @param zfbPraiseCode
-     * @return
+     * @param configs 配置map
+     * @param wxPraiseCode  微信付款码
+     * @param zfbPraiseCode 支付宝付款码
+     * @return JSON
      */
     @RequiresRoles("role:root")
     @PostMapping("/save")

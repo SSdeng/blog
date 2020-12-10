@@ -34,8 +34,8 @@ public class RestTemplateController {
 
     /**
      * 模板分页
-     * @param vo
-     * @return
+     * @param vo 封装好的模板对象
+     * @return bootstrap table用到的返回json格式
      */
     @RequiresPermissions("templates")
     @PostMapping("/list")
@@ -46,8 +46,8 @@ public class RestTemplateController {
 
     /**
      * 添加模板
-     * @param template
-     * @return
+     * @param template 模板
+     * @return JSON
      */
     @RequiresPermissions("template:add")
     @PostMapping(value = "/add")
@@ -59,8 +59,8 @@ public class RestTemplateController {
 
     /**
      * 删除模板
-     * @param ids
-     * @return
+     * @param ids id
+     * @return JSON
      */
     @RequiresPermissions(value = {"template:batchDelete", "template:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
@@ -77,8 +77,8 @@ public class RestTemplateController {
 
     /**
      * 获取模板详情
-     * @param id
-     * @return
+     * @param id id
+     * @return JSON
      */
     @RequiresPermissions("template:get")
     @PostMapping("/get/{id}")
@@ -89,8 +89,8 @@ public class RestTemplateController {
 
     /**
      * 编辑模板
-     * @param template
-     * @return
+     * @param template 模板
+     * @return bootstrap table用到的返回json格式
      */
     @RequiresPermissions("template:edit")
     @PostMapping("/edit")

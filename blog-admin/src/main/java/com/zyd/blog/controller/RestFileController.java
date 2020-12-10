@@ -30,8 +30,8 @@ public class RestFileController {
 
     /**
      * 文件分页
-     * @param vo
-     * @return
+     * @param vo 封装好的文件对象
+     * @return bootstrap table用到的返回json格式
      */
     @RequiresPermissions("files")
     @PostMapping("/list")
@@ -42,8 +42,8 @@ public class RestFileController {
 
     /**
      * 删除文件
-     * @param ids
-     * @return
+     * @param ids id
+     * @return JSON
      */
     @RequiresPermissions("files")
     @PostMapping(value = "/remove")
@@ -59,8 +59,8 @@ public class RestFileController {
 
     /**
      * 添加文件
-     * @param file
-     * @return
+     * @param file 文件
+     * @return JSON
      */
     @RequiresPermissions("files")
     @PostMapping(value = "/add")

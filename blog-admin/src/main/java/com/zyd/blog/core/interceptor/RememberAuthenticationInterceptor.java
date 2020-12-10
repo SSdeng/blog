@@ -33,9 +33,9 @@ public class RememberAuthenticationInterceptor implements HandlerInterceptor {
 
     /**
      * preHandle会在一个控制器类的处理方法被调用之前执行此方法
-     * @param request
-     * @param response
-     * @param handler
+     * @param request http请求
+     * @param response http响应
+     * @param handler 一个控制器类的处理方法
      * @return
      * @throws Exception
      */

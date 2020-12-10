@@ -39,8 +39,8 @@ public class RestApiController {
 
     /**
      * wangEditor编辑器中上传文件
-     * @param file
-     * @return
+     * @param file 要上传的文件
+     * @return JSON
      */
     @BussinessLog("wangEditor编辑器中上传文件")
     @RequiresPermissions("article:publish")
@@ -53,8 +53,8 @@ public class RestApiController {
 
     /**
      * simpleMD编辑器中上传文件
-     * @param file
-     * @return
+     * @param file 要上传的文件
+     * @return resultMap
      */
     @BussinessLog("simpleMD编辑器中上传文件")
     @RequiresPermissions("article:publish")
@@ -72,7 +72,7 @@ public class RestApiController {
     /**
      * 发送消息通知
      *
-     * @return
+     * @return JSON
      */
     @RequiresPermissions("notice")
     @PostMapping("/notice")

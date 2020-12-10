@@ -60,7 +60,7 @@ public class RetryLimitCredentialsMatcher extends CredentialsMatcher {
      * 此方法实现了密码输入错误的状态下重试次数的匹配管理
      * @param token
      * @param info
-     * @return
+     * @return 是否验证通过
      */
     @Override
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {

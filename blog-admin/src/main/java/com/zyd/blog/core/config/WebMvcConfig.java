@@ -22,7 +22,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     /**
      * 添加拦截器
-     * @param registry
+     * @param registry 拦截器
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
