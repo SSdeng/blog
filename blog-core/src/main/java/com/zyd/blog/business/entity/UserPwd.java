@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class UserPwd {
+public class UserPwd {//业务实体，用来更新用户的密码
     @NotNull(message = "用户ID不可为空")
     private Long id;
     @NotNull(message = "原密码不可为空")
