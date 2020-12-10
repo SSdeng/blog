@@ -32,9 +32,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/notice")
 public class RestNoticeController {
-    @Autowired
-    private SysNoticeService noticeService;
 
+    @Autowired
+    private SysNoticeService noticeService;//通知业务层对象
+
+    /**
+     * 通知分页
+     * @param vo
+     * @return
+     */
     @RequiresPermissions("notices")
     @PostMapping("/list")
     public PageResult list(NoticeConditionVO vo) {
@@ -42,6 +48,11 @@ public class RestNoticeController {
         return ResultUtil.tablePage(pageInfo);
     }
 
+    /**
+     * 添加公告通知
+     * @param notice
+     * @return
+     */
     @RequiresPermissions("notice:add")
     @PostMapping(value = "/add")
     @BussinessLog("添加公告通知")
@@ -54,6 +65,11 @@ public class RestNoticeController {
         return ResultUtil.success("系统通知添加成功");
     }
 
+    /**
+     * 删除公告通知
+     * @param ids
+     * @return
+     */
     @RequiresPermissions(value = {"notice:batchDelete", "notice:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除公告通知")
@@ -67,6 +83,11 @@ public class RestNoticeController {
         return ResultUtil.success("成功删除 [" + ids.length + "] 个系统通知");
     }
 
+    /**
+     * 获取公告通知详情
+     * @param id
+     * @return
+     */
     @RequiresPermissions("notice:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取公告通知详情")
@@ -74,6 +95,11 @@ public class RestNoticeController {
         return ResultUtil.success(null, this.noticeService.getByPrimaryKey(id));
     }
 
+    /**
+     * 编辑公告通知
+     * @param notice
+     * @return
+     */
     @RequiresPermissions("notice:edit")
     @PostMapping("/edit")
     @BussinessLog("编辑公告通知")
@@ -87,6 +113,11 @@ public class RestNoticeController {
         return ResultUtil.success(ResponseStatus.SUCCESS);
     }
 
+    /**
+     * 发布公告通知
+     * @param id
+     * @return
+     */
     @RequiresPermissions("notice:release")
     @PostMapping("/release/{id}")
     @BussinessLog("发布公告通知")
@@ -103,6 +134,11 @@ public class RestNoticeController {
         return ResultUtil.success("该通知已发布，可去前台页面查看效果！");
     }
 
+    /**
+     * 撤回公告通知
+     * @param id
+     * @return
+     */
     @RequiresPermissions("notice:withdraw")
     @PostMapping("/withdraw/{id}")
     @BussinessLog("撤回公告通知")

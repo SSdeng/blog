@@ -26,8 +26,13 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/file")
 public class RestFileController {
     @Autowired
-    private BizFileService fileService;
+    private BizFileService fileService;//文件业务层对象
 
+    /**
+     * 文件分页
+     * @param vo
+     * @return
+     */
     @RequiresPermissions("files")
     @PostMapping("/list")
     public PageInfo list(FileConditionVO vo) {
@@ -35,6 +40,11 @@ public class RestFileController {
         return fileService.findPageBreakByCondition(vo);
     }
 
+    /**
+     * 删除文件
+     * @param ids
+     * @return
+     */
     @RequiresPermissions("files")
     @PostMapping(value = "/remove")
     @BussinessLog("删除文件，ids:{1}")
@@ -47,6 +57,11 @@ public class RestFileController {
         return ResultUtil.success("成功删除 [" + ids.length + "] 张图片");
     }
 
+    /**
+     * 添加文件
+     * @param file
+     * @return
+     */
     @RequiresPermissions("files")
     @PostMapping(value = "/add")
     @BussinessLog("添加文件")

@@ -27,14 +27,25 @@ import java.util.Map;
 @RequestMapping("/config")
 public class RestConfigController {
     @Autowired
-    private SysConfigService sysConfigService;
+    private SysConfigService sysConfigService;//配置业务层对象
 
+    /**
+     * 将配置封装为ResponseVO对象并返回
+     * @return
+     */
     @RequiresRoles("role:root")
     @PostMapping("/get")
     public ResponseVO get() {
         return ResultUtil.success(null, sysConfigService.getConfigs());
     }
 
+    /**
+     * 修改系统配置
+     * @param configs
+     * @param wxPraiseCode
+     * @param zfbPraiseCode
+     * @return
+     */
     @RequiresRoles("role:root")
     @PostMapping("/save")
     @BussinessLog("修改系统配置")

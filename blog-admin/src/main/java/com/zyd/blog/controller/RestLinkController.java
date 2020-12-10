@@ -33,10 +33,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/link")
 public class RestLinkController {
     @Autowired
-    private SysLinkService linkService;
+    private SysLinkService linkService;//链接业务层对象
     @Autowired
-    private MailService mailService;
+    private MailService mailService;//邮箱业务层对象
 
+    /**
+     * 链接分页
+     * @param vo
+     * @return
+     */
     @RequiresPermissions("links")
     @PostMapping("/list")
     public PageResult list(LinkConditionVO vo) {
@@ -44,6 +49,11 @@ public class RestLinkController {
         return ResultUtil.tablePage(pageInfo);
     }
 
+    /**
+     * 添加友情链接
+     * @param link
+     * @return
+     */
     @RequiresPermissions("link:add")
     @PostMapping(value = "/add")
     @BussinessLog("添加友情链接")
@@ -54,6 +64,11 @@ public class RestLinkController {
         return ResultUtil.success("成功");
     }
 
+    /**
+     * 删除友情链接
+     * @param ids
+     * @return
+     */
     @RequiresPermissions(value = {"link:batchDelete", "link:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除友情链接")
@@ -67,6 +82,11 @@ public class RestLinkController {
         return ResultUtil.success("成功删除 [" + ids.length + "] 个友情链接");
     }
 
+    /**
+     * 获取友情链接详情
+     * @param id
+     * @return
+     */
     @RequiresPermissions("link:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取友情链接详情")
@@ -74,6 +94,11 @@ public class RestLinkController {
         return ResultUtil.success(null, this.linkService.getByPrimaryKey(id));
     }
 
+    /**
+     * 编辑友情链接
+     * @param link
+     * @return
+     */
     @RequiresPermissions("link:edit")
     @PostMapping("/edit")
     @BussinessLog("编辑友情链接")

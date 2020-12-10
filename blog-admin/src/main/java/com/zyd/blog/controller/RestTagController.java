@@ -30,8 +30,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/tag")
 public class RestTagController {
     @Autowired
-    private BizTagsService tagsService;
+    private BizTagsService tagsService;//标签业务层
 
+    /**
+     * 标签分页
+     * @param vo
+     * @return
+     */
     @RequiresPermissions("tags")
     @PostMapping("/list")
     public PageResult list(TagsConditionVO vo) {
@@ -39,6 +44,11 @@ public class RestTagController {
         return ResultUtil.tablePage(pageInfo);
     }
 
+    /**
+     * 添加标签
+     * @param tags
+     * @return
+     */
     @RequiresPermissions("tag:add")
     @PostMapping(value = "/add")
     @BussinessLog("添加标签")
@@ -47,6 +57,11 @@ public class RestTagController {
         return ResultUtil.success("标签添加成功！新标签 - " + tags.getName(), tags);
     }
 
+    /**
+     * 删除标签
+     * @param ids
+     * @return
+     */
     @RequiresPermissions(value = {"tag:batchDelete", "tag:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除标签")
@@ -60,6 +75,11 @@ public class RestTagController {
         return ResultUtil.success("成功删除 [" + ids.length + "] 个标签");
     }
 
+    /**
+     * 获取标签详情
+     * @param id
+     * @return
+     */
     @RequiresPermissions("tag:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取标签详情")
@@ -67,6 +87,11 @@ public class RestTagController {
         return ResultUtil.success(null, this.tagsService.getByPrimaryKey(id));
     }
 
+    /**
+     * 编辑标签
+     * @param tags
+     * @return
+     */
     @RequiresPermissions("tag:edit")
     @PostMapping("/edit")
     @BussinessLog("编辑标签")
@@ -80,6 +105,10 @@ public class RestTagController {
         return ResultUtil.success(ResponseStatus.SUCCESS);
     }
 
+    /**
+     * 显示所有标签
+     * @return
+     */
     @PostMapping("/listAll")
     public ResponseVO list() {
         return ResultUtil.success(null, tagsService.listAll());

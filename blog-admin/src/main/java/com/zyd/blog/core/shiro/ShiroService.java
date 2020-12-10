@@ -3,6 +3,7 @@ package com.zyd.blog.core.shiro;
 import java.util.Map;
 
 /**
+ * Shiro-权限相关的业务处理接口
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @website https://www.zhyd.me
