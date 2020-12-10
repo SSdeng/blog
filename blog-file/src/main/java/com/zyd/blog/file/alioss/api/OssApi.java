@@ -18,6 +18,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * 阿里云OSSAPI
+ *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @website https://www.zhyd.me
@@ -32,6 +34,13 @@ public class OssApi {
         this.client = client;
     }
 
+    /**
+     * 创建OSS客户端
+     *
+     * @param endpoint          阿里云地区节点域名
+     * @param accessKeyId       阿里云账户AccessKeyID
+     * @param accessKeySecret   阿里云账户AccessKey密码
+     */
     public OssApi(String endpoint, String accessKeyId, String accessKeySecret) {
         this.client = new OSSClient(endpoint, accessKeyId, accessKeySecret);
     }
@@ -224,15 +233,20 @@ public class OssApi {
             ArrayList<SetBucketCORSRequest.CORSRule> putCorsRules = new ArrayList<>();
             SetBucketCORSRequest.CORSRule corRule = new SetBucketCORSRequest.CORSRule();
 
+            //指定允许的跨域请求方法(GET/PUT/DELETE/POST/HEAD)。
             corRule.setAllowedMethods(corsRole.getAllowedMethod());
+            //指定允许跨域请求的来源。
             corRule.setAllowedOrigins(corsRole.getAllowedOrigin());
+            //是否允许预取指令（OPTIONS）中Access-Control-Request-Headers头中指定的Header。
             corRule.setAllowedHeaders(corsRole.getAllowedHeader());
+            //指定允许用户从应用程序中访问的响应头。
             corRule.setExposeHeaders(corsRole.getExposedHeader());
             //指定浏览器对特定资源的预取(OPTIONS)请求返回结果的缓存时间,单位为秒。
             corRule.setMaxAgeSeconds(corsRole.getMaxAgeSeconds());
             //最多允许10条规则
             putCorsRules.add(corRule);
 
+            //已存在的规则将被覆盖。
             request.setCorsRules(putCorsRules);
             this.client.setBucketCORS(request);
         } finally {
@@ -258,7 +272,7 @@ public class OssApi {
                 throw new OssApiException("[阿里云OSS] 无法创建目录！Bucket不存在：" + bucketName);
             }
             folder = folder.endsWith("/") ? folder : folder + "/";
-            this.client.putObject(bucketName, folder, new ByteArrayInputStream(new byte[0]));
+            this.client.putObject(bucketName, folder, new ByteArrayInputStream(new byte[0]));//上传模拟文件
         } finally {
             this.shutdown();
         }
@@ -320,6 +334,8 @@ public class OssApi {
     }
 
     /**
+     * 通过文件对象上传文件
+     *
      * @param localFile 待上传的文件
      * @param fileName  文件名:最终保存到云端的文件名
      * @param bucket    需要上传到的目标bucket
@@ -336,6 +352,8 @@ public class OssApi {
     }
 
     /**
+     * 通过文件输入流上传文件
+     *
      * @param inputStream 待上传的文件流
      * @param fileName    文件名:最终保存到云端的文件名
      * @param bucketName  需要上传到的目标bucket
@@ -346,12 +364,15 @@ public class OssApi {
                 throw new OssApiException("[阿里云OSS] 无法上传文件！Bucket不存在：" + bucketName);
             }
             PutObjectResult result = this.client.putObject(bucketName, fileName, inputStream);
-            return result.getETag();
+            return result.getETag();//返回文件内容标识，文件内容不变etag值不变
         } finally {
             this.shutdown();
         }
     }
 
+    /**
+     * 关闭OSS Client
+     */
     private void shutdown() {
         this.client.shutdown();
     }

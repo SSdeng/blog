@@ -5,6 +5,8 @@ import com.zyd.blog.file.exception.GlobalFileException;
 import java.io.*;
 
 /**
+ * 流操作工具类
+ *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @website https://www.zhyd.me
@@ -16,7 +18,7 @@ public class StreamUtil {
     /**
      * 将InputStream转换为字符串
      *
-     * @param is InputStream
+     * @param is 要转换的InputStream
      * @return
      */
     public static String toString(InputStream is) {
@@ -26,7 +28,7 @@ public class StreamUtil {
     /**
      * 将InputStream转换为字符串
      *
-     * @param is InputStream
+     * @param is 要转换的InputStream
      * @return
      */
     public static String toString(InputStream is, String encoding) {
@@ -40,6 +42,7 @@ public class StreamUtil {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, encoding))
         ) {
             String line = "";
+            //读取流内容并加入StringBuilder
             while ((line = reader.readLine()) != null) {
                 fileContent.append(line);
                 fileContent.append("\n");
@@ -53,7 +56,7 @@ public class StreamUtil {
     /**
      * 复制InputStream
      *
-     * @param is InputStream
+     * @param is 要复制的InputStream
      * @return
      */
     public static InputStream clone(InputStream is) {
@@ -64,6 +67,7 @@ public class StreamUtil {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
             int len;
+            //将输入流写入buffer并加入字节数组输出流缓冲区
             while ((len = is.read(buffer)) > -1) {
                 baos.write(buffer, 0, len);
             }

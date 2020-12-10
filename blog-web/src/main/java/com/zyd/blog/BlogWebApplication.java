@@ -7,7 +7,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
- * 程序启动类
+ * 前台程序启动类
  *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableBraumConfiguration
 public class BlogWebApplication {
 
+    //启动前台程序
     public static void main(String[] args) {
         SpringApplication.run(BlogWebApplication.class, args);
     }

@@ -46,15 +46,34 @@ import java.util.Map;
 @RequestMapping("/api")
 public class RestApiController {
 
+    /**
+     * 友情链接
+     */
     @Autowired
     private SysLinkService sysLinkService;
+    /**
+     * 评论服务
+     */
     @Autowired
     private BizCommentService commentService;
+    /**
+     * 文章列表
+     */
     @Autowired
     private BizArticleService articleService;
+    /**
+     * 系统通知
+     */
     @Autowired
     private SysNoticeService noticeService;
 
+    /**
+     * 申请友链
+     *
+     * @param link 友情链接
+     * @param bindingResult 参数校验
+     * @return
+     */
     @PostMapping("/autoLink")
     @BussinessLog(value = "自助申请友链", platform = PlatformEnum.WEB)
     public ResponseVO autoLink(@Validated Link link, BindingResult bindingResult) {
@@ -64,7 +83,7 @@ public class RestApiController {
             return ResultUtil.error(bindingResult.getFieldError().getDefaultMessage());
         }
         try {
-            sysLinkService.autoLink(link);
+            sysLinkService.autoLink(link);//添加友链
         } catch (ZhydLinkException e) {
             log.error("客户端自助申请友链发生异常", e);
             return ResultUtil.error(e.getMessage());
@@ -72,6 +91,12 @@ public class RestApiController {
         return ResultUtil.success("已成功添加友链，祝您生活愉快！");
     }
 
+    /**
+     * 获取QQ信息
+     *
+     * @param qq qq账号
+     * @return
+     */
     @PostMapping("/qq/{qq}")
     @BussinessLog(value = "获取QQ信息", platform = PlatformEnum.WEB)
     public ResponseVO qq(@PathVariable("qq") String qq) {
@@ -86,8 +111,8 @@ public class RestApiController {
                 json = json.replaceAll("portraitCallBack|\\\\s*|\\t|\\r|\\n", "");
                 json = json.substring(1, json.length() - 1);
                 log.info(json);
-                JSONObject object = JSONObject.parseObject(json);
-                JSONArray array = object.getJSONArray(qq);
+                JSONObject object = JSONObject.parseObject(json);//字符串转JSON对象
+                JSONArray array = object.getJSONArray(qq);//字符串转JSON数组
                 nickname = array.getString(6);
             } catch (Exception e) {
                 log.error("通过QQ号获取用户昵称发生异常", e);
@@ -100,6 +125,12 @@ public class RestApiController {
         return ResultUtil.success(null, resultMap);
     }
 
+    /**
+     * 评论区
+     *
+     * @param vo 评论属性对象
+     * @return
+     */
     @PostMapping("/comments")
     @BussinessLog(value = "评论列表", platform = PlatformEnum.WEB, save = false)
     public ResponseVO comments(CommentConditionVO vo) {
@@ -107,50 +138,79 @@ public class RestApiController {
         return ResultUtil.success(null, commentService.list(vo));
     }
 
+    /**
+     * 发表评论
+     *
+     * @param comment 评论对象
+     * @return
+     */
     @PostMapping("/comment")
     @BussinessLog(value = "发表评论", platform = PlatformEnum.WEB)
     public ResponseVO comment(Comment comment) {
         try {
-            commentService.comment(comment);
+            commentService.comment(comment);//执行评论
         } catch (ZhydCommentException e) {
             return ResultUtil.error(e.getMessage());
         }
         return ResultUtil.success("评论发表成功，系统正在审核，请稍后刷新页面查看！");
     }
 
+    /**
+     * 点赞评论
+     *
+     * @param id 评论ID
+     * @return
+     */
     @PostMapping("/doSupport/{id}")
     @BussinessLog(value = "点赞评论{1}", platform = PlatformEnum.WEB)
     public ResponseVO doSupport(@PathVariable("id") Long id) {
         try {
-            commentService.doSupport(id);
+            commentService.doSupport(id);//执行点赞
         } catch (ZhydCommentException e) {
             return ResultUtil.error(e.getMessage());
         }
         return ResultUtil.success("");
     }
 
+    /**
+     * 点踩评论
+     *
+     * @param id 评论ID
+     * @return
+     */
     @PostMapping("/doOppose/{id}")
     @BussinessLog(value = "点踩评论{1}", platform = PlatformEnum.WEB)
     public ResponseVO doOppose(@PathVariable("id") Long id) {
         try {
-            commentService.doOppose(id);
+            commentService.doOppose(id);//执行点踩
         } catch (ZhydCommentException e) {
             return ResultUtil.error(e.getMessage());
         }
         return ResultUtil.success("");
     }
 
+    /**
+     * 点赞文章
+     *
+     * @param id 文章ID
+     * @return
+     */
     @PostMapping("/doPraise/{id}")
     @BussinessLog(value = "点赞文章{1}", platform = PlatformEnum.WEB)
     public ResponseVO doPraise(@PathVariable("id") Long id) {
         try {
-            articleService.doPraise(id);
+            articleService.doPraise(id);//执行点赞
         } catch (ZhydArticleException e) {
             return ResultUtil.error(e.getMessage());
         }
         return ResultUtil.success("");
     }
 
+    /**
+     * 查看公告列表
+     *
+     * @return
+     */
     @PostMapping("/listNotice")
     @BussinessLog(value = "公告列表", platform = PlatformEnum.WEB, save = false)
     public ResponseVO listNotice() {

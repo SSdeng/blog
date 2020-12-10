@@ -15,6 +15,8 @@ import java.io.InputStream;
 import java.util.Date;
 
 /**
+ * 本地API客户端
+ *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @website https://www.zhyd.me
@@ -22,10 +24,22 @@ import java.util.Date;
  * @since 1.8
  */
 public class LocalApiClient extends BaseApiClient {
-    private static final String DEFAULT_PREFIX = "oneblog/";
 
+    /**
+     * 默认前缀
+     */
+    private static final String DEFAULT_PREFIX = "oneblog/";
+    /**
+     * URL
+     */
     private String url;
+    /**
+     * 根目录
+     */
     private String rootPath;
+    /**
+     * 路径前缀
+     */
     private String pathPrefix;
 
     public LocalApiClient() {
@@ -40,6 +54,13 @@ public class LocalApiClient extends BaseApiClient {
         return this;
     }
 
+    /**
+     * 上传图片
+     *
+     * @param is 要上传的输入流
+     * @param imageUrl 图片url
+     * @return
+     */
     @Override
     public VirtualFile uploadImg(InputStream is, String imageUrl) {
         this.check();
@@ -52,7 +73,7 @@ public class LocalApiClient extends BaseApiClient {
         FileUtil.checkFilePath(realFilePath);
         try (InputStream uploadIs = StreamUtil.clone(is);
              InputStream fileHashIs = StreamUtil.clone(is);
-             FileOutputStream fos = new FileOutputStream(realFilePath)) {
+             FileOutputStream fos = new FileOutputStream(realFilePath)) {//JDK1.7后的try with resources写法，用于对资源申请，确保异常时资源实时关闭
             FileCopyUtils.copy(uploadIs, fos);
             return new VirtualFile()
                     .setOriginalFileName(FileUtil.getName(key))
@@ -75,6 +96,12 @@ public class LocalApiClient extends BaseApiClient {
         }
     }
 
+    /**
+     * 删除图片
+     *
+     * @param key 要删除的图片key
+     * @return 操作结果
+     */
     @Override
     public boolean removeFile(String key) {
         this.check();
