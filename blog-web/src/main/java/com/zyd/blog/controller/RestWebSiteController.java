@@ -24,44 +24,86 @@ import java.util.Map;
  */
 @RestController
 public class RestWebSiteController {
+
+    /**
+     * 文章列表
+     */
     @Autowired
     private BizArticleService articleService;
+    /**
+     * 分类服务
+     */
     @Autowired
     private BizTypeService typeService;
+    /**
+     * 标签服务
+     */
     @Autowired
     private BizTagsService tagsService;
+    /**
+     * 系统模板
+     */
     @Autowired
     private SysTemplateService templateService;
+    /**
+     * 系统配置
+     */
     @Autowired
     private SysConfigService configService;
 
+    /**
+     * 查看sitemap.xml
+     *
+     * @return
+     */
     @GetMapping(value = "/sitemap.xml", produces = {"application/xml"})
     @BussinessLog(value = "查看sitemap.xml", platform = PlatformEnum.WEB)
     public String sitemapXml() {
         return getSitemap(TemplateKeyEnum.TM_SITEMAP_XML);
     }
 
+    /**
+     * 查看sitemap.txt
+     *
+     * @return
+     */
     @GetMapping(value = "/sitemap.txt", produces = {"text/plain"})
     @BussinessLog(value = "查看sitemap.txt", platform = PlatformEnum.WEB)
     public String sitemapTxt() {
         return getSitemap(TemplateKeyEnum.TM_SITEMAP_TXT);
     }
 
+    /**
+     * 查看sitemap.html
+     *
+     * @return
+     */
     @GetMapping(value = "/sitemap.html", produces = {"text/html"})
     @BussinessLog(value = "查看sitemap.html", platform = PlatformEnum.WEB)
     public String sitemapHtml() {
         return getSitemap(TemplateKeyEnum.TM_SITEMAP_HTML);
     }
 
+    /**
+     * 查看robots
+     *
+     * @return
+     */
     @GetMapping(value = "/robots.txt", produces = {"text/plain"})
     @BussinessLog(value = "查看robots", platform = PlatformEnum.WEB)
     public String robots() {
         Template template = templateService.getTemplate(TemplateKeyEnum.TM_ROBOTS);
         Map<String, Object> map = new HashMap<>();
         map.put("config", configService.getConfigs());
-        return FreeMarkerUtil.template2String(template.getRefValue(), map, true);
+        return FreeMarkerUtil.template2String(template.getRefValue(), map, true);//调用FreeMarker生成robots文件
     }
 
+    /**
+     * 生成sitemap
+     *
+     * @param key 模板类型
+     * @return
+     */
     private String getSitemap(TemplateKeyEnum key) {
         Template template = templateService.getTemplate(key);
         Map<String, Object> map = new HashMap<>();
@@ -69,6 +111,6 @@ public class RestWebSiteController {
         map.put("articleTagsList", tagsService.listAll());
         map.put("articleList", articleService.listAll());
         map.put("config", configService.getConfigs());
-        return FreeMarkerUtil.template2String(template.getRefValue(), map, true);
+        return FreeMarkerUtil.template2String(template.getRefValue(), map, true);//调用FreeMarker生成sitemap文件
     }
 }

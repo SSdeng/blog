@@ -1,6 +1,8 @@
 package com.zyd.blog.file.exception;
 
 /**
+ * 七牛云API客户端异常类
+ *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @date 2018/12/5 17:15

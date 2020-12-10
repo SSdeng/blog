@@ -13,6 +13,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 /**
+ * 文章浏览记录保存类
+ *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @website https://www.zhyd.me
@@ -24,14 +26,23 @@ import java.util.concurrent.BlockingQueue;
 @RequiredArgsConstructor
 public class ArticleLookTask {
 
+    /**
+     * 文章列表服务
+     */
     private final BizArticleService bizArticleService;
 
+    /**
+     * 文章浏览记录服务
+     */
     private final BizArticleLookService articleLookService;
 
+    /**
+     * 文章浏览记录阻塞队列
+     */
     private BlockingQueue<ArticleLook> queue = new ArrayBlockingQueue<>(1024);
 
     /**
-     * 保存文章的浏览记录，先进先出
+     * 在阻塞队列中保存文章的浏览记录，先进先出
      */
     public void addLookRecordToQueue(ArticleLook articleLook) {
         if (null == articleLook) {
@@ -40,17 +51,20 @@ public class ArticleLookTask {
         queue.offer(articleLook);
     }
 
+    /**
+     * 取出阻塞队列中的文章浏览记录保存至服务
+     */
     public void save() {
         List<ArticleLook> bufferList = new ArrayList<>();
         while (true) {
             try {
-                bufferList.add(queue.take());
+                bufferList.add(queue.take());//取出阻塞队列中的浏览记录
                 for (ArticleLook articleLook : bufferList) {
                     if (!bizArticleService.isExist(articleLook.getArticleId())) {
                         log.warn("{}-该文章不存在！", articleLook.getArticleId());
                         continue;
                     }
-                    articleLookService.insert(articleLook);
+                    articleLookService.insert(articleLook);//加入文章浏览记录
                 }
             } catch (InterruptedException e) {
                 log.error("保存文章浏览记录失败--->[{}]", e.getMessage());

@@ -21,6 +21,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
+ * 第三方授权认证控制类
+ *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @website https://www.zhyd.me
@@ -34,6 +36,14 @@ public class OAuthController {
     @Autowired
     private AuthService authService;
 
+    /**
+     * 授权跳转
+     *
+     * @param source 授权来源
+     * @param response HTTP响应
+     * @param session HTTP session
+     * @throws IOException
+     */
     @RequestMapping("/render/{source}")
     public void renderAuth(@PathVariable("source") String source, HttpServletResponse response, HttpSession session) throws IOException {
         AuthRequest authRequest = RequestFactory.getInstance(source).getRequest();
@@ -62,8 +72,8 @@ public class OAuthController {
     /**
      * 收回授权
      *
-     * @param source
-     * @param token
+     * @param source 授权来源
+     * @param token 授权令牌
      * @return
      * @throws IOException
      */

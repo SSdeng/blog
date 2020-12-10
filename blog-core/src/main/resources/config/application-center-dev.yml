@@ -9,7 +9,8 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://localhost:3306/dblog?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true
     username: root
-    password: dzj991118...
+    password: ljc2018xgd
+    #password: dzj991118...#
   ####### Redis Config #######
   redis:
     database: 5
@@ -18,7 +19,7 @@ spring:
     # Redis服务器连接端口
     port: 6379
     # Redis服务器连接密码（默认为空）
-    password:
+    password: ljc2018xgd
 
   ####### redis缓存服务配置 #######
   session:
