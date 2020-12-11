@@ -292,7 +292,7 @@ public class BizArticleServiceImpl implements BizArticleService {
         String key = ip + "_doPraise_" + id;
         // 获取缓存值
         ValueOperations<String, Object> operations = redisTemplate.opsForValue();
-        // redis中存有该操作key
+        // 缓存中存有该操作key
         if (redisTemplate.hasKey(key)) {
             // 同一ip对同一文章一小时内不能多次点赞
             throw new ZhydArticleException("一个小时只能点赞一次哈，感谢支持~~");
@@ -316,7 +316,7 @@ public class BizArticleServiceImpl implements BizArticleService {
         love.setUpdateTime(new Date());
         // 将点赞操作插入数据库
         bizArticleLoveMapper.insert(love);
-        // 记录点赞操作
+        // 记录该点赞操作
         operations.set(key, id, 1, TimeUnit.HOURS);
     }
 

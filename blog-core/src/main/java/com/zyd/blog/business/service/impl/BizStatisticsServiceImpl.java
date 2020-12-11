@@ -34,7 +34,8 @@ public class BizStatisticsServiceImpl implements BizStatisticsService {
     /**
      * 获取热门文章
      *
-     * @return
+     * @param pageSize 分页大小
+     * @return 热门文章列表
      */
     @Override
     public List<Article> listHotArticle(int pageSize) {
@@ -44,38 +45,50 @@ public class BizStatisticsServiceImpl implements BizStatisticsService {
     /**
      * 获取爬虫统计
      *
-     * @return
+     * @param pageSize 分页大小
+     * @return 统计结果表
      */
     @Override
     public List<Statistics> listSpider(int pageSize) {
+        // 分页
         PageHelper.startPage(1, pageSize);
+        // 获取统计表
         List<BizStatistics> entityList = statisticsMapper.listSpider();
+        // 空表
         if (CollectionUtils.isEmpty(entityList)) {
             return null;
         }
+        // 拷贝 转换元素类型
         List<Statistics> list = new ArrayList<>();
         for (BizStatistics entity : entityList) {
             list.add(new Statistics(entity));
         }
+        // 返回结果
         return list;
     }
 
     /**
      * 获取文章分类统计
      *
-     * @return
+     * @param pageSize 分页大小
+     * @return 文章分类统计表
      */
     @Override
     public List<Statistics> listType(int pageSize) {
+        // 分页
         PageHelper.startPage(1, pageSize);
+        // 获取文章分类统计表
         List<BizStatistics> entityList = statisticsMapper.listType();
+        // 空表
         if (CollectionUtils.isEmpty(entityList)) {
             return null;
         }
+        // 拷贝 转换元素类型
         List<Statistics> list = new ArrayList<>();
         for (BizStatistics entity : entityList) {
             list.add(new Statistics(entity));
         }
+        // 返回结果
         return list;
     }
 

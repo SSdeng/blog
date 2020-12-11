@@ -191,7 +191,7 @@ public class BizCommentServiceImpl implements BizCommentService {
      * 发表评论
      *
      * @param comment 评论
-     * @return
+     * @return 更新后的comment
      */
     @Override
     @RedisCache(flush = true)
@@ -249,11 +249,12 @@ public class BizCommentServiceImpl implements BizCommentService {
         // set当前评论者的位置信息
         this.setCurrentLocation(comment);
 
-        // 保存
+        // 保存到数据库
         this.insert(comment);
 
         // 发送邮件通知
         this.sendEmail(comment);
+        // 返回更新后的comment
         return comment;
     }
 
@@ -397,19 +398,21 @@ public class BizCommentServiceImpl implements BizCommentService {
         }
     }
 
-    //TODO
     /**
+     * 给被评论用户发送邮件
      *
-     * @param comment
+     * @param comment 评论
      */
     private void sendEmail(Comment comment) {
         // 发送邮件通知，此处如发生异常不应阻塞当前的业务流程
         // 可以进行日志记录等操作
         try {
+            // comment有合法pid
             if (null != comment.getPid() && 0 != comment.getPid()) {
                 // 给被评论的用户发送通知
                 Comment commentDB = this.getByPrimaryKey(comment.getPid());
                 mailService.send(commentDB, TemplateKeyEnum.TM_COMMENT_REPLY, false);
+            // 发送给管理员
             } else {
                 mailService.sendToAdmin(comment);
             }
@@ -421,22 +424,28 @@ public class BizCommentServiceImpl implements BizCommentService {
     /**
      * 查询近期评论
      *
-     * @param pageSize
-     * @return
+     * @param pageSize 分页大小
+     * @return 近期评论列表
      */
     @Override
     @RedisCache
     public List<Comment> listRecentComment(int pageSize) {
+        // 搜索条件控制类
         CommentConditionVO vo = new CommentConditionVO();
+        // 设定分页大小
         vo.setPageSize(pageSize);
+        // 设置评论状态为“审核通过”
         vo.setStatus(CommentStatusEnum.APPROVED.toString());
+        // 分页
         PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        // 查找
         List<BizComment> list = bizCommentMapper.findPageBreakByCondition(vo);
+        // 返回结果
         return getComments(list);
     }
 
     /**
-     * 将列表存储的BizComment类向上转换为Comment类并分会新列表
+     * List<BizComment> -> List<Comment>
      *
      * @param list 存储BizComment类的列表
      * @return 存储Comment类的列表
@@ -459,63 +468,97 @@ public class BizCommentServiceImpl implements BizCommentService {
     /**
      * 查询未审核的评论
      *
-     * @param pageSize
-     * @return
+     * @param pageSize 分页大小
+     * @return 未审核的评论列表
      */
     @Override
     public List<Comment> listVerifying(int pageSize) {
+        // 搜索条件控制类
         CommentConditionVO vo = new CommentConditionVO();
+        // 设定分页大小
         vo.setPageSize(pageSize);
+        // 设置评论状态为“正在审核”
         vo.setStatus(CommentStatusEnum.VERIFYING.toString());
+        // 分页搜索
         PageInfo pageInfo = findPageBreakByCondition(vo);
+        // 不为空则返回评论列表
         return null == pageInfo ? null : pageInfo.getList();
     }
 
     /**
      * 点赞
      *
-     * @param id
+     * @param id 评论id
      */
     @Override
     @RedisCache(flush = true)
     public void doSupport(Long id) {
+        // 创建点赞操作key = 点赞者ip + ‘_doSupport_’ + 评论id
         String key = IpUtil.getRealIp(RequestHolder.getRequest()) + "_doSupport_" + id;
+        // 获取缓存值
         ValueOperations<String, Object> operations = redisTemplate.opsForValue();
+        // 缓存中存有该操作key
         if (redisTemplate.hasKey(key)) {
+            // 同一ip对同一评论一小时内不能多次点赞
             throw new ZhydCommentException("一个小时只能点一次赞哈~");
         }
+        // 执行点赞操作
         bizCommentMapper.doSupport(id);
+        // 记录该点赞操作
         operations.set(key, id, 1, TimeUnit.HOURS);
     }
 
     /**
      * 点踩
      *
-     * @param id
+     * @param id 评论id
      */
     @Override
     @RedisCache(flush = true)
     public void doOppose(Long id) {
+        // 创建点踩操作key = 点踩者ip + ‘_doOppose_’ + 评论id
         String key = IpUtil.getRealIp(RequestHolder.getRequest()) + "_doOppose_" + id;
+        // 获取缓存值
         ValueOperations<String, Object> operations = redisTemplate.opsForValue();
+        // 缓存中存有该操作key
         if (redisTemplate.hasKey(key)) {
+            // 同一ip对同一评论一小时内不能多次点踩
             throw new ZhydCommentException("一个小时只能踩一次哈~又没什么深仇大恨");
         }
+        // 执行点踩操作
         bizCommentMapper.doOppose(id);
+        // 记录该点赞操作
         operations.set(key, id, 1, TimeUnit.HOURS);
     }
 
+    /**
+     * 将评论上传到数据库
+     *
+     * @param entity 评论实体
+     * @return 更新后的entity
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     @RedisCache(flush = true)
     public Comment insert(Comment entity) {
+        // entity不可为空
         Assert.notNull(entity, "Comment不可为空！");
+        // 记录更新时间
         entity.setUpdateTime(new Date());
+        // 记录创建时间
         entity.setCreateTime(new Date());
+        // 插入数据库
         bizCommentMapper.insertSelective(entity.getBizComment());
+        // 返回更新后的entity
         return entity;
     }
 
+    /**
+     * 按主键删除评论
+     *
+     * @param primaryKey 评论主键
+     * @return 删除结果
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     @RedisCache(flush = true)
@@ -523,19 +566,37 @@ public class BizCommentServiceImpl implements BizCommentService {
         return bizCommentMapper.deleteByPrimaryKey(primaryKey) > 0;
     }
 
+    /**
+     * 更新评论
+     *
+     * @param entity 评论实体
+     * @return 更新结果
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     @RedisCache(flush = true)
     public boolean updateSelective(Comment entity) {
+        // 实体不可为空
         Assert.notNull(entity, "Comment不可为空！");
+        // 记录更新时间
         entity.setUpdateTime(new Date());
+        // 更新数据库 返回结果
         return bizCommentMapper.updateByPrimaryKeySelective(entity.getBizComment()) > 0;
     }
 
+    /**
+     * 按主键获取评论实体
+     *
+     * @param primaryKey 评论主键
+     * @return 对应评论对象
+     */
     @Override
     public Comment getByPrimaryKey(Long primaryKey) {
+        // 主键参数不可为空
         Assert.notNull(primaryKey, "PrimaryKey不可为空！");
+        // 按主键获取评论对象
         BizComment entity = bizCommentMapper.getById(primaryKey);
+        // 不为空则返回转换为Comment类的对象
         return null == entity ? null : new Comment(entity);
     }
 }
