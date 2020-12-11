@@ -79,6 +79,7 @@ public class RestApiController {
     public ResponseVO autoLink(@Validated Link link, BindingResult bindingResult) {
         log.info("申请友情链接......");
         log.info(JSON.toJSONString(link));
+        //参数校验错误时报错
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(bindingResult.getFieldError().getDefaultMessage());
         }
@@ -88,6 +89,7 @@ public class RestApiController {
             log.error("客户端自助申请友链发生异常", e);
             return ResultUtil.error(e.getMessage());
         }
+        //返回结果响应
         return ResultUtil.success("已成功添加友链，祝您生活愉快！");
     }
 
@@ -100,28 +102,35 @@ public class RestApiController {
     @PostMapping("/qq/{qq}")
     @BussinessLog(value = "获取QQ信息", platform = PlatformEnum.WEB)
     public ResponseVO qq(@PathVariable("qq") String qq) {
+        //qq为空时报错
         if (StringUtils.isEmpty(qq)) {
             return ResultUtil.error("");
         }
         Map<String, String> resultMap = new HashMap<>(4);
+        //默认名为匿名
         String nickname = "匿名";
+        //qq地址
         String json = RestClientUtil.get("http://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=" + qq, "GBK");
         if (!StringUtils.isEmpty(json)) {
             try {
                 json = json.replaceAll("portraitCallBack|\\\\s*|\\t|\\r|\\n", "");
                 json = json.substring(1, json.length() - 1);
                 log.info(json);
-                JSONObject object = JSONObject.parseObject(json);//字符串转JSON对象
-                JSONArray array = object.getJSONArray(qq);//字符串转JSON数组
+                //字符串转JSON对象
+                JSONObject object = JSONObject.parseObject(json);
+                //字符串转JSON数组
+                JSONArray array = object.getJSONArray(qq);
                 nickname = array.getString(6);
             } catch (Exception e) {
                 log.error("通过QQ号获取用户昵称发生异常", e);
             }
         }
+        //设置结果属性
         resultMap.put("avatar", "https://q1.qlogo.cn/g?b=qq&nk=" + qq + "&s=40");
         resultMap.put("nickname", nickname);
         resultMap.put("email", qq + "@qq.com");
         resultMap.put("url", "https://user.qzone.qq.com/" + qq);
+        //返回结果响应
         return ResultUtil.success(null, resultMap);
     }
 
@@ -134,7 +143,9 @@ public class RestApiController {
     @PostMapping("/comments")
     @BussinessLog(value = "评论列表", platform = PlatformEnum.WEB, save = false)
     public ResponseVO comments(CommentConditionVO vo) {
+        //设置评论vo的状态
         vo.setStatus(CommentStatusEnum.APPROVED.toString());
+        //返回结果响应
         return ResultUtil.success(null, commentService.list(vo));
     }
 
@@ -148,10 +159,12 @@ public class RestApiController {
     @BussinessLog(value = "发表评论", platform = PlatformEnum.WEB)
     public ResponseVO comment(Comment comment) {
         try {
-            commentService.comment(comment);//执行评论
+            //执行发表评论
+            commentService.comment(comment);
         } catch (ZhydCommentException e) {
             return ResultUtil.error(e.getMessage());
         }
+        //返回结果响应
         return ResultUtil.success("评论发表成功，系统正在审核，请稍后刷新页面查看！");
     }
 
@@ -165,10 +178,12 @@ public class RestApiController {
     @BussinessLog(value = "点赞评论{1}", platform = PlatformEnum.WEB)
     public ResponseVO doSupport(@PathVariable("id") Long id) {
         try {
-            commentService.doSupport(id);//执行点赞
+            //执行点赞评论
+            commentService.doSupport(id);
         } catch (ZhydCommentException e) {
             return ResultUtil.error(e.getMessage());
         }
+        //返回结果响应
         return ResultUtil.success("");
     }
 
@@ -182,10 +197,12 @@ public class RestApiController {
     @BussinessLog(value = "点踩评论{1}", platform = PlatformEnum.WEB)
     public ResponseVO doOppose(@PathVariable("id") Long id) {
         try {
-            commentService.doOppose(id);//执行点踩
+            //执行点踩评论
+            commentService.doOppose(id);
         } catch (ZhydCommentException e) {
             return ResultUtil.error(e.getMessage());
         }
+        //返回结果响应
         return ResultUtil.success("");
     }
 
@@ -199,10 +216,12 @@ public class RestApiController {
     @BussinessLog(value = "点赞文章{1}", platform = PlatformEnum.WEB)
     public ResponseVO doPraise(@PathVariable("id") Long id) {
         try {
-            articleService.doPraise(id);//执行点赞
+            //执行点赞文章
+            articleService.doPraise(id);
         } catch (ZhydArticleException e) {
             return ResultUtil.error(e.getMessage());
         }
+        //返回结果响应
         return ResultUtil.success("");
     }
 
@@ -215,6 +234,6 @@ public class RestApiController {
     @BussinessLog(value = "公告列表", platform = PlatformEnum.WEB, save = false)
     public ResponseVO listNotice() {
         return ResultUtil.success("", noticeService.listRelease());
-    }
+    }//返回公告列表响应
 
 }

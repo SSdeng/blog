@@ -54,9 +54,11 @@ public class OssApi {
      */
     public String authFile(String fileName, String bucketName, long expirationTime) {
         try {
+            //存储空间不存在时抛出异常
             if (!this.client.doesBucketExist(bucketName)) {
                 throw new OssApiException("[阿里云OSS] 无法授权访问文件的URL！Bucket不存在：" + bucketName);
             }
+            //文件不存在时抛出异常
             if (!this.client.doesObjectExist(bucketName, fileName)) {
                 throw new OssApiException("[阿里云OSS] 文件授权失败！文件不存在：" + bucketName + "/" + fileName);
             }
@@ -65,6 +67,7 @@ public class OssApi {
             // 生成URL
             return this.client.generatePresignedUrl(bucketName, fileName, expiration).toString();
         } finally {
+            //关闭客户端
             this.shutdown();
         }
     }
@@ -77,11 +80,14 @@ public class OssApi {
      */
     public boolean isExistFile(String fileName, String bucketName) {
         try {
+            //存储空间不存在时抛出异常
             if (!this.client.doesBucketExist(bucketName)) {
                 throw new OssApiException("[阿里云OSS] Bucket不存在：" + bucketName);
             }
+            //返回文件是否存在的结果
             return this.client.doesObjectExist(bucketName, fileName);
         } finally {
+            //关闭客户端
             this.shutdown();
         }
     }
@@ -95,9 +101,11 @@ public class OssApi {
      */
     public ObjectPermission getFileAcl(String fileName, String bucketName) {
         try {
+            //存储空间不存在时抛出异常
             if (!this.client.doesBucketExist(bucketName)) {
                 throw new OssApiException("[阿里云OSS] 无法获取文件的访问权限！Bucket不存在：" + bucketName);
             }
+            //文件不存在时抛出异常
             if (!this.client.doesObjectExist(bucketName, fileName)) {
                 throw new OssApiException("[阿里云OSS] 无法获取文件的访问权限！文件不存在：" + bucketName + "/" + fileName);
             }
@@ -116,10 +124,13 @@ public class OssApi {
      */
     public List<OSSObjectSummary> listFile(String bucketName, ObjectsRequestEntity request) {
         try {
+            //存储空间不存在时抛出异常
             if (!this.client.doesBucketExist(bucketName)) {
                 throw new OssApiException("[阿里云OSS] 无法获取文件列表！Bucket不存在：" + bucketName);
             }
+            //创建新的存储空间请求对象
             ListObjectsRequest listRequest = new ListObjectsRequest(bucketName);
+            //从请求中载入请求信息
             if (null != request) {
                 listRequest.withDelimiter(request.getDelimiter())
                         .withEncodingType(request.getEncodingType())
@@ -129,8 +140,10 @@ public class OssApi {
             }
             // 列举Object
             ObjectListing objectListing = this.client.listObjects(listRequest);
+            //返回Object列表
             return objectListing.getObjectSummaries();
         } finally {
+            //关闭客户端
             this.shutdown();
         }
     }
@@ -144,15 +157,19 @@ public class OssApi {
      */
     public void setFileAcl(String fileName, String bucketName, CannedAccessControlList acl) {
         try {
+            //存储空间不存在时抛出异常
             boolean exists = this.client.doesBucketExist(bucketName);
             if (!exists) {
                 throw new OssApiException("[阿里云OSS] 无法修改文件的访问权限！Bucket不存在：" + bucketName);
             }
+            //文件不存在时抛出异常
             if (!this.client.doesObjectExist(bucketName, fileName)) {
                 throw new OssApiException("[阿里云OSS] 无法修改文件的访问权限！文件不存在：" + bucketName + "/" + fileName);
             }
+            //修改指定存储空间指定文件的访问权限
             this.client.setObjectAcl(bucketName, fileName, acl);
         } finally {
+            //关闭客户端
             this.shutdown();
         }
     }
@@ -166,14 +183,18 @@ public class OssApi {
     public void deleteFile(String fileName, String bucketName) {
         try {
             boolean exists = this.client.doesBucketExist(bucketName);
+            //存储空间不存在时抛出异常
             if (!exists) {
                 throw new OssApiException("[阿里云OSS] 文件删除失败！Bucket不存在：" + bucketName);
             }
+            //文件不存在时抛出异常
             if (!this.client.doesObjectExist(bucketName, fileName)) {
                 throw new OssApiException("[阿里云OSS] 文件删除失败！文件不存在：" + bucketName + "/" + fileName);
             }
+            //删除指定存储空间指定文件
             this.client.deleteObject(bucketName, fileName);
         } finally {
+            //关闭客户端
             this.shutdown();
         }
     }
@@ -186,6 +207,7 @@ public class OssApi {
     public void createBucket(String bucketName) {
         try {
             boolean exists = this.client.doesBucketExist(bucketName);
+            //存储空间不存在时抛出异常
             if (exists) {
                 throw new OssApiException("[阿里云OSS] Bucket创建失败！Bucket名称[" + bucketName + "]已被使用！");
             }
@@ -195,8 +217,10 @@ public class OssApi {
             createBucketRequest.setCannedACL(CannedAccessControlList.PublicRead);
             // 设置bucket存储类型为低频访问类型，默认是标准类型
             createBucketRequest.setStorageClass(StorageClass.IA);
+            //创建存储空间
             this.client.createBucket(createBucketRequest);
         } finally {
+            //关闭客户端
             this.shutdown();
         }
     }
@@ -208,11 +232,14 @@ public class OssApi {
      */
     public void setBucketAcl(BucketEntity bucket) {
         try {
+            //存储空间不存在时抛出异常
             if (!this.client.doesBucketExist(bucket.getBucketName())) {
                 throw new OssApiException("[阿里云OSS] 无法修改Bucket的访问权限！Bucket不存在：" + bucket.getBucketName());
             }
+            //设置指定存储空间的权限
             this.client.setBucketAcl(bucket.getBucketName(), bucket.getAcl());
         } finally {
+            //关闭客户端
             this.shutdown();
         }
     }
@@ -224,9 +251,11 @@ public class OssApi {
      */
     public void setBucketCors(CorsRoleEntity corsRole) {
         try {
+            //存储空间不存在时抛出异常
             if (!this.client.doesBucketExist(corsRole.getBucketName())) {
                 throw new OssApiException("[阿里云OSS] 无法修改Bucket的跨域设置！Bucket不存在：" + corsRole.getBucketName());
             }
+            //从跨域资源共享对象中获取请求
             SetBucketCORSRequest request = new SetBucketCORSRequest(corsRole.getBucketName());
 
             //CORS规则的容器,每个bucket最多允许10条规则
@@ -248,8 +277,10 @@ public class OssApi {
 
             //已存在的规则将被覆盖。
             request.setCorsRules(putCorsRules);
+            //设置跨域资源共享信息
             this.client.setBucketCORS(request);
         } finally {
+            //关闭客户端
             this.shutdown();
         }
     }
@@ -264,16 +295,22 @@ public class OssApi {
      */
     public void createFolder(String folder, String bucketName) throws OssApiException {
         try {
+
+            //存储空间名为空时抛出异常
             if (null == bucketName) {
                 throw new OssApiException("[阿里云OSS] 尚未指定Bucket！");
             }
 
+            //存储空间不存在时抛出异常
             if (!this.client.doesBucketExist(bucketName)) {
                 throw new OssApiException("[阿里云OSS] 无法创建目录！Bucket不存在：" + bucketName);
             }
+            //创建目录名
             folder = folder.endsWith("/") ? folder : folder + "/";
-            this.client.putObject(bucketName, folder, new ByteArrayInputStream(new byte[0]));//上传模拟文件
+            //上传模拟文件
+            this.client.putObject(bucketName, folder, new ByteArrayInputStream(new byte[0]));
         } finally {
+            //关闭客户端
             this.shutdown();
         }
     }
@@ -285,15 +322,20 @@ public class OssApi {
      */
     public void addReferers(RefererEntity refererEntity) {
         try {
+            //存储空间不存在时抛出异常
             if (!this.client.doesBucketExist(refererEntity.getBucketName())) {
                 throw new OssApiException("[阿里云OSS] 无法设置Referer白名单！Bucket不存在：" + refererEntity.getBucketName());
             }
+            //refer列表为空时结束
             if (CollectionUtils.isEmpty(refererEntity.getRefererList())) {
                 return;
             }
+            //获取referer列表
             BucketReferer br = new BucketReferer(true, refererEntity.getRefererList());
+            //设置白名单
             this.client.setBucketReferer(refererEntity.getBucketName(), br);
         } finally {
+            //关闭客户端
             this.shutdown();
         }
     }
@@ -305,13 +347,16 @@ public class OssApi {
      */
     public void removeReferers(String bucketName) {
         try {
+            //存储空间不存在时抛出异常
             if (!this.client.doesBucketExist(bucketName)) {
                 throw new OssApiException("[阿里云OSS] 无法清空Referer白名单！Bucket不存在：" + bucketName);
             }
             // 默认允许referer字段为空，且referer白名单为空。
             BucketReferer br = new BucketReferer();
+            //设置空的白名单
             client.setBucketReferer(bucketName, br);
         } finally {
+            //关闭客户端
             this.shutdown();
         }
     }
@@ -323,12 +368,16 @@ public class OssApi {
      */
     public List<String> getReferers(String bucketName) {
         try {
+            //存储空间不存在时抛出异常
             if (!this.client.doesBucketExist(bucketName)) {
                 throw new OssApiException("[阿里云OSS] 无法获取Referer白名单！Bucket不存在：" + bucketName);
             }
+            //获取指定存储空间的referer白名单
             BucketReferer br = this.client.getBucketReferer(bucketName);
+            //返回白名单
             return br.getRefererList();
         } finally {
+            //关闭客户端
             this.shutdown();
         }
     }
@@ -342,11 +391,14 @@ public class OssApi {
      */
     public String uploadFile(File localFile, String fileName, String bucket) {
         try {
+            //新建本地文件的输入流
             InputStream inputStream = new FileInputStream(localFile);
+            //上传本地文件并返回结果
             return this.uploadFile(inputStream, fileName, bucket);
         } catch (Exception e) {
             throw new OssApiException("[阿里云OSS] 文件上传失败！" + localFile, e);
         } finally {
+            //关闭客户端
             this.shutdown();
         }
     }
@@ -360,12 +412,16 @@ public class OssApi {
      */
     public String uploadFile(InputStream inputStream, String fileName, String bucketName) {
         try {
+            //存储空间不存在时抛出异常
             if (!this.client.doesBucketExist(bucketName)) {
                 throw new OssApiException("[阿里云OSS] 无法上传文件！Bucket不存在：" + bucketName);
             }
+            //上传文件并获取结果
             PutObjectResult result = this.client.putObject(bucketName, fileName, inputStream);
-            return result.getETag();//返回文件内容标识，文件内容不变etag值不变
+            //返回文件内容标识，文件内容不变etag值不变
+            return result.getETag();
         } finally {
+            //关闭客户端
             this.shutdown();
         }
     }

@@ -60,7 +60,7 @@ public class RestWebSiteController {
     @BussinessLog(value = "查看sitemap.xml", platform = PlatformEnum.WEB)
     public String sitemapXml() {
         return getSitemap(TemplateKeyEnum.TM_SITEMAP_XML);
-    }
+    }//返回xml格式网站地图
 
     /**
      * 查看sitemap.txt
@@ -71,7 +71,7 @@ public class RestWebSiteController {
     @BussinessLog(value = "查看sitemap.txt", platform = PlatformEnum.WEB)
     public String sitemapTxt() {
         return getSitemap(TemplateKeyEnum.TM_SITEMAP_TXT);
-    }
+    }//返回txt格式网站地图
 
     /**
      * 查看sitemap.html
@@ -82,7 +82,7 @@ public class RestWebSiteController {
     @BussinessLog(value = "查看sitemap.html", platform = PlatformEnum.WEB)
     public String sitemapHtml() {
         return getSitemap(TemplateKeyEnum.TM_SITEMAP_HTML);
-    }
+    }//返回html格式网站地图
 
     /**
      * 查看robots
@@ -92,10 +92,13 @@ public class RestWebSiteController {
     @GetMapping(value = "/robots.txt", produces = {"text/plain"})
     @BussinessLog(value = "查看robots", platform = PlatformEnum.WEB)
     public String robots() {
+        //新建robots模板
         Template template = templateService.getTemplate(TemplateKeyEnum.TM_ROBOTS);
         Map<String, Object> map = new HashMap<>();
+        //载入系统配置信息
         map.put("config", configService.getConfigs());
-        return FreeMarkerUtil.template2String(template.getRefValue(), map, true);//调用FreeMarker生成robots文件
+        //调用FreeMarker生成robots文件
+        return FreeMarkerUtil.template2String(template.getRefValue(), map, true);
     }
 
     /**
@@ -105,12 +108,18 @@ public class RestWebSiteController {
      * @return
      */
     private String getSitemap(TemplateKeyEnum key) {
+        //新建key类型的模板
         Template template = templateService.getTemplate(key);
         Map<String, Object> map = new HashMap<>();
+        //载入文章类型列表
         map.put("articleTypeList", typeService.listAll());
+        //载入文章标签列表
         map.put("articleTagsList", tagsService.listAll());
+        //载入文章列表
         map.put("articleList", articleService.listAll());
+        //载入系统配置信息
         map.put("config", configService.getConfigs());
-        return FreeMarkerUtil.template2String(template.getRefValue(), map, true);//调用FreeMarker生成sitemap文件
+        //调用FreeMarker生成sitemap文件
+        return FreeMarkerUtil.template2String(template.getRefValue(), map, true);
     }
 }
