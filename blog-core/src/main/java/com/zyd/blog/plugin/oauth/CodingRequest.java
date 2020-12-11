@@ -17,12 +17,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CodingRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得码市的请求
+     * 获得码市的授权
      * @return
      */
     @Override

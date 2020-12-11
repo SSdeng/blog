@@ -18,12 +18,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TaobaoRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得淘宝的请求
+     * 获得淘宝的授权
      * @return
      */
     @Override

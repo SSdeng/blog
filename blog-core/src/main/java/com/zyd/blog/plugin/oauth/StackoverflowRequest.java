@@ -17,12 +17,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class StackoverflowRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得Stackover的请求
+     * 获得Stackover的授权
      * @return
      */
     @Override

@@ -17,12 +17,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DouyinRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得抖音的请求
+     * 获得抖音的授权
      * @return
      */
     @Override
