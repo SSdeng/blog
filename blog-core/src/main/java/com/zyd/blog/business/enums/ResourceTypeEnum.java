@@ -7,6 +7,12 @@ package com.zyd.blog.business.enums;
  * @date 2018/4/16 16:26
  * @since 1.0
  */
+
+/**
+ * 枚举资源类型
+ * @param menu:菜单
+ * @param button:按钮
+ */
 public enum ResourceTypeEnum {
     menu("菜单"), button("按钮");
 
@@ -16,6 +22,10 @@ public enum ResourceTypeEnum {
         this.info = info;
     }
 
+    /**
+     * 获取资源类型的info
+     * @return
+     */
     public String getInfo() {
         return info;
     }

@@ -7,6 +7,10 @@ package com.zyd.blog.business.enums;
  * @date 2018/4/16 16:26
  * @since 1.0
  */
+
+/**
+ * 枚举模板的类型
+ */
 public enum TemplateKeyEnum {
     TM_SITEMAP_XML,
     TM_SITEMAP_TXT,

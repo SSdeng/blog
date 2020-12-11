@@ -9,7 +9,9 @@ package com.zyd.blog.business.consts;
  * @since 1.0
  */
 public class HttpConsts {
-
+    /**
+     * 默认HTTP、HTTPS协议
+     */
     public static final String HTTP_PROROCOL = "http://";
 
     public static final String HTTPS_PROROCOL = "https://";

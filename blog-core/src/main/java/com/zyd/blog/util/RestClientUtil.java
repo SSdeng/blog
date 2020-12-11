@@ -24,22 +24,53 @@ public class RestClientUtil {
     protected static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.10 Safari/537.36";
     private static final String DEFAULT_ENCODE = "UTF-8";
 
+    /**
+     * post请求
+     * @param urlString url
+     * @param params
+     * @param requestHeader 请求的头部
+     * @return 请求
+     */
     public static String post(String urlString, Map<String, Object> params, Map<String, String> requestHeader) {
         return request("POST", urlString, params, DEFAULT_ENCODE, requestHeader);
     }
 
+    /**
+     * get请求
+     * @param urlString url
+     * @return 请求
+     */
     public static String get(String urlString) {
         return get(urlString, DEFAULT_ENCODE, null);
     }
 
+    /**
+     * get请求
+     * @param urlString url
+     * @param requestHeader 请求的头部
+     * @return 请求
+     */
     public static String get(String urlString, Map<String, String> requestHeader) {
         return get(urlString, DEFAULT_ENCODE, requestHeader);
     }
 
+    /**
+     * get请求
+     * @param urlString url
+     * @param encode
+     * @return 请求
+     */
     public static String get(String urlString, String encode) {
         return get(urlString, encode, null);
     }
 
+    /**
+     * get请求
+     * @param urlString url
+     * @param encode
+     * @param requestHeader 请求的头部
+     * @return 请求
+     */
     public static String get(String urlString, String encode, Map<String, String> requestHeader) {
         return request("GET", urlString, null, encode, requestHeader);
     }
@@ -54,11 +85,12 @@ public class RestClientUtil {
      */
     public static String request(String method, String urlString, Map<String, Object> params, String encode, Map<String, String> requestHeader) {
         // 解决因jdk版本问题造成的SSL请求失败的问题
-        java.lang.System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+        System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
         final HttpURLConnection connection;
         try {
             connection = openConnection(urlString);
             connection.setRequestMethod(method);
+            //如果请求的头部不为空设置请求的属性
             if (null != requestHeader) {
                 Set<Map.Entry<String, String>> entrySet = requestHeader.entrySet();
                 for (Map.Entry<String, String> entry : entrySet) {
@@ -70,7 +102,7 @@ public class RestClientUtil {
                 connection.setRequestProperty("User-Agent", USER_AGENT);
             }
             connection.setDoOutput(true);
-
+            //如果接受的参数不为空，则写入传送来的输出流
             if (!CollectionUtils.isEmpty(params)) {
                 final OutputStream outputStream = connection.getOutputStream();
                 StringBuilder paramsStr = new StringBuilder();
@@ -96,11 +128,23 @@ public class RestClientUtil {
         return null;
     }
 
+    /**
+     * 打开Http链接
+     * @param urlString
+     * @return
+     * @throws Exception
+     */
     protected static HttpURLConnection openConnection(final String urlString) throws Exception {
         final URL url = new URL(urlString);
         return (HttpURLConnection) url.openConnection();
     }
 
+    /**
+     * 写入传送来的输出流
+     * @param outputStream
+     * @param params
+     * @throws Exception
+     */
     protected static void writeOutput(final OutputStream outputStream, final String params) throws Exception {
         ByteArrayInputStream inputStram = new ByteArrayInputStream(params.getBytes("UTF-8"));
 
@@ -111,6 +155,12 @@ public class RestClientUtil {
         }
     }
 
+    /**
+     * 读取输入流
+     * @param is
+     * @param encode
+     * @return 输入的内容
+     */
     protected static String readInput(final InputStream is, String encode) {
         if (null == is) {
             return null;

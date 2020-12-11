@@ -6,6 +6,12 @@ package com.zyd.blog.business.enums;
  * @date 2018/5/7 15:16
  * @since 1.0
  */
+
+/**
+ * 枚举后台
+ * @param ADMIN 管理员
+ * @param WEB
+ */
 public enum PlatformEnum {
     ADMIN, WEB
 }

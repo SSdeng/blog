@@ -10,6 +10,11 @@ import lombok.Setter;
  * @date 2018/01/09 17:40
  * @since 1.0
  */
+
+/**
+ * LogConditionVO继承父类BaseConditionVO属性,为属性自动生成Getter和setter方法
+ *
+ */
 @Getter
 @Setter
 public class LogConditionVO extends BaseConditionVO {

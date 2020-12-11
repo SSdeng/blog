@@ -24,6 +24,24 @@ public class BizCommentDTO {
     BizCommentDTO parentDTO;
     private Long id;
     @JsonIgnore
+    /**
+     * 评论的概况
+     * @param createTime 创建时间
+     * @param sid
+     * @param pid
+     * @param nickname 昵称
+     * @param avatar 头像
+     * @param url
+     * @param address 地址
+     * @param os 操作系统
+     * @param osShortName 操作系统短名
+     * @param browser 浏览器
+     * @param browserShortName 浏览器简称
+     * @param content 内容
+     * @param support 点赞数量
+     * @param oppose 踩的数量
+     *
+     */
     private Date createTime;
     private Long sid;
     private Long pid;
@@ -41,16 +59,17 @@ public class BizCommentDTO {
 
     @JsonIgnore
     private UserTypeEnum userType;
-
+    //判断使用者类型是否是管理员
     public boolean isRoot() {
         return null != userType && userType == UserTypeEnum.ROOT;
     }
-
+    //定义评论的创建时间格式yyyy-MM-dd HH:mm
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    //获取评论创建时间
     public Date getCreateTimeString() {
         return this.getCreateTime();
     }
-
+    //获取上一页面
     public BizCommentDTO getParent() {
         return this.parentDTO;
     }
