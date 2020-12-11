@@ -17,12 +17,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class LinkedinRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得领英的请求
+     * 获得领英的授权
      * @return
      */
     @Override

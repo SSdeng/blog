@@ -18,12 +18,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class GithubRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得github的请求
+     * 获得github的授权
      * @return
      */
     @Override

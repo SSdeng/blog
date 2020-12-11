@@ -17,12 +17,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class RenrenRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得人人网的请求
+     * 获得人人网的授权
      * @return
      */
     @Override
