@@ -22,6 +22,10 @@ import java.lang.reflect.Method;
  * @date 2018/4/16 16:26
  * @since 1.0
  */
+
+/**
+ * Redis缓存界面，防止Redis宕机影响业务逻辑
+ */
 @Slf4j
 @Aspect
 @Component
@@ -31,7 +35,7 @@ public class RedisCacheAspect {
 
     @Autowired
     private RedisService redisService;
-
+    //匹配当前方法持有com.zyd.blog.business.annotation.RedisCache注解的方法
     @Pointcut(value = "@annotation(com.zyd.blog.business.annotation.RedisCache)")
     public void pointcut() {
     }
@@ -42,18 +46,25 @@ public class RedisCacheAspect {
         //获取操作名称
         RedisCache cache = currentMethod.getAnnotation(RedisCache.class);
         boolean enable = cache.enable();
+        //判断是否启用了缓存
         if (!enable) {
             return point.proceed();
         }
         boolean flush = cache.flush();
+        //判断缓存是否刷新
+        /**
+         * 如果刷新就清空缓存
+         */
         if (flush) {
             String classPrefix = AspectUtil.INSTANCE.getKey(point, BIZ_CACHE_PREFIX);
             log.info("清空缓存 - {}*", classPrefix);
             redisService.delBatch(classPrefix);
             return point.proceed();
         }
+        //定义缓存中的数据
         String key = AspectUtil.INSTANCE.getKey(point, cache.key(), BIZ_CACHE_PREFIX);
         boolean hasKey = redisService.hasKey(key);
+        //判断缓存中是否还有数据
         if (hasKey) {
             try {
                 log.info("{}从缓存中获取数据", key);

@@ -41,7 +41,7 @@ public class Md5Util {
         char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
         try {
             byte[] btInput = s.getBytes();
-            MessageDigest mdInst = MessageDigest.getInstance("MD5");
+            MessageDigest mdInst = MessageDigest.getInstance("MD5");//获取MD5加密字符串
             mdInst.update(btInput);
             byte[] md = mdInst.digest();
             int j = md.length;

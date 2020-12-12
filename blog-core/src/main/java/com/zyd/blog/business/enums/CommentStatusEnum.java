@@ -8,6 +8,9 @@ package com.zyd.blog.business.enums;
  * @since 1.0
  */
 public enum CommentStatusEnum {
+    /**
+     * 评论审核状态和描述
+     */
     VERIFYING("正在审核"),
     APPROVED("审核通过"),
     REJECT("审核失败"),
@@ -18,6 +21,10 @@ public enum CommentStatusEnum {
         this.desc = desc;
     }
 
+    /**
+     * 获取审核内容
+     * @return 描述
+     */
     public String getDesc() {
         return desc;
     }

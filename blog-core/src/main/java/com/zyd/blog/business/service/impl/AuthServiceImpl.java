@@ -42,8 +42,8 @@ public class AuthServiceImpl implements AuthService {
     public boolean login(String source, AuthCallback callback) {
         // 利用request工厂类，创建授权request
         AuthRequest authRequest = RequestFactory.getInstance(source).getRequest();
-        // 登录
-        AuthResponse response = authRequest.login(callback);
+        // 登录并获取登录信息
+        AuthResponse<? extends Object> response = authRequest.login(callback);
         if (response.ok()) { // 如果登录成功
             // 获取到的用户资料
             AuthUser authUser = (AuthUser) response.getData();

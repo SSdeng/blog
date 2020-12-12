@@ -10,12 +10,17 @@ import lombok.Setter;
  * @date 2018/01/09 17:40
  * @since 1.0
  */
+
+/**
+ * LogConditionVO继承父类BaseConditionVO属性,为属性自动生成Getter和setter方法
+ *
+ */
 @Getter
 @Setter
 public class LogConditionVO extends BaseConditionVO {
-	private Long userId;
-	private String logLevel;
-	private String type;
-	private Boolean spider;
+	private Long userId;//用户id
+	private String logLevel;//登入级别
+	private String type;//类型
+	private Boolean spider;//是否爬登入
 }
 

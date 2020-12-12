@@ -71,6 +71,12 @@ public class ImageDownloadUtil {
         return fileName;
     }
 
+    /**
+     * 通过Url获取字节输入流
+     * @param url
+     * @param referer
+     * @return
+     */
     private static InputStream getInputStreamByUrl(String url, String referer) {
         HttpGet httpGet = new HttpGet(checkUrl(url));
         httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
@@ -95,6 +101,12 @@ public class ImageDownloadUtil {
         return in;
     }
 
+    /**
+     * 解析读取的数据流
+     * @param in
+     * @return
+     * @throws IOException
+     */
     private static String parseInputStream(InputStream in) throws IOException {
         String result = "";
         StringBuffer content = null;

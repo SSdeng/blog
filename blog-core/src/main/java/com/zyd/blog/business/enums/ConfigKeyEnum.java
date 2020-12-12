@@ -193,12 +193,20 @@ public enum ConfigKeyEnum {
     DYNAMIC_TITLE("dynamicTitle"),
     ;
 
-    private String key;
+    private String key;//站点
 
+    /**
+     * 初始化站点
+     * @param key
+     */
     ConfigKeyEnum(String key) {
         this.key = key;
     }
 
+    /**
+     * 获取站点
+     * @return
+     */
     public String getKey() {
         return key;
     }}

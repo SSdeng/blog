@@ -10,6 +10,10 @@ import lombok.EqualsAndHashCode;
  * @date 2018/12/14 09:23
  * @since 1.8
  */
+
+/**
+ * FileConditionVO继承父类BaseConditionVO属性，在比较时不涉及父类成员，只涉及子类属性
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class FileConditionVO extends BaseConditionVO {

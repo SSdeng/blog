@@ -13,9 +13,14 @@ import lombok.EqualsAndHashCode;
  * @date 2018/4/16 16:26
  * @since 1.0
  */
+
+/**
+ * UpdateRecordeConditionVO继承父类BaseConditionVO属性，在比较时不涉及父类成员，只涉及子类属性
+ * @param 更新记录
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class UpdateRecordeConditionVO extends BaseConditionVO {
-	private UpdateRecorde updateRecorde;
+	private UpdateRecorde updateRecorde;//更新记录
 }
 

@@ -53,6 +53,7 @@ public class BeanConvertUtil {
             return null;
         }
         try {
+            //复制资源属性
             T t = target.newInstance();
             BeanUtils.copyProperties(source, t);
             return t;
@@ -77,6 +78,7 @@ public class BeanConvertUtil {
         if (null == source || null == target) {
             return null;
         }
+        //复制资源到目的地属性
         CustomBeanUtils.copyProperties(source, target);
         if (clazz.equals(target.getClass())) {
             return (T) target;
@@ -93,8 +95,8 @@ public class BeanConvertUtil {
         }
 
         private static void copyProperties(Object source, Object target, @Nullable Class<?> editable, @Nullable String... ignoreProperties) throws BeansException {
-            Assert.notNull(source, "Source must not be null");
-            Assert.notNull(target, "Target must not be null");
+            Assert.notNull(source, "Source must not be null");//断言源资源不为空
+            Assert.notNull(target, "Target must not be null");//断言目的资源不为空
             Class<?> actualEditable = target.getClass();
             if (editable != null) {
                 if (!editable.isInstance(target)) {
@@ -103,12 +105,14 @@ public class BeanConvertUtil {
 
                 actualEditable = editable;
             }
-
+            //定义属性描述
             PropertyDescriptor[] targetPds = getPropertyDescriptors(actualEditable);
             List<String> ignoreList = ignoreProperties != null ? Arrays.asList(ignoreProperties) : null;
             PropertyDescriptor[] var7 = targetPds;
             int var8 = targetPds.length;
-
+            /**
+             * 进行不同类型属性之间的转换
+             */
             for (int var9 = 0; var9 < var8; ++var9) {
                 PropertyDescriptor targetPd = var7[var9];
                 Method writeMethod = targetPd.getWriteMethod();
