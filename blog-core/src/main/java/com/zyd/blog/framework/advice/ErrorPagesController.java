@@ -51,13 +51,20 @@ public class ErrorPagesController implements ErrorController {
      */
     @Autowired
     public ErrorPagesController(ErrorAttributes errorAttributes) {
+
+        //检查参数是否正确传入，没有正确传入则报错
         Assert.notNull(errorAttributes, "ErrorAttributes must not be null");
         this.errorAttributes = errorAttributes;
     }
 
+    //处理PAGE NOT FOUND 404 的情况
     @RequestMapping("/404")
     public ModelAndView errorHtml404(HttpServletRequest request, HttpServletResponse response, WebRequest webRequest) {
+
+        //将response的状态响应码设置为404
         response.setStatus(HttpStatus.NOT_FOUND.value());
+
+        //获取网页的错误信息并存放入model中
         Map<String, Object> model = getErrorAttributes(webRequest, isIncludeStackTrace(request, MediaType.TEXT_HTML));
         model.put("queryString", request.getQueryString());
 
