@@ -91,55 +91,88 @@ public class RequestHolder {
      * @return Object
      */
     public static Object getSession(String name) {
+
+        //日志记录获取session的线程信息
         log.debug("getSession -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
+
+        //从 RequestContextHolder中获得RequestAttributes信息
         ServletRequestAttributes servletRequestAttributes = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
+
+        //如果获得的RequestAttributes信息为空，则直接返回空，避免报错
         if (null == servletRequestAttributes) {
             return null;
         }
+
+        //根据name直接从RequestAttributes中获取attribute的信息
+        //设置RequestAttributes取的种类为session
         return servletRequestAttributes.getAttribute(name, RequestAttributes.SCOPE_SESSION);
     }
 
     /**
      * 添加session
      *
-     * @param name
-     * @param value
+     * @param name 添加session的名字
+     * @param value 添加session的值
      */
     public static void setSession(String name, Object value) {
+
+        //日志记录添加session的线程信息
         log.debug("setSession -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
+
+        //从 RequestContextHolder中获得 RequestAttributes 信息
         ServletRequestAttributes servletRequestAttributes = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
+
+        //如果获得的RequestAttributes信息为空，则直接结束函数，避免报错
         if (null == servletRequestAttributes) {
             return;
         }
+
+        //如果不为空，则向RequestAttributes中添加session信息
         servletRequestAttributes.setAttribute(name, value, RequestAttributes.SCOPE_SESSION);
     }
 
     /**
      * 清除指定session
      *
-     * @param name
+     * @param name 移除session的名字
      * @return void
      */
     public static void removeSession(String name) {
+
+        //日志记录删除session的线程信息
         log.debug("removeSession -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
+
+        //从 RequestContextHolder中获得 RequestAttributes 信息
         ServletRequestAttributes servletRequestAttributes = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
+
+        //如果获得的RequestAttributes信息为空，则直接结束函数，避免报错
         if (null == servletRequestAttributes) {
             return;
         }
+
+        //如果不为空，则根据name直接从RequestAttributes中移除session信息
         servletRequestAttributes.removeAttribute(name, RequestAttributes.SCOPE_SESSION);
     }
 
     /**
      * 获取所有session key
      *
-     * @return String[]
+     * @return String[] 所有的 session key
      */
     public static String[] getSessionKeys() {
+
+        //日志记录获取session的线程信息
         log.debug("getSessionKeys -- Thread id :{}, name : {}", Thread.currentThread().getId(), Thread.currentThread().getName());
+
+        //从 RequestContextHolder中获得 RequestAttributes 信息
         ServletRequestAttributes servletRequestAttributes = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
+
+        //如果获得的RequestAttributes信息为空，则直接结束函数，避免报错
         if (null == servletRequestAttributes) {
             return null;
         }
+
+        //如果不为空，从RequestAttributes中获取所有session的key
         return servletRequestAttributes.getAttributeNames(RequestAttributes.SCOPE_SESSION);
     }
 }
