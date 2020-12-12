@@ -2,6 +2,7 @@ package com.zyd.blog.business.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.zyd.blog.business.annotation.RedisCache;
 import com.zyd.blog.business.entity.Link;
 import com.zyd.blog.business.enums.ConfigKeyEnum;
@@ -55,7 +56,7 @@ public class SysLinkServiceImpl implements SysLinkService {
     @Override
     public PageInfo<Link> findPageBreakByCondition(LinkConditionVO vo) {
         // 设置分页参数，开启分页
-        PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(), vo.getPageSize());
         // 紧跟着的第一个数据查询会被分页
         List<SysLink> list = sysLinkMapper.findPageBreakByCondition(vo);
         // 结果列表为空，则返回null
@@ -69,9 +70,7 @@ public class SysLinkServiceImpl implements SysLinkService {
             boList.add(new Link(sysLink));
         }
         // 用PageInfo包装结果集
-        PageInfo bean = new PageInfo<SysLink>(list);
-        bean.setList(boList);
-        return bean;
+        return new PageInfo<>(boList);
     }
 
     /**
@@ -155,8 +154,9 @@ public class SysLinkServiceImpl implements SysLinkService {
      * @return 添加成功/失败
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     @RedisCache(flush = true)
-    public boolean autoLink(Link link) throws ZhydLinkException {
+    public boolean autoLink(Link link) {
         // 获取友链url，并根据url调用getOneByUrl（）查找数据库
         String url = link.getUrl();
         Link bo = getOneByUrl(url);
@@ -165,7 +165,7 @@ public class SysLinkServiceImpl implements SysLinkService {
             throw new ZhydLinkException("本站已经添加过贵站的链接！");
         }
         // 获取配置信息实体
-        Map config = configService.getConfigs();
+        Map<String,Object> config = configService.getConfigs();
         // 获取配置信息实体中的域名信息
         String domain = (String) config.get(ConfigKeyEnum.DOMAIN.getKey());
         // 如果该url未添加本站友情链接，抛出异常并提示

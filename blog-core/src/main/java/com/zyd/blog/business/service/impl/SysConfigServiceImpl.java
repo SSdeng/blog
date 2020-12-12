@@ -3,7 +3,7 @@ package com.zyd.blog.business.service.impl;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSON;
 import com.zyd.blog.business.annotation.RedisCache;
 import com.zyd.blog.business.consts.DateConst;
 import com.zyd.blog.business.enums.ConfigKeyEnum;
@@ -67,7 +67,7 @@ public class SysConfigServiceImpl implements SysConfigService {
         // 利用开源项目huTool提供的日期工具完成日期格式转换，设置系统最后一次更新时间为"2019-01-01 00:00:00"
         res.put(updateTimeKey, DateUtil.parse("2019-01-01 00:00:00", DateConst.YYYY_MM_DD_HH_MM_SS_EN));
         // 遍历配置实体
-        list.forEach((sysConfig) -> {
+        list.forEach(sysConfig -> {
             // 将配置实体的ConfigKey属性、ConfigValue属性分别作为map的Key、Value放入Map中
             res.put(String.valueOf(sysConfig.getConfigKey()), sysConfig.getConfigValue());
             // 如果该配置的更新时间比现存的最后更新时间晚，则替换最后更新时间
@@ -77,15 +77,16 @@ public class SysConfigServiceImpl implements SysConfigService {
         });
         // 取出存储方式
         String storageType = (String) res.get(ConfigKeyEnum.STORAGE_TYPE.getKey());
+        String fsp = "fileStoragePath";
         // 如果存储方式为本地，则在map中加入value为本地文件存储路径，key为"fileStoragePath"
         if ("local".equalsIgnoreCase(storageType)) {
-            res.put("fileStoragePath", res.get(ConfigKeyEnum.LOCAL_FILE_URL.getKey()));
+            res.put(fsp, res.get(ConfigKeyEnum.LOCAL_FILE_URL.getKey()));
         } else if ("qiniu".equalsIgnoreCase(storageType)) {
             // 如果存储方式为七牛，则在map中加入value为七牛云cdn域名，key为"fileStoragePath"
-            res.put("fileStoragePath", res.get(ConfigKeyEnum.QINIU_BASE_PATH.getKey()));
+            res.put(fsp, res.get(ConfigKeyEnum.QINIU_BASE_PATH.getKey()));
         } else if ("aliyun".equalsIgnoreCase(storageType)) {
             // 如果存储方式为阿里云，则在map中加入value为阿里云Bucket域名，key为"fileStoragePath"
-            res.put("fileStoragePath", res.get(ConfigKeyEnum.ALIYUN_FILE_URL.getKey()));
+            res.put(fsp, res.get(ConfigKeyEnum.ALIYUN_FILE_URL.getKey()));
         }
         return res;
     }
@@ -233,7 +234,7 @@ public class SysConfigServiceImpl implements SysConfigService {
         }
         try {
             // 否则利用alibaba的fastJson，将值转换为JSON数组格式返回
-            return JSONArray.parseArray(config.getConfigValue(), String.class);
+            return JSON.parseArray(config.getConfigValue(), String.class);
         } catch (Exception e) {
             log.error("配置项无效！defaultUserAvatar = [" + config.getConfigValue() + "]");
         }

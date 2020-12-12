@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Redis服务接口类
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @website https://www.zhyd.me
  * @version 1.0

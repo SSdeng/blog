@@ -1,8 +1,8 @@
 package com.zyd.blog.business.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageHelper;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.zyd.blog.business.entity.Log;
 import com.zyd.blog.business.entity.User;
 import com.zyd.blog.business.enums.LogLevelEnum;
@@ -49,7 +49,7 @@ public class SysLogServiceImpl implements SysLogService {
     @Override
     public PageInfo<Log> findPageBreakByCondition(LogConditionVO vo) {
         // 设置分页参数，开启分页
-        PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(), vo.getPageSize());
         // 紧跟着的第一个数据查询会被分页
         List<SysLog> list = sysLogMapper.findPageBreakByCondition(vo);
         // 结果列表为空，则返回null
@@ -63,9 +63,7 @@ public class SysLogServiceImpl implements SysLogService {
             boList.add(new Log(sysLog));
         }
         // 用PageInfo包装结果集
-        PageInfo bean = new PageInfo<SysLog>(list);
-        bean.setList(boList);
-        return bean;
+        return new PageInfo<>(boList);
     }
 
     /**
@@ -75,6 +73,7 @@ public class SysLogServiceImpl implements SysLogService {
      */
     @Async
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void asyncSaveSystemLog(PlatformEnum platform, String bussinessName) {
         // 获取请求头中的User-Agent
         String ua = RequestUtil.getUa();
@@ -89,7 +88,7 @@ public class SysLogServiceImpl implements SysLogService {
         sysLog.setRequestUrl(RequestUtil.getRequestUrl());
         sysLog.setUa(ua);
         sysLog.setSpiderType(WebSpiderUtils.parseUa(ua));
-        sysLog.setParams(JSONObject.toJSONString(RequestUtil.getParametersMap()));
+        sysLog.setParams(JSON.toJSONString(RequestUtil.getParametersMap()));
         // 利用session工具类，取出session中的user实体
         User user = SessionUtil.getUser();
         if (user != null) { // user非空，代表用户登录了，设置日志的userid和内容

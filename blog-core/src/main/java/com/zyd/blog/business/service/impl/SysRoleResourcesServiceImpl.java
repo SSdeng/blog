@@ -2,10 +2,8 @@ package com.zyd.blog.business.service.impl;
 
 import com.zyd.blog.business.entity.RoleResources;
 import com.zyd.blog.business.service.SysRoleResourcesService;
-import com.zyd.blog.framework.holder.RequestHolder;
 import com.zyd.blog.persistence.beans.SysRoleResources;
 import com.zyd.blog.persistence.mapper.SysRoleResourcesMapper;
-import com.zyd.blog.util.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -60,9 +58,7 @@ public class SysRoleResourcesServiceImpl implements SysRoleResourcesService {
         Assert.notNull(entities, "entities不可为空！");
         // 新建角色-资源数据实体
         List<SysRoleResources> sysRoleResources = new ArrayList<>();
-        // 调用ip工具类和RequeHolder获取ip信息
-        String regIp = IpUtil.getRealIp(RequestHolder.getRequest());
-        // 遍历传入的列表，设置信息，列表添加数据实体
+        // 遍历传入的列表，设置更新和创建信息，列表添加数据实体
         for (RoleResources RoleResources : entities) {
             RoleResources.setUpdateTime(new Date());
             RoleResources.setCreateTime(new Date());
@@ -136,11 +132,11 @@ public class SysRoleResourcesServiceImpl implements SysRoleResourcesService {
             return null;
         }
         // 非空，构建数据实体列表，遍历加入转换的数据实体
-        List<RoleResources> RoleResources = new ArrayList<>();
+        List<RoleResources> roleResources = new ArrayList<>();
         for (SysRoleResources r : sysRoleResources) {
-            RoleResources.add(new RoleResources(r));
+            roleResources.add(new RoleResources(r));
         }
-        return RoleResources;
+        return roleResources;
     }
 
     /**

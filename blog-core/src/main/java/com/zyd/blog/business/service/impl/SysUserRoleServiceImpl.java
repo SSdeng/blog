@@ -2,10 +2,8 @@ package com.zyd.blog.business.service.impl;
 
 import com.zyd.blog.business.entity.UserRole;
 import com.zyd.blog.business.service.SysUserRoleService;
-import com.zyd.blog.framework.holder.RequestHolder;
 import com.zyd.blog.persistence.beans.SysUserRole;
 import com.zyd.blog.persistence.mapper.SysUserRoleMapper;
-import com.zyd.blog.util.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -132,12 +130,12 @@ public class SysUserRoleServiceImpl implements SysUserRoleService {
             return null;
         }
         // 创建业务实体列表
-        List<UserRole> UserRole = new ArrayList<>();
+        List<UserRole> userRole = new ArrayList<>();
         // 遍历，添加
         for (SysUserRole r : sysUserRole) {
-            UserRole.add(new UserRole(r));
+            userRole.add(new UserRole(r));
         }
-        return UserRole;
+        return userRole;
     }
 
     /**

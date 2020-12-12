@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Redis服务实现类
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0
  * @website https://www.zhyd.me

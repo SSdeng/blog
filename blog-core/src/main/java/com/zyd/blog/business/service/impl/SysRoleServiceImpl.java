@@ -2,6 +2,7 @@ package com.zyd.blog.business.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.zyd.blog.business.entity.Role;
 import com.zyd.blog.business.service.SysRoleService;
 import com.zyd.blog.business.vo.RoleConditionVO;
@@ -44,11 +45,11 @@ public class SysRoleServiceImpl implements SysRoleService {
             return null;
         }
         // 非空，则创建map列表
-        List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> mapList = new ArrayList<>();
         Map<String, Object> map = null;
         // 遍历结果集，设置信息
         for (SysRole role : sysRole) {
-            map = new HashMap<String, Object>(3);
+            map = new HashMap<>(3);
             map.put("id", role.getId());
             map.put("pId", 0);
             map.put("checked", role.getSelected() != null && role.getSelected() == 1);
@@ -67,7 +68,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Override
     public PageInfo<Role> findPageBreakByCondition(RoleConditionVO vo) {
         // 设置分页参数，开启分页
-        PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(), vo.getPageSize());
         // 调用SysRoleMapper操作数据库
         List<SysRole> sysRoles = roleMapper.findPageBreakByCondition(vo);
         // 列表为空，则返回null
@@ -77,9 +78,7 @@ public class SysRoleServiceImpl implements SysRoleService {
         // 非空，则构建列表，并调用私有函数转换为业务实体
         List<Role> roles = this.getRole(sysRoles);
         // 用PageInfo包装结果集
-        PageInfo bean = new PageInfo<SysRole>(sysRoles);
-        bean.setList(roles);
-        return bean;
+        return new PageInfo<>(roles);
     }
 
     /**
