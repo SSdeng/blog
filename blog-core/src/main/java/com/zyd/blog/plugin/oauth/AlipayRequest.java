@@ -18,12 +18,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AlipayRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得阿里支付的请求
+     * 获得阿里支付的授权
      * @return
      */
     @Override

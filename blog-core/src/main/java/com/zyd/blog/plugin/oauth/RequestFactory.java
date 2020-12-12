@@ -19,6 +19,11 @@ public class RequestFactory {
 
     public static Map<String, OauthRequest> requestMap = new HashMap<>();
 
+    /**
+     * 生产authRequest
+     * @param source
+     * @return
+     */
     public static OauthRequest getInstance(String source) {
         if (StringUtils.isEmpty(source)) {
             throw new AuthException("请指定第三方平台");

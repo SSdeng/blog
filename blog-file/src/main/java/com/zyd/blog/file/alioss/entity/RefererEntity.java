@@ -26,6 +26,11 @@ public class RefererEntity extends AbstractEntity {
         super(bucketName);
     }
 
+    /**
+     * 设置referer列表
+     *
+     * @param refererList 要设置的referer列表
+     */
     public void setRefererList(List<String> refererList) {
         this.refererList = refererList;
     }

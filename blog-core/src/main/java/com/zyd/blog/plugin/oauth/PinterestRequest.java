@@ -17,12 +17,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PinterestRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得拼趣的请求
+     * 获得拼趣的授权
      * @return
      */
     @Override

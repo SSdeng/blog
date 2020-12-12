@@ -18,12 +18,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class GiteeRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得码云的请求
+     * 获得码云的授权
      * @return
      */
     @Override

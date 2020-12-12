@@ -64,8 +64,10 @@ public class BraumIntercepter implements HandlerInterceptor {
             writer.close();
             return false;
         }
+        //设置请求属性
         request.setAttribute("errorMsg", errorMsg);
         request.setAttribute("expire", TimeUnit.MILLISECONDS.toSeconds(br.getExpire()));
+        //拦截请求转发403响应
         request.getRequestDispatcher("/error/403").forward(request, response);
         return false;
     }

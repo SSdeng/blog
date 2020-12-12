@@ -17,12 +17,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DingTalkRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得钉钉的请求
+     * 获得钉钉的授权
      * @return
      */
     @Override

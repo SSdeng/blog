@@ -18,12 +18,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class WeiboRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得微博的请求
+     * 获得微博的授权
      * @return
      */
     @Override

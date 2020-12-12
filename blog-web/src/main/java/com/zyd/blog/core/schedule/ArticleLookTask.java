@@ -59,6 +59,7 @@ public class ArticleLookTask {
         while (true) {
             try {
                 bufferList.add(queue.take());//取出阻塞队列中的浏览记录
+                //遍历浏览记录
                 for (ArticleLook articleLook : bufferList) {
                     if (!bizArticleService.isExist(articleLook.getArticleId())) {
                         log.warn("{}-该文章不存在！", articleLook.getArticleId());
@@ -73,6 +74,8 @@ public class ArticleLookTask {
                     Thread.sleep(1000);
                 } catch (Exception err) {
                     log.error(err.getMessage());
+                    // 中断线程
+                    Thread.currentThread().interrupt();
                 }
             } finally {
                 bufferList.clear();
