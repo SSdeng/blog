@@ -161,7 +161,11 @@ public class Resources {//业务实体资源，包装了持久化中的数据实
      */
     public boolean isAvailable() {
         Boolean value = this.sysResources.getAvailable();
-        return value != null ? value : false;
+        if (value != null){
+            return value;
+        }else {
+            return false;
+        }
     }
 
     /**
@@ -178,7 +182,11 @@ public class Resources {//业务实体资源，包装了持久化中的数据实
      */
     public Boolean getExternal() {
         Boolean value = this.sysResources.getExternal();
-        return null == value ? false : value;
+        if(value != null){
+            return value;
+        }else {
+            return false;
+        }
     }
 
     /**

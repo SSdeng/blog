@@ -2,7 +2,6 @@ package com.zyd.blog.business.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.zyd.blog.business.entity.User;
 import com.zyd.blog.business.enums.CommentStatusEnum;
 import com.zyd.blog.business.enums.ExtraCommentTypeEnum;
 import com.zyd.blog.persistence.beans.BizArticle;
