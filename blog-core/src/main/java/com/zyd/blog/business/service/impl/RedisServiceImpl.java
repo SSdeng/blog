@@ -23,7 +23,7 @@ public class RedisServiceImpl implements RedisService {
 
     /** spring-data-redis中的核心操作类 */
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 设置值

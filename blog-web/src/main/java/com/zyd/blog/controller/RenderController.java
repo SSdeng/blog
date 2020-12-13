@@ -288,7 +288,7 @@ public class RenderController {
     @BussinessLog(value = "进入归档目录页", platform = PlatformEnum.WEB)
     public ModelAndView archives(Model model) {
         //获取归档目录列表
-        Map<String, List> map = bizArticleArchivesService.listArchives();
+        Map<String, List<Object> > map = bizArticleArchivesService.listArchives();
         model.addAttribute("archives", map);
         //返回归档目录视图
         return ResultUtil.view("archives");

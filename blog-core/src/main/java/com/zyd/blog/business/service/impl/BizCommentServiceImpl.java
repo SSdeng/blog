@@ -1,8 +1,10 @@
 package com.zyd.blog.business.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageHelper;
+
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.zyd.blog.business.annotation.RedisCache;
 import com.zyd.blog.business.dto.BizCommentDTO;
 import com.zyd.blog.business.entity.Comment;
@@ -25,6 +27,7 @@ import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;
 import eu.bitwalker.useragentutils.Version;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -54,7 +57,7 @@ public class BizCommentServiceImpl implements BizCommentService {
     private BizCommentMapper bizCommentMapper;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
     private MailService mailService;
@@ -71,7 +74,7 @@ public class BizCommentServiceImpl implements BizCommentService {
     @Override
     public PageInfo<Comment> findPageBreakByCondition(CommentConditionVO vo) {
         // 按vo属性分页
-        PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(), vo.getPageSize());
         // 按vo属性查询
         List<BizComment> list = bizCommentMapper.findPageBreakByCondition(vo);
         // 转换列表类型
@@ -80,12 +83,8 @@ public class BizCommentServiceImpl implements BizCommentService {
         if (boList == null) {
             return null;
         }
-        // 封装list到PageInfo对象实现分页
-        PageInfo bean = new PageInfo<BizComment>(list);
-        // 将boList放入pageInfo
-        bean.setList(boList);
-        // 返回PageInfo对象
-        return bean;
+        // 封装bolist到PageInfo对象实现分页
+        return new PageInfo<>(boList);
     }
 
     /**
@@ -102,7 +101,7 @@ public class BizCommentServiceImpl implements BizCommentService {
     @Override
     public Map<String, Object> list(CommentConditionVO vo) {
         // 按vo中规定 分页查询
-        PageInfo pageInfo = findPageBreakByCondition(vo);
+        PageInfo<Comment> pageInfo = findPageBreakByCondition(vo);
         // 创建存储结果的Map对象
         Map<String, Object> map = new HashMap<>();
         // 查询结果不为空
@@ -160,9 +159,9 @@ public class BizCommentServiceImpl implements BizCommentService {
      */
     @Override
     @RedisCache(flush = true)
-    public void commentForAdmin(Comment comment) throws ZhydCommentException {
+    public void commentForAdmin(Comment comment) {
         // 获取系统配置
-        Map config = configService.getConfigs();
+        Map<String, Object> config = configService.getConfigs();
         // 从session获取当前user
         User user = SessionUtil.getUser();
         // 记录qq
@@ -195,7 +194,7 @@ public class BizCommentServiceImpl implements BizCommentService {
      */
     @Override
     @RedisCache(flush = true)
-    public Comment comment(Comment comment) throws ZhydCommentException {
+    public Comment comment(Comment comment) {
         // 获取允许匿名评论的配置
         SysConfig sysConfig = configService.getByKey(ConfigKeyEnum.ANONYMOUS.getKey());
         boolean anonymous = true;
@@ -250,7 +249,7 @@ public class BizCommentServiceImpl implements BizCommentService {
         this.setCurrentLocation(comment);
 
         // 保存到数据库
-        this.insert(comment);
+        ((BizCommentServiceImpl) AopContext.currentProxy()).insert(comment);
 
         // 发送邮件通知
         this.sendEmail(comment);
@@ -358,23 +357,23 @@ public class BizCommentServiceImpl implements BizCommentService {
      */
     private void setCurrentLocation(Comment comment) {
         // 获取系统配置
-        Map config = configService.getConfigs();
+        Map<String, Object> config = configService.getConfigs();
         try {
             // 向百度api_ak发送请求 查询Ip地址对应实际地址 获取返回的json信息
             String locationJson = RestClientUtil.get(UrlBuildUtil.getLocationByIp(comment.getIp(), (String) config.get(ConfigKeyEnum.BAIDU_API_AK.getKey())));
             // 从json中提取报含位置信息的JSONObject
-            JSONObject localtionContent = JSONObject.parseObject(locationJson).getJSONObject("content");
+            JSONObject locationContent = JSON.parseObject(locationJson).getJSONObject("content");
             // 获取位置点信息
-            JSONObject point = localtionContent.getJSONObject("point");
+            JSONObject point = locationContent.getJSONObject("point");
             // 设置地址纬度
             comment.setLat(point.getString("y"));
             // 设置地址经度
             comment.setLng(point.getString("x"));
 
             // JSON对象中含有详细地址信息
-            if (localtionContent.containsKey("address_detail")) {
+            if (locationContent.containsKey("address_detail")) {
                 // 提取详细地址JSONObject
-                JSONObject addressDetail = localtionContent.getJSONObject("address_detail");
+                JSONObject addressDetail = locationContent.getJSONObject("address_detail");
                 // 获取城市地址
                 String city = addressDetail.getString("city");
                 // 获取区地址
@@ -437,7 +436,7 @@ public class BizCommentServiceImpl implements BizCommentService {
         // 设置评论状态为“审核通过”
         vo.setStatus(CommentStatusEnum.APPROVED.toString());
         // 分页
-        PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(), vo.getPageSize());
         // 查找
         List<BizComment> list = bizCommentMapper.findPageBreakByCondition(vo);
         // 返回结果
@@ -480,7 +479,7 @@ public class BizCommentServiceImpl implements BizCommentService {
         // 设置评论状态为“正在审核”
         vo.setStatus(CommentStatusEnum.VERIFYING.toString());
         // 分页搜索
-        PageInfo pageInfo = findPageBreakByCondition(vo);
+        PageInfo<Comment> pageInfo = findPageBreakByCondition(vo);
         // 不为空则返回评论列表
         return null == pageInfo ? null : pageInfo.getList();
     }
@@ -498,7 +497,7 @@ public class BizCommentServiceImpl implements BizCommentService {
         // 获取缓存值
         ValueOperations<String, Object> operations = redisTemplate.opsForValue();
         // 缓存中存有该操作key
-        if (redisTemplate.hasKey(key)) {
+        if ((boolean) redisTemplate.hasKey(key)) {
             // 同一ip对同一评论一小时内不能多次点赞
             throw new ZhydCommentException("一个小时只能点一次赞哈~");
         }
@@ -521,7 +520,7 @@ public class BizCommentServiceImpl implements BizCommentService {
         // 获取缓存值
         ValueOperations<String, Object> operations = redisTemplate.opsForValue();
         // 缓存中存有该操作key
-        if (redisTemplate.hasKey(key)) {
+        if ((boolean) redisTemplate.hasKey(key)) {
             // 同一ip对同一评论一小时内不能多次点踩
             throw new ZhydCommentException("一个小时只能踩一次哈~又没什么深仇大恨");
         }

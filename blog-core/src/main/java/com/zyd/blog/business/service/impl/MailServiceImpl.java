@@ -40,6 +40,8 @@ import java.util.Map;
 @Service
 public class MailServiceImpl implements MailService {
 
+    private static final String CONFIG = "config";
+
     @Autowired
     private JavaMailSender javaMailSender;
     @Autowired
@@ -73,7 +75,7 @@ public class MailServiceImpl implements MailService {
         // 友情链邮箱不为空
         if (!StringUtils.isEmpty(link.getEmail())) {
             // 获取系统配置
-            Map config = configService.getConfigs();
+            Map<String, Object> config = configService.getConfigs();
             // 获取相应模板信息
             Template template = templateService.getTemplate(keyEnum);
             // 获取模板值
@@ -82,7 +84,7 @@ public class MailServiceImpl implements MailService {
             // 记录友链
             map.put("link", link);
             // 记录系统配置
-            map.put("config", config);
+            map.put(CONFIG, config);
             // 按模板及map数据生成邮件正文
             String mailContext = FreeMarkerUtil.template2String(temXml, map, true);
 
@@ -112,7 +114,7 @@ public class MailServiceImpl implements MailService {
             return;
         }
         // 获取系统配置
-        Map config = configService.getConfigs();
+        Map<String, Object> config = configService.getConfigs();
         // 获取模板
         Template template = templateService.getTemplate(keyEnum);
         // 获取模板值
@@ -121,7 +123,7 @@ public class MailServiceImpl implements MailService {
         // 记录评论
         map.put("comment", comment);
         // 记录系统配置
-        map.put("config", config);
+        map.put(CONFIG, config);
         // 按模板及map数据生成邮件正文
         String mailContext = FreeMarkerUtil.template2String(temXml, map, true);
         // 标志通知类型
@@ -151,7 +153,7 @@ public class MailServiceImpl implements MailService {
     @Async
     public void sendToAdmin(Link link) {
         // 获取系统配置
-        Map config = configService.getConfigs();
+        Map<String, Object> config = configService.getConfigs();
         // 获取模板
         Template template = templateService.getTemplate(TemplateKeyEnum.TM_LINKS_TO_ADMIN);
         // 获取模板值
@@ -185,7 +187,7 @@ public class MailServiceImpl implements MailService {
     @Async
     public void sendToAdmin(Comment comment) {
         // 获取系统配置
-        Map config = configService.getConfigs();
+        Map<String, Object> config = configService.getConfigs();
         // 获取模板
         Template template = templateService.getTemplate(TemplateKeyEnum.TM_NEW_COMMENT);
         // 获取模板值
@@ -194,7 +196,7 @@ public class MailServiceImpl implements MailService {
         // 记录评论
         map.put("comment", comment);
         // 记录系统配置
-        map.put("config", config);
+        map.put(CONFIG, config);
         // 按模板及map数据生成邮件正文
         String mailContext = FreeMarkerUtil.template2String(temXml, map, true);
         // 从系统配置中获取作者邮箱

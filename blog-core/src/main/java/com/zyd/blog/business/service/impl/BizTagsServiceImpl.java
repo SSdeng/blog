@@ -1,7 +1,8 @@
 package com.zyd.blog.business.service.impl;
 
-import com.github.pagehelper.PageHelper;
+
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.zyd.blog.business.annotation.RedisCache;
 import com.zyd.blog.business.entity.Tags;
 import com.zyd.blog.business.service.BizTagsService;
@@ -48,7 +49,7 @@ public class BizTagsServiceImpl implements BizTagsService {
     @Override
     public PageInfo<Tags> findPageBreakByCondition(TagsConditionVO vo) {
         // 分页
-        PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(), vo.getPageSize());
         // 按条件查询
         List<BizTags> list = bizTagsMapper.findPageBreakByCondition(vo);
         // 转换元素类型
@@ -57,11 +58,8 @@ public class BizTagsServiceImpl implements BizTagsService {
         if (boList == null) {
             return null;
         }
-        // 封装list到pageInfo对象实现分页
-        PageInfo bean = new PageInfo<BizTags>(list);
-        // 将boList放入pageInfo
-        bean.setList(boList);
-        return bean;
+        // 封装boList到pageInfo对象实现分页
+        return new PageInfo<>(boList);
     }
 
     /**

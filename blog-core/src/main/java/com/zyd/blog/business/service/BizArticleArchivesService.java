@@ -19,5 +19,5 @@ public interface BizArticleArchivesService {
      *
      * @return 归档目录列表
      */
-    Map<String, List> listArchives();
+    Map<String, List<Object> > listArchives();
 }

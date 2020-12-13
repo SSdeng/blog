@@ -1,6 +1,7 @@
 package com.zyd.blog.business.service.impl;
 
-import com.github.pagehelper.PageHelper;
+
+import com.github.pagehelper.page.PageMethod;
 import com.zyd.blog.business.entity.Article;
 import com.zyd.blog.business.entity.Statistics;
 import com.zyd.blog.business.service.BizArticleService;
@@ -51,7 +52,7 @@ public class BizStatisticsServiceImpl implements BizStatisticsService {
     @Override
     public List<Statistics> listSpider(int pageSize) {
         // 分页
-        PageHelper.startPage(1, pageSize);
+        PageMethod.startPage(1, pageSize);
         // 获取统计表
         List<BizStatistics> entityList = statisticsMapper.listSpider();
         // 空表
@@ -76,7 +77,7 @@ public class BizStatisticsServiceImpl implements BizStatisticsService {
     @Override
     public List<Statistics> listType(int pageSize) {
         // 分页
-        PageHelper.startPage(1, pageSize);
+        PageMethod.startPage(1, pageSize);
         // 获取文章分类统计表
         List<BizStatistics> entityList = statisticsMapper.listType();
         // 空表
