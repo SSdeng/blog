@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +38,9 @@ public class RenderController {
      * sidebar部分的推荐、近期和随机tab页中显示的文章数
      */
     private static final int SIDEBAR_ARTICLE_SIZE = 8;
+    /**
+     * 首页地址属性名
+     */
     private static final String INDEX_URL = "index";
 
     /**

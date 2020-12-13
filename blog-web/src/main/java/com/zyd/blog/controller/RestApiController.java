@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,12 +77,18 @@ public class RestApiController {
      */
     @PostMapping("/autoLink")
     @BussinessLog(value = "自助申请友链", platform = PlatformEnum.WEB)
-    public ResponseVO autoLink(@Validated Link link, BindingResult bindingResult) {
+    public ResponseVO<Object> autoLink(@Validated Link link, BindingResult bindingResult) {
         log.info("申请友情链接......");
         log.info(JSON.toJSONString(link));
         //参数校验错误时报错
         if (bindingResult.hasErrors()) {
-            return ResultUtil.error(bindingResult.getFieldError().getDefaultMessage());
+            FieldError error;
+            if((error = bindingResult.getFieldError())!=null){
+                return ResultUtil.error(error.getDefaultMessage());
+            }
+            else{
+                return ResultUtil.error("Field Error is Null!");
+            }
         }
         try {
             sysLinkService.autoLink(link);//添加友链
@@ -101,7 +108,7 @@ public class RestApiController {
      */
     @PostMapping("/qq/{qq}")
     @BussinessLog(value = "获取QQ信息", platform = PlatformEnum.WEB)
-    public ResponseVO qq(@PathVariable("qq") String qq) {
+    public ResponseVO<Object> qq(@PathVariable("qq") String qq) {
         //qq为空时报错
         if (StringUtils.isEmpty(qq)) {
             return ResultUtil.error("");
@@ -117,7 +124,7 @@ public class RestApiController {
                 json = json.substring(1, json.length() - 1);
                 log.info(json);
                 //字符串转JSON对象
-                JSONObject object = JSONObject.parseObject(json);
+                JSONObject object = JSON.parseObject(json);
                 //字符串转JSON数组
                 JSONArray array = object.getJSONArray(qq);
                 nickname = array.getString(6);
@@ -142,7 +149,7 @@ public class RestApiController {
      */
     @PostMapping("/comments")
     @BussinessLog(value = "评论列表", platform = PlatformEnum.WEB, save = false)
-    public ResponseVO comments(CommentConditionVO vo) {
+    public ResponseVO<Object> comments(CommentConditionVO vo) {
         //设置评论vo的状态
         vo.setStatus(CommentStatusEnum.APPROVED.toString());
         //返回结果响应
@@ -157,7 +164,7 @@ public class RestApiController {
      */
     @PostMapping("/comment")
     @BussinessLog(value = "发表评论", platform = PlatformEnum.WEB)
-    public ResponseVO comment(Comment comment) {
+    public ResponseVO<Object> comment(Comment comment) {
         try {
             //执行发表评论
             commentService.comment(comment);
@@ -176,7 +183,7 @@ public class RestApiController {
      */
     @PostMapping("/doSupport/{id}")
     @BussinessLog(value = "点赞评论{1}", platform = PlatformEnum.WEB)
-    public ResponseVO doSupport(@PathVariable("id") Long id) {
+    public ResponseVO<Object> doSupport(@PathVariable("id") Long id) {
         try {
             //执行点赞评论
             commentService.doSupport(id);
@@ -195,7 +202,7 @@ public class RestApiController {
      */
     @PostMapping("/doOppose/{id}")
     @BussinessLog(value = "点踩评论{1}", platform = PlatformEnum.WEB)
-    public ResponseVO doOppose(@PathVariable("id") Long id) {
+    public ResponseVO<Object> doOppose(@PathVariable("id") Long id) {
         try {
             //执行点踩评论
             commentService.doOppose(id);
@@ -214,7 +221,7 @@ public class RestApiController {
      */
     @PostMapping("/doPraise/{id}")
     @BussinessLog(value = "点赞文章{1}", platform = PlatformEnum.WEB)
-    public ResponseVO doPraise(@PathVariable("id") Long id) {
+    public ResponseVO<Object> doPraise(@PathVariable("id") Long id) {
         try {
             //执行点赞文章
             articleService.doPraise(id);
@@ -232,7 +239,7 @@ public class RestApiController {
      */
     @PostMapping("/listNotice")
     @BussinessLog(value = "公告列表", platform = PlatformEnum.WEB, save = false)
-    public ResponseVO listNotice() {
+    public ResponseVO<Object> listNotice() {
         return ResultUtil.success("", noticeService.listRelease());
     }//返回公告列表响应
 

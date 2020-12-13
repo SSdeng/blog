@@ -12,7 +12,7 @@ import com.qiniu.util.Auth;
 import com.qiniu.util.StringUtils;
 import com.zyd.blog.file.entity.VirtualFile;
 import com.zyd.blog.file.exception.QiniuApiException;
-import com.zyd.blog.file.util.FileUtil;
+import com.zyd.blog.file.util.BlogFileUtil;
 
 import java.io.InputStream;
 import java.util.Date;
@@ -71,7 +71,16 @@ public class QiniuApiClient extends BaseApiClient {
         this.secretKey = secretKey;
         this.bucket = bucketName;
         this.path = baseUrl;
-        this.pathPrefix = StringUtils.isNullOrEmpty(uploadType) ? DEFAULT_PREFIX : uploadType.endsWith("/") ? uploadType : uploadType + "/";
+        StringBuilder builder = new StringBuilder();
+
+        if(org.springframework.util.StringUtils.isEmpty(uploadType)){
+            builder.append(DEFAULT_PREFIX);
+        }
+        else{
+            builder.append(uploadType);
+            if(!uploadType.endsWith("/")) builder.append("/");
+        }
+        this.pathPrefix = builder.toString();
         return this;
     }
 
@@ -88,7 +97,7 @@ public class QiniuApiClient extends BaseApiClient {
         this.check();
 
         //获取文件key
-        String key = FileUtil.generateTempFileName(imageUrl);
+        String key = BlogFileUtil.generateTempFileName(imageUrl);
         //设置文件名
         this.createNewFileName(key, this.pathPrefix);
         Date startTime = new Date();

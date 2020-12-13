@@ -3,7 +3,7 @@ package com.zyd.blog.file;
 import com.zyd.blog.file.alioss.api.OssApi;
 import com.zyd.blog.file.entity.VirtualFile;
 import com.zyd.blog.file.exception.OssApiException;
-import com.zyd.blog.file.util.FileUtil;
+import com.zyd.blog.file.util.BlogFileUtil;
 import com.zyd.blog.file.util.StreamUtil;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
@@ -64,8 +64,16 @@ public class AliyunOssApiClient extends BaseApiClient {
         ossApi = new OssApi(endpoint, accessKeyId, accessKeySecret);
         this.url = url;
         this.bucketName = bucketName;
+        StringBuilder builder = new StringBuilder();
 
-        this.pathPrefix = StringUtils.isEmpty(uploadType) ? DEFAULT_PREFIX : uploadType.endsWith("/") ? uploadType : uploadType + "/";
+        if(StringUtils.isEmpty(uploadType)){
+            builder.append(DEFAULT_PREFIX);
+        }
+        else{
+            builder.append(uploadType);
+            if(!uploadType.endsWith("/")) builder.append("/");
+        }
+        this.pathPrefix = builder.toString();
         return this;
     }
 
@@ -82,7 +90,7 @@ public class AliyunOssApiClient extends BaseApiClient {
         this.check();
 
         //获取文件key
-        String key = FileUtil.generateTempFileName(imageUrl);
+        String key = BlogFileUtil.generateTempFileName(imageUrl);
         //设置文件名
         this.createNewFileName(key, this.pathPrefix);
         Date startTime = new Date();
@@ -93,7 +101,7 @@ public class AliyunOssApiClient extends BaseApiClient {
             ossApi.uploadFile(uploadIs, this.newFileName, bucketName);
             //设置文件属性并返回上传文件对象
             return new VirtualFile()
-                    .setOriginalFileName(FileUtil.getName(key))
+                    .setOriginalFileName(cn.hutool.core.io.FileUtil.getName(key))
                     .setSuffix(this.suffix)
                     .setUploadStartTime(startTime)
                     .setUploadEndTime(new Date())

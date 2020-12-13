@@ -5,7 +5,7 @@ import com.zyd.blog.file.entity.VirtualFile;
 import com.zyd.blog.file.exception.GlobalFileException;
 import com.zyd.blog.file.exception.OssApiException;
 import com.zyd.blog.file.exception.QiniuApiException;
-import com.zyd.blog.file.util.FileUtil;
+import com.zyd.blog.file.util.BlogFileUtil;
 import com.zyd.blog.file.util.ImageUtil;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,7 +36,7 @@ public abstract class BaseApiClient implements ApiClient {
      */
     protected String suffix;
 
-    public BaseApiClient(String storageType) {
+    protected BaseApiClient(String storageType) {
         this.storageType = storageType;
     }
 
@@ -85,7 +85,7 @@ public abstract class BaseApiClient implements ApiClient {
             //新建上传文件的缓冲输入流
             InputStream is = new BufferedInputStream(new FileInputStream(file));
             //新建上传文件对象
-            VirtualFile res = this.uploadImg(is, "temp" + FileUtil.getSuffix(file));
+            VirtualFile res = this.uploadImg(is, "temp" + BlogFileUtil.getSuffix(file));
             //获取图片信息
             VirtualFile imageInfo = ImageUtil.getInfo(file);
             //设置图片信息并返回上传对象
@@ -106,9 +106,9 @@ public abstract class BaseApiClient implements ApiClient {
      */
     void createNewFileName(String key, String pathPrefix) {
         //获取文件后缀
-        this.suffix = FileUtil.getSuffix(key);
+        this.suffix = BlogFileUtil.getSuffix(key);
         //文件不为图片类型时抛出异常
-        if (!FileUtil.isPicture(this.suffix)) {
+        if (!BlogFileUtil.isPicture(this.suffix)) {
             throw new GlobalFileException("[" + this.storageType + "] 非法的图片文件[" + key + "]！目前只支持以下图片格式：[jpg, jpeg, png, gif, bmp]");
         }
         //以上传时间命名文件

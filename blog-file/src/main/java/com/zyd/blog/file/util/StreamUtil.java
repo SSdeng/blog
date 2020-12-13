@@ -16,6 +16,12 @@ import java.io.*;
 public class StreamUtil {
 
     /**
+     *  隐藏工具类的public构造方法
+     */
+    private StreamUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+    /**
      * 将InputStream转换为字符串
      *
      * @param is 要转换的InputStream
