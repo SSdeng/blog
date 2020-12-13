@@ -38,6 +38,7 @@ public class RedisCacheAspect {
     //匹配当前方法持有com.zyd.blog.business.annotation.RedisCache注解的方法
     @Pointcut(value = "@annotation(com.zyd.blog.business.annotation.RedisCache)")
     public void pointcut() {
+    	//Do Nothing 
     }
 
     @Around("pointcut()")

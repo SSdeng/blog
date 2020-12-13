@@ -9,6 +9,9 @@ package com.zyd.blog.business.consts;
  * @since 1.0
  */
 public class HttpConsts {
+	private HttpConsts() {
+		throw new IllegalStateException();
+	}
     /**
      * 默认HTTP、HTTPS协议
      */

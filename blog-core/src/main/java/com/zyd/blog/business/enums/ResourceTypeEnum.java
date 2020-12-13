@@ -14,7 +14,7 @@ package com.zyd.blog.business.enums;
  * @param button:按钮
  */
 public enum ResourceTypeEnum {
-    menu("菜单"), button("按钮");
+    MENU("菜单"), BUTTON("按钮");
 
     private final String info;//信息
 

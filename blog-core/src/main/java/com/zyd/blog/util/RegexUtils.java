@@ -1,5 +1,6 @@
 package com.zyd.blog.util;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,6 +16,9 @@ import java.util.regex.Pattern;
  * @since 1.0
  */
 public class RegexUtils {
+	private RegexUtils() {
+		throw new IllegalStateException();
+	}
 
     /**
      * @param regex
@@ -25,7 +29,7 @@ public class RegexUtils {
      */
     public static List<String> match(String str, String regex) {
         if (null == str) {
-            return null;
+            return Collections.emptyList();
         }
         Pattern pattern = Pattern.compile(regex);//定义正则表达式的模式转换
         Matcher matcher = pattern.matcher(str);

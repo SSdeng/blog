@@ -18,6 +18,7 @@ import com.zyd.blog.persistence.beans.SysLink;
 import com.zyd.blog.persistence.mapper.SysLinkMapper;
 import com.zyd.blog.util.HtmlUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -154,7 +155,6 @@ public class SysLinkServiceImpl implements SysLinkService {
      * @return 添加成功/失败
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     @RedisCache(flush = true)
     public boolean autoLink(Link link) {
         // 获取友链url，并根据url调用getOneByUrl（）查找数据库
@@ -197,7 +197,7 @@ public class SysLinkServiceImpl implements SysLinkService {
             link.setDescription(HtmlUtil.html2Text(link.getDescription()));
         }
         // 调用insert（）方法插入友链
-        this.insert(link);
+        ((SysLinkService)AopContext.currentProxy()).insert(link);
         log.info("友联自动申请成功,开始发送邮件通知...");
         // 发送邮件通知
         mailService.send(link, TemplateKeyEnum.TM_LINKS);

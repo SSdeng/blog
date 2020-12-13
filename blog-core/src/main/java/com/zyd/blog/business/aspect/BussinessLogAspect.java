@@ -12,8 +12,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+
 
 import java.lang.reflect.Method;
 
@@ -36,6 +35,7 @@ public class BussinessLogAspect {
     //1、匹配当前方法持有com.zyd.blog.business.annotation.BussinessLog注解的方法
     @Pointcut(value = "@annotation(com.zyd.blog.business.annotation.BussinessLog)")
     public void pointcut() {
+    	//Do Nothing Because of pointcut() is empty
     }
 
     @Around("pointcut()")
@@ -55,7 +55,7 @@ public class BussinessLogAspect {
         /**
          * 处理AOP切面日志
          */
-    private void handle(ProceedingJoinPoint point) throws Exception {
+    private void handle(ProceedingJoinPoint point) throws NoSuchMethodException {
         Method currentMethod = AspectUtil.INSTANCE.getMethod(point);
         //获取操作名称
         BussinessLog annotation = currentMethod.getAnnotation(BussinessLog.class);

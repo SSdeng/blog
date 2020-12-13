@@ -21,6 +21,9 @@ import java.util.concurrent.TimeUnit;
  * 爬web数据
  */
 public class WebSpiderUtils {
+	private WebSpiderUtils() {
+		throw new IllegalStateException("WebSpiderUtil.class");
+	}
 
     private static final String KEY = CachePrefixEnum.SPIDER.getPrefix() + "list";
 
@@ -29,21 +32,24 @@ public class WebSpiderUtils {
             return null;
         }
         Map<String, String> spider = listSpider();
+        if(spider!=null){
+
         for (Map.Entry<String, String> entry : spider.entrySet()) {
             String spiderSign = entry.getKey();// 爬虫的标记
             if (ua.contains(spiderSign) || ua.equalsIgnoreCase(spiderSign) || ua.toLowerCase().contains(spiderSign.toLowerCase())) {
                 return entry.getValue();
             }
         }
+        }
         return null;
     }
 
     private static Map<String, String> listSpider() {
         //从缓存中获取key
-        RedisTemplate redisTemplate = (RedisTemplate) SpringContextHolder.getBean("redisTemplate");
+        RedisTemplate<String, Map<String, String>> redisTemplate = (RedisTemplate<String, Map<String, String>>) SpringContextHolder.getBean("redisTemplate");
         ValueOperations<String, Map<String, String>> operations = redisTemplate.opsForValue();
         //判断缓存在是否有key
-        if (redisTemplate.hasKey(KEY)) {
+        if ((boolean) redisTemplate.hasKey(KEY)) {
             return operations.get(KEY);
         }
         //申明接口

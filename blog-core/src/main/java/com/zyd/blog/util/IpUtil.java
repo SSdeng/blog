@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
  * @since 1.0
  */
 public class IpUtil {
+	private IpUtil() {
+		throw new IllegalStateException();
+	}
 
     /**
      * 获取真实IP

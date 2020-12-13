@@ -16,6 +16,7 @@ import com.zyd.blog.persistence.mapper.SysLogMapper;
 import com.zyd.blog.util.RequestUtil;
 import com.zyd.blog.util.SessionUtil;
 import eu.bitwalker.useragentutils.UserAgent;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,6 @@ public class SysLogServiceImpl implements SysLogService {
      */
     @Async
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void asyncSaveSystemLog(PlatformEnum platform, String bussinessName) {
         // 获取请求头中的User-Agent
         String ua = RequestUtil.getUa();
@@ -108,7 +108,7 @@ public class SysLogServiceImpl implements SysLogService {
             sysLog.setBrowser(agent.getBrowser().getName());
             sysLog.setOs(agent.getOperatingSystem().getName());
             // 调用insert方法保存log到数据库
-            this.insert(sysLog);
+            ((SysLogServiceImpl) AopContext.currentProxy()).insert(sysLog);
         } catch (Exception e) {
             e.printStackTrace();
         }

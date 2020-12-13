@@ -17,6 +17,7 @@ import com.zyd.blog.persistence.beans.SysUser;
 import com.zyd.blog.persistence.mapper.SysUserMapper;
 import com.zyd.blog.util.IpUtil;
 import com.zyd.blog.util.PasswordUtil;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -196,7 +197,6 @@ public class SysUserServiceImpl implements SysUserService {
      * @return 更新后的用户
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public User updateUserLastLoginInfo(User user) {
         if (user != null) { // 验证user非空
             // 更新user信息
@@ -205,7 +205,7 @@ public class SysUserServiceImpl implements SysUserService {
             // 调用Ip工具类和RequestHolder类获取实际IP
             user.setLastLoginIp(IpUtil.getRealIp(RequestHolder.getRequest()));
             user.setPassword(null);
-            this.updateSelective(user);
+            ((SysUserService) AopContext.currentProxy()).updateSelective(user);
         }
         return user;
     }

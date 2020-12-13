@@ -21,6 +21,7 @@ import java.util.Set;
  */
 @Slf4j
 public class RestClientUtil {
+
     protected static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.10 Safari/537.36";
     private static final String DEFAULT_ENCODE = "UTF-8";
 
@@ -85,7 +86,7 @@ public class RestClientUtil {
      */
     public static String request(String method, String urlString, Map<String, Object> params, String encode, Map<String, String> requestHeader) {
         // 解决因jdk版本问题造成的SSL请求失败的问题
-        java.lang.System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+        System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
         final HttpURLConnection connection;
         try {
             connection = openConnection(urlString);
@@ -132,9 +133,9 @@ public class RestClientUtil {
      * 打开Http链接
      * @param urlString
      * @return
-     * @throws Exception
+     * @throws IOException
      */
-    protected static HttpURLConnection openConnection(final String urlString) throws Exception {
+    protected static HttpURLConnection openConnection(final String urlString) throws IOException {
         final URL url = new URL(urlString);
         return (HttpURLConnection) url.openConnection();
     }
@@ -143,10 +144,10 @@ public class RestClientUtil {
      * 写入传送来的输出流
      * @param outputStream
      * @param params
-     * @throws Exception
+     * @throws UnsupportedEncodingException
      */
-    protected static void writeOutput(final OutputStream outputStream, final String params) throws Exception {
-        ByteArrayInputStream inputStram = new ByteArrayInputStream(params.getBytes("UTF-8"));
+    protected static void writeOutput(final OutputStream outputStream, final String params) throws IOException{
+        ByteArrayInputStream inputStram = new ByteArrayInputStream(params.getBytes("DEFAULT_ENCODE"));
 
         final byte[] buffer = new byte[1024];
         int length = 0;

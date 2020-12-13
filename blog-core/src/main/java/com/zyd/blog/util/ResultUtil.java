@@ -21,6 +21,10 @@ import java.util.Map;
  * @since 1.0
  */
 public class ResultUtil {
+	private ResultUtil() {
+		throw new IllegalStateException();
+	}
+
     //根据view通过ModelAnView工具创建ModelAndView
     public static ModelAndView view(String view) {
         return new ModelAndView(view);

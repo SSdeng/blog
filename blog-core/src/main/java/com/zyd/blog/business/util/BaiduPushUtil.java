@@ -4,8 +4,6 @@ import com.zyd.blog.framework.exception.ZhydCommentException;
 import com.zyd.blog.util.RestClientUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
-
-import javax.net.ssl.HttpsURLConnection;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.util.Date;
@@ -21,6 +19,7 @@ import java.util.Date;
  */
 @Slf4j
 public class BaiduPushUtil extends RestClientUtil {
+
 
     /**
      * 推送链接到百度站长平台
@@ -60,7 +59,7 @@ public class BaiduPushUtil extends RestClientUtil {
                 outputStream.close();//关闭输出流
             }
             log.info("RestClientUtil response: {} : {}", connection.getResponseCode(), connection.getResponseMessage());
-            if (connection.getResponseCode() == HttpsURLConnection.HTTP_OK) {
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 return readInput(connection.getInputStream(), "UTF-8");//读取连接输入流
             } else {
                 return readInput(connection.getErrorStream(), "UTF-8");//读取连接输入流

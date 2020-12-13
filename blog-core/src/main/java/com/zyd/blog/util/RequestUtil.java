@@ -15,6 +15,9 @@ import java.util.Map;
  * @since 1.0
  */
 public class RequestUtil {
+	private RequestUtil() {
+		throw new IllegalStateException();
+	}
     /**
      * 获取HTTPServlet 请求参数
      * @return 请求参数

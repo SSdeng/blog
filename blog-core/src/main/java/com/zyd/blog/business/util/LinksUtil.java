@@ -3,7 +3,10 @@ package com.zyd.blog.business.util;
 import com.zyd.blog.business.consts.HttpConsts;
 import com.zyd.blog.util.HtmlUtil;
 import com.zyd.blog.util.RestClientUtil;
+
 import lombok.extern.slf4j.Slf4j;
+import me.zhyd.oauth.log.Log;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -30,6 +33,9 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class LinksUtil {
+	private LinksUtil(){
+		throw new IllegalStateException("LinkUtil.class");
+	}
     /**
      * 单位b，1kb = 1024b
      */
@@ -95,13 +101,10 @@ public class LinksUtil {
             contentLength = connection.getContentLength();
             log.debug("Favicon size : {}", contentLength);
         } catch (MalformedURLException e) {
-            e.printStackTrace();
             log.error("请求地址不对", e);
         } catch (ProtocolException e) {
-            e.printStackTrace();
             log.error("请求地址协议异常", e);
         } catch (IOException e) {
-            e.printStackTrace();
             log.error("数据传输异常", e);
         }
         return contentLength;
@@ -143,14 +146,14 @@ public class LinksUtil {
                 if (maxRequestCount == 0) {
                     return false;
                 }
-                System.err.println("没有获取到element.还剩" + maxRequestCount + "次获取机会.");
+                Log.error("没有获取到element.还剩" + maxRequestCount + "次获取机会.");
                 htmlDocument = Jsoup.parse(RestClientUtil.get("http://link.chinaz.com/" + url));
                 ulElement = HtmlUtil.getElementById(htmlDocument, "ulLink");
                 maxRequestCount--;
             }
 
             Elements liElements = ulElement.getElementsByTag("li");
-            if (liElements == null || liElements.size() <= 0) {
+            if (liElements == null || liElements.isEmpty()) {
                 return false;
             }
             for (int i = 1; i < liElements.size(); i++) {

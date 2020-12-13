@@ -10,7 +10,9 @@ package com.zyd.blog.business.consts;
  * @since 1.0
  */
 public class DateConst {
-
+	private DateConst() {
+		throw new IllegalStateException("CommonConst class");
+	}
     /**
      * yyyy-MM-dd HH:mm:ss
      */

@@ -64,7 +64,7 @@ public enum AspectUtil {
      * @param point 当前切面执行的方法
      */
     public String getClassName(JoinPoint point) {
-        return point.getTarget().getClass().getName().replaceAll("\\.", "_");
+        return point.getTarget().getClass().getName().replace("\\.", "_");
     }
 
     /**
