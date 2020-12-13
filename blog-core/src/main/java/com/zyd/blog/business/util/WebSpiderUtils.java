@@ -16,6 +16,10 @@ import java.util.concurrent.TimeUnit;
  * @date 2018/5/7 11:25
  * @since 1.0
  */
+
+/**
+ * 爬web数据
+ */
 public class WebSpiderUtils {
 
     private static final String KEY = CachePrefixEnum.SPIDER.getPrefix() + "list";
@@ -35,12 +39,16 @@ public class WebSpiderUtils {
     }
 
     private static Map<String, String> listSpider() {
+        //从缓存中获取key
         RedisTemplate redisTemplate = (RedisTemplate) SpringContextHolder.getBean("redisTemplate");
         ValueOperations<String, Map<String, String>> operations = redisTemplate.opsForValue();
+        //判断缓存在是否有key
         if (redisTemplate.hasKey(KEY)) {
             return operations.get(KEY);
         }
+        //申明接口
         Map<String, String> spider = new HashMap<>();
+        //爬数据
         spider.put("Baiduspider-image", "百度图片搜索");
         spider.put("Baiduspider-video", "百度视频搜索");
         spider.put("Baiduspider-news", "百度新闻搜索");

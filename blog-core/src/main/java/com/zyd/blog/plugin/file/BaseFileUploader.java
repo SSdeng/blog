@@ -37,7 +37,7 @@ public class BaseFileUploader {
     ApiClient getApiClient(String uploadType) {
         SysConfigService configService = SpringContextHolder.getBean(SysConfigService.class);
         Map<String, Object> config = configService.getConfigs();
-        String storageType = null;
+        String storageType = null;//存储类型
         if (null == config || StringUtils.isEmpty((storageType = (String) config.get(ConfigKeyEnum.STORAGE_TYPE.getKey())))) {
             throw new ZhydException("[文件服务]当前系统暂未配置文件服务相关的内容！");
         }

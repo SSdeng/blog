@@ -35,16 +35,17 @@ public class BaiduPushUtil extends RestClientUtil {
             throw new ZhydCommentException("尚未设置百度站长平台的Cookie信息，该功能不可用！");
         }
         log.info("{} REST url: {}", new Date(), urlString);
-        HttpURLConnection connection = null;
+        HttpURLConnection connection = null;//定义HttpUrl连接
         try {
             connection = openConnection(urlString);
             connection.setRequestMethod("POST");
             // (如果不设此项,json数据 ,当WEB服务默认的不是这种类型时可能抛java.io.EOFException)
+            //设置请求属性
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-            connection.setRequestProperty("Action", "1000");
-            connection.setRequestProperty("User-Agent", USER_AGENT);
-            connection.setRequestProperty("Connection", "keep-alive");
-            connection.setRequestProperty("Cookie", cookie);
+            connection.setRequestProperty("Action", "1000");//设置请求属性
+            connection.setRequestProperty("User-Agent", USER_AGENT);//设置请求属性
+            connection.setRequestProperty("Connection", "keep-alive");//设置请求属性
+            connection.setRequestProperty("Cookie", cookie);//设置请求属性
             connection.setDoOutput(true);
             connection.setDoInput(true);
             // 设置连接超时时间，单位毫秒
@@ -56,13 +57,13 @@ public class BaiduPushUtil extends RestClientUtil {
             if (params != null) {
                 final OutputStream outputStream = connection.getOutputStream();
                 writeOutput(outputStream, params);
-                outputStream.close();
+                outputStream.close();//关闭输出流
             }
             log.info("RestClientUtil response: {} : {}", connection.getResponseCode(), connection.getResponseMessage());
             if (connection.getResponseCode() == HttpsURLConnection.HTTP_OK) {
-                return readInput(connection.getInputStream(), "UTF-8");
+                return readInput(connection.getInputStream(), "UTF-8");//读取连接输入流
             } else {
-                return readInput(connection.getErrorStream(), "UTF-8");
+                return readInput(connection.getErrorStream(), "UTF-8");//读取连接输入流
             }
         } catch (Exception e) {
             log.error("推送到百度站长平台发生异常！", e);

@@ -60,6 +60,7 @@ public class AliyunOssApiClient extends BaseApiClient {
      * @return
      */
     public AliyunOssApiClient init(String endpoint, String accessKeyId, String accessKeySecret, String url, String bucketName, String uploadType) {
+        //根据节点域名，通行Key信息建立客户端对象并初始化参数
         ossApi = new OssApi(endpoint, accessKeyId, accessKeySecret);
         this.url = url;
         this.bucketName = bucketName;
@@ -77,14 +78,20 @@ public class AliyunOssApiClient extends BaseApiClient {
      */
     @Override
     public VirtualFile uploadImg(InputStream is, String imageUrl) {
+        //检查客户端配置
         this.check();
 
+        //获取文件key
         String key = FileUtil.generateTempFileName(imageUrl);
+        //设置文件名
         this.createNewFileName(key, this.pathPrefix);
         Date startTime = new Date();
+        //创建上传输入流和文件哈希输入流资源
         try (InputStream uploadIs = StreamUtil.clone(is);
              InputStream fileHashIs = StreamUtil.clone(is)) {
-            ossApi.uploadFile(uploadIs, this.newFileName, bucketName);//通过输入流上传文件
+            //通过输入流上传文件
+            ossApi.uploadFile(uploadIs, this.newFileName, bucketName);
+            //设置文件属性并返回上传文件对象
             return new VirtualFile()
                     .setOriginalFileName(FileUtil.getName(key))
                     .setSuffix(this.suffix)
@@ -114,13 +121,16 @@ public class AliyunOssApiClient extends BaseApiClient {
      */
     @Override
     public boolean removeFile(String key) {
+        //检查客户端配置
         this.check();
 
+        //文件key值为空时抛出异常
         if (StringUtils.isEmpty(key)) {
             throw new OssApiException("[" + this.storageType + "]删除文件失败：文件key为空");
         }
 
         try {
+            //从存储空间中删除文件
             this.ossApi.deleteFile(key, bucketName);
             return true;
         } catch (Exception e) {
@@ -133,6 +143,7 @@ public class AliyunOssApiClient extends BaseApiClient {
      */
     @Override
     public void check() {
+        //客户端为创建或初始化时抛出异常
         if (null == ossApi) {
             throw new OssApiException("[" + this.storageType + "]尚未配置阿里云OSS，文件上传功能暂时不可用！");
         }

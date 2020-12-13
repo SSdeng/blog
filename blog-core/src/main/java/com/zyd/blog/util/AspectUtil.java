@@ -36,7 +36,7 @@ public enum AspectUtil {
         if (null == currentMethod) {
             throw new ZhydException("Invalid operation! Method not found.");
         }
-        String methodName = currentMethod.getName();
+        String methodName = currentMethod.getName();//方法名字
         return getKey(point, prefix) +
                 "_" +
                 methodName +
@@ -50,7 +50,7 @@ public enum AspectUtil {
      * @param point 当前切面执行的方法
      */
     public String getKey(JoinPoint point, String prefix) {
-        String keyPrefix = "";
+        String keyPrefix = "";//前缀的键
         if (!StringUtils.isEmpty(prefix)) {
             keyPrefix += prefix;
         }
@@ -79,6 +79,12 @@ public enum AspectUtil {
         return target.getClass().getMethod(msig.getName(), msig.getParameterTypes());
     }
 
+    /**
+     * 解析当前执行方法的参数
+     * @param params
+     * @param bussinessName
+     * @return 商务姓名
+     */
     public String parseParams(Object[] params, String bussinessName) {
         if (bussinessName.contains("{") && bussinessName.contains("}")) {
             List<String> result = RegexUtils.match(bussinessName, "(?<=\\{)(\\d+)");

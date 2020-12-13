@@ -27,7 +27,7 @@ public class RegexUtils {
         if (null == str) {
             return null;
         }
-        Pattern pattern = Pattern.compile(regex);
+        Pattern pattern = Pattern.compile(regex);//定义正则表达式的模式转换
         Matcher matcher = pattern.matcher(str);
         List<String> list = new LinkedList<>();
         while (matcher.find()) {
@@ -40,8 +40,8 @@ public class RegexUtils {
         if (null == str) {
             return false;
         }
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(str);
+        Pattern pattern = Pattern.compile(regex);//定义正则表达式的模式转换
+        Matcher matcher = pattern.matcher(str);//定义str匹配
         return matcher.find();
     }
 }  

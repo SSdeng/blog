@@ -17,12 +17,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class GoogleRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得谷歌的请求
+     * 获得谷歌的授权
      * @return
      */
     @Override

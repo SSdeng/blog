@@ -18,12 +18,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class OschinaRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得开源中国的请求
+     * 获得开源中国的授权
      * @return
      */
     @Override

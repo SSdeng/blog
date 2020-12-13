@@ -42,19 +42,25 @@ public class FreemarkerSharedVariableMonitorAspects {
 
     @After("pointcut()")
     public void after(JoinPoint joinPoint) {
+        //获取config服务的config
         Map config = configService.getConfigs();
+        //判断config是否为空
         if (null == config) {
             log.error("config为空");
             return;
         }
+        //获取config的更新时间
         Long updateTime = ((Date) config.get(ConfigKeyEnum.UPDATE_TIME.getKey())).getTime();
+        //判断config表是否更新
         if (updateTime == configLastUpdateTime) {
             log.debug("config表未更新");
             return;
         }
         log.debug("config表已更新，重新加载config到shared variable");
+        //更新config表最后一次更新时间
         configLastUpdateTime = updateTime;
         try {
+            //添加config共享变量
             configuration.setSharedVariable("config", config);
         } catch (TemplateModelException e) {
             e.printStackTrace();

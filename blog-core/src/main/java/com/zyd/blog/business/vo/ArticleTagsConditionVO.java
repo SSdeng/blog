@@ -13,9 +13,14 @@ import lombok.EqualsAndHashCode;
  * @date 2018/4/16 16:26
  * @since 1.0
  */
+
+/**
+ * ArticleTagsConditionVO继承父类BaseConditionVO属性，在比较时不涉及父类成员，只涉及子类属性
+ * @param 文章标签
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class ArticleTagsConditionVO extends BaseConditionVO {
-	private ArticleTags articleTags;
+	private ArticleTags articleTags;//文章标签
 }
 

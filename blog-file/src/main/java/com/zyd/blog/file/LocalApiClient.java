@@ -42,6 +42,7 @@ public class LocalApiClient extends BaseApiClient {
      */
     private String pathPrefix;
 
+    //设置文件存储类型为“Nginx文件服务器”
     public LocalApiClient() {
         super("Nginx文件服务器");
     }
@@ -63,18 +64,27 @@ public class LocalApiClient extends BaseApiClient {
      */
     @Override
     public VirtualFile uploadImg(InputStream is, String imageUrl) {
+        //检查客户端配置
         this.check();
 
+        //获得文件key
         String key = FileUtil.generateTempFileName(imageUrl);
+        //设置文件名
         this.createNewFileName(key, this.pathPrefix);
         Date startTime = new Date();
 
+        //创建文件完整路径
         String realFilePath = this.rootPath + this.newFileName;
+        //检查路径
         FileUtil.checkFilePath(realFilePath);
+        //JDK1.7后的try with resources写法，用于对资源申请，确保异常时资源实时关闭
+        //创建上传文件输入流，文件哈希输入流和文件输出流资源
         try (InputStream uploadIs = StreamUtil.clone(is);
              InputStream fileHashIs = StreamUtil.clone(is);
-             FileOutputStream fos = new FileOutputStream(realFilePath)) {//JDK1.7后的try with resources写法，用于对资源申请，确保异常时资源实时关闭
+             FileOutputStream fos = new FileOutputStream(realFilePath)) {
+            //从文件输出流中复制文件到上传文件输入流中
             FileCopyUtils.copy(uploadIs, fos);
+            //设置文件属性并返回上传文件对象
             return new VirtualFile()
                     .setOriginalFileName(FileUtil.getName(key))
                     .setSuffix(this.suffix)
@@ -104,23 +114,32 @@ public class LocalApiClient extends BaseApiClient {
      */
     @Override
     public boolean removeFile(String key) {
+        //检查客户端配置
         this.check();
+        //文件key为空时抛出异常
         if (StringUtils.isEmpty(key)) {
             throw new LocalApiException("[" + this.storageType + "]删除文件失败：文件key为空");
         }
+        //根据文件key创建文件对象
         File file = new File(this.rootPath + key);
+        //文件不存在时抛出异常
         if (!file.exists()) {
             throw new LocalApiException("[" + this.storageType + "]删除文件失败：文件不存在[" + this.rootPath + key + "]");
         }
         try {
+            //删除文件并返回删除结果
             return file.delete();
         } catch (Exception e) {
             throw new LocalApiException("[" + this.storageType + "]删除文件失败：" + e.getMessage());
         }
     }
 
+    /**
+     *  检查本地API客户端配置
+     */
     @Override
     public void check() {
+        //url或者根路径为空时抛出异常
         if (StringUtils.isEmpty(url) || StringUtils.isEmpty(rootPath)) {
             throw new LocalApiException("[" + this.storageType + "]尚未配置Nginx文件服务器，文件上传功能暂时不可用！");
         }

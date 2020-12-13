@@ -17,12 +17,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MicrosoftRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得微软的请求
+     * 获得微软的授权
      * @return
      */
     @Override

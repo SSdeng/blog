@@ -17,12 +17,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class WechatEnterpriseRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得微信企业级的请求
+     * 获得微信企业级的授权
      * @return
      */
     @Override

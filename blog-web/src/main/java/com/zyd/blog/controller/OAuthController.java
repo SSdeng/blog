@@ -47,7 +47,9 @@ public class OAuthController {
     @RequestMapping("/render/{source}")
     public void renderAuth(@PathVariable("source") String source, HttpServletResponse response, HttpSession session) throws IOException {
         AuthRequest authRequest = RequestFactory.getInstance(source).getRequest();
+        //设置回调地址
         session.setAttribute("historyUrl", RequestUtil.getReferer());
+        //重定向至第三方
         response.sendRedirect(authRequest.authorize(AuthStateUtils.createState()));
     }
 
@@ -61,11 +63,14 @@ public class OAuthController {
     @RequestMapping("/callback/{source}")
     public ModelAndView login(@PathVariable("source") String source, AuthCallback callback, HttpSession session) {
         authService.login(source, callback);
+        //获取回调地址
         String historyUrl = (String) session.getAttribute("historyUrl");
         session.removeAttribute("historyUrl");
+        //url为空时跳转至首页
         if (StringUtils.isEmpty(historyUrl)) {
             return ResultUtil.redirect("/");
         }
+        //重定向至回调地址
         return ResultUtil.redirect(historyUrl);
     }
 
@@ -80,10 +85,13 @@ public class OAuthController {
     @RequestMapping("/revoke/{source}/{token}")
     public ModelAndView revokeAuth(@PathVariable("source") String source, @PathVariable("token") String token) throws IOException {
         AuthRequest authRequest = RequestFactory.getInstance(source).getRequest();
+        //回收授权令牌
         AuthResponse response = authRequest.revoke(AuthToken.builder().accessToken(token).build());
+        //应该是响应码返回200时跳回首页
         if (response.getCode() == 2000) {
             return ResultUtil.redirect("/");
         }
+        //跳回登录页
         return ResultUtil.redirect("/login");
     }
 
@@ -94,6 +102,7 @@ public class OAuthController {
      */
     @RequestMapping("/logout")
     public ModelAndView logout() {
+        //执行第三方登出
         authService.logout();
         return ResultUtil.redirect("/");
     }

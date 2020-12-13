@@ -17,12 +17,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ToutiaoRequest implements OauthRequest, InitializingBean {
-
+    //JustAuth属性
     @Autowired
     private JustAuthProperties properties;
 
     /**
-     * 获得头条网的请求
+     * 获得头条网的授权
      * @return
      */
     @Override

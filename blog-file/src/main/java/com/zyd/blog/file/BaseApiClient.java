@@ -53,8 +53,11 @@ public abstract class BaseApiClient implements ApiClient {
             throw new OssApiException("[" + this.storageType + "]文件上传失败：文件不可为空");
         }
         try {
+            //新建待上传文件对象
             VirtualFile res = this.uploadImg(file.getInputStream(), file.getOriginalFilename());
-            VirtualFile imageInfo = ImageUtil.getInfo(file);//获取图片信息
+            //获取图片信息
+            VirtualFile imageInfo = ImageUtil.getInfo(file);
+            //设置图片信息并返回上传对象
             return res.setSize(imageInfo.getSize())
                     .setOriginalFileName(file.getOriginalFilename())
                     .setWidth(imageInfo.getWidth())
@@ -72,14 +75,20 @@ public abstract class BaseApiClient implements ApiClient {
      */
     @Override
     public VirtualFile uploadImg(File file) {
+        //检查客户端配置
         this.check();
+        //文件对象为空时抛出异常
         if (file == null) {
             throw new QiniuApiException("[" + this.storageType + "]文件上传失败：文件不可为空");
         }
         try {
+            //新建上传文件的缓冲输入流
             InputStream is = new BufferedInputStream(new FileInputStream(file));
+            //新建上传文件对象
             VirtualFile res = this.uploadImg(is, "temp" + FileUtil.getSuffix(file));
-            VirtualFile imageInfo = ImageUtil.getInfo(file);//获取图片信息
+            //获取图片信息
+            VirtualFile imageInfo = ImageUtil.getInfo(file);
+            //设置图片信息并返回上传对象
             return res.setSize(imageInfo.getSize())
                     .setOriginalFileName(file.getName())
                     .setWidth(imageInfo.getWidth())
@@ -96,11 +105,15 @@ public abstract class BaseApiClient implements ApiClient {
      * @param pathPrefix 路径前缀
      */
     void createNewFileName(String key, String pathPrefix) {
+        //获取文件后缀
         this.suffix = FileUtil.getSuffix(key);
+        //文件不为图片类型时抛出异常
         if (!FileUtil.isPicture(this.suffix)) {
             throw new GlobalFileException("[" + this.storageType + "] 非法的图片文件[" + key + "]！目前只支持以下图片格式：[jpg, jpeg, png, gif, bmp]");
         }
-        String fileName = DateUtil.format(new Date(), "yyyyMMddHHmmssSSS");//以上传时间命名文件
+        //以上传时间命名文件
+        String fileName = DateUtil.format(new Date(), "yyyyMMddHHmmssSSS");
+        //设置完整文件名
         this.newFileName = pathPrefix + (fileName + this.suffix);
     }
 

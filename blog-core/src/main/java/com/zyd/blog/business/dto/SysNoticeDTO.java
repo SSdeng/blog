@@ -11,8 +11,14 @@ import lombok.Data;
  * @date 2018/4/16 16:26
  * @since 1.0
  */
+
+/**
+ * 系统通知详情
+ * @param title 标题
+ * param content 内容
+ */
 @Data
 public class SysNoticeDTO {
-    private String title;
-    private String content;
+    private String title;//标题
+    private String content;//内容
 }

@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import java.util.Date;
 
 /**
- * 文件实体类
+ * 上传文件实体类
  *
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @version 1.0

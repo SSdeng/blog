@@ -84,9 +84,12 @@ public class QiniuApiClient extends BaseApiClient {
      */
     @Override
     public VirtualFile uploadImg(InputStream is, String imageUrl) {
+        //检查客户端配置
         this.check();
 
+        //获取文件key
         String key = FileUtil.generateTempFileName(imageUrl);
+        //设置文件名
         this.createNewFileName(key, this.pathPrefix);
         Date startTime = new Date();
         //Zone.zone0:华东
@@ -96,13 +99,18 @@ public class QiniuApiClient extends BaseApiClient {
         Configuration cfg = new Configuration(Region.autoRegion());//存储对象地区自动设置
         UploadManager uploadManager = new UploadManager(cfg);//创建上传对象
         try {
+            //根据通行Key信息创建客户端
             Auth auth = Auth.create(this.accessKey, this.secretKey);
+            //获得上传Token
             String upToken = auth.uploadToken(this.bucket);
+
+            //获得上传结果响应
             Response response = uploadManager.put(is, this.newFileName, upToken, null, null);
 
             //解析上传成功的结果
             DefaultPutRet putRet = JSON.parseObject(response.bodyString(), DefaultPutRet.class);
 
+            //设置文件属性并返回上传文件对象
             return new VirtualFile()
                     .setOriginalFileName(key)
                     .setSuffix(this.suffix)
@@ -123,16 +131,23 @@ public class QiniuApiClient extends BaseApiClient {
      */
     @Override
     public boolean removeFile(String key) {
+        //检查客户端配置
         this.check();
 
+        //文件key值为空时抛出异常
         if (StringUtils.isNullOrEmpty(key)) {
             throw new QiniuApiException("[" + this.storageType + "]删除文件失败：文件key为空");
         }
+        //根据通行key信息创建客户端
         Auth auth = Auth.create(this.accessKey, this.secretKey);
+        //获取默认配置
         Configuration config = new Configuration(Region.autoRegion());
-        BucketManager bucketManager = new BucketManager(auth, config);//创建存储对象
+        //创建存储对象
+        BucketManager bucketManager = new BucketManager(auth, config);
         try {
+            //获得删除结果响应
             Response re = bucketManager.delete(this.bucket, key);
+            //返回响应
             return re.isOK();
         } catch (QiniuException e) {
             Response r = e.response;
@@ -145,6 +160,7 @@ public class QiniuApiClient extends BaseApiClient {
      */
     @Override
     public void check() {
+        //通行key，密码，存储空间任一为空时抛出异常
         if (StringUtils.isNullOrEmpty(this.accessKey) || StringUtils.isNullOrEmpty(this.secretKey) || StringUtils.isNullOrEmpty(this.bucket)) {
             throw new QiniuApiException("[" + this.storageType + "]尚未配置七牛云，文件上传功能暂时不可用！");
         }

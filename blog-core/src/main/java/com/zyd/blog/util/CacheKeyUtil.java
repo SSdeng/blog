@@ -25,12 +25,13 @@ public class CacheKeyUtil {
         if (null == params || params.length == 0) {
             return "";
         }
+        //定义创建变量“（”
         StringBuilder key = new StringBuilder("(");
         for (Object obj : params) {
             if (obj.getClass().equals(BindingAwareModelMap.class)) {
                 continue;
             }
-            key.append(JSON.toJSONString(obj).replaceAll("\"", "'"));
+            key.append(JSON.toJSONString(obj).replaceAll("\"", "'"));//进行字符替换
         }
         key.append(")");
         return key.toString();

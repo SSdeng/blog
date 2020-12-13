@@ -11,16 +11,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
- * @version 1.0
- * @website https://www.zhyd.me
- * @date 2019/3/21 17:54
- * @since 1.8
+ *
  */
 @Component
 @EnableScheduling
 public class SchedulingConfig implements SchedulingConfigurer {
 
+    //使用AtomicInteger防止多线程操作
     private AtomicInteger integer = new AtomicInteger(0);
 
     @Override

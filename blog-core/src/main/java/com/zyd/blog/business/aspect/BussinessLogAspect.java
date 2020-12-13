@@ -32,8 +32,8 @@ import java.lang.reflect.Method;
 public class BussinessLogAspect {
 
     @Autowired
-    private SysLogService logService;
-
+    private SysLogService logService;//注入logService
+    //1、匹配当前方法持有com.zyd.blog.business.annotation.BussinessLog注解的方法
     @Pointcut(value = "@annotation(com.zyd.blog.business.annotation.BussinessLog)")
     public void pointcut() {
     }
@@ -52,21 +52,25 @@ public class BussinessLogAspect {
 
         return result;
     }
-
+        /**
+         * 处理AOP切面日志
+         */
     private void handle(ProceedingJoinPoint point) throws Exception {
         Method currentMethod = AspectUtil.INSTANCE.getMethod(point);
         //获取操作名称
         BussinessLog annotation = currentMethod.getAnnotation(BussinessLog.class);
+        //获取是否操作是否存入数据库
         boolean save = annotation.save();
+        //操作进行后台管理
         PlatformEnum platform = annotation.platform();
         String bussinessName = AspectUtil.INSTANCE.parseParams(point.getArgs(), annotation.value());
         String ua = RequestUtil.getUa();
-
+        //以名字、IP、方法、URL和ua状况登录
         log.info("{} | {} - {} {} - {}", bussinessName, RequestUtil.getIp(), RequestUtil.getMethod(), RequestUtil.getRequestUrl(), ua);
         if (!save) {
             return;
         }
-
+        //5、记录数据库操作
         logService.asyncSaveSystemLog(platform, bussinessName);
     }
 
