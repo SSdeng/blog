@@ -35,7 +35,7 @@ public class RestConfigController {
      */
     @RequiresRoles("role:root")
     @PostMapping("/get")
-    public ResponseVO get() {
+    public ResponseVO<Object> get() {
         return ResultUtil.success(null, sysConfigService.getConfigs());
     }
 
@@ -49,7 +49,7 @@ public class RestConfigController {
     @RequiresRoles("role:root")
     @PostMapping("/save")
     @BussinessLog("修改系统配置")
-    public ResponseVO save(@RequestParam Map<String, String> configs,
+    public ResponseVO<Object> save(@RequestParam Map<String, String> configs,
                            @RequestParam(required = false) MultipartFile wxPraiseCode,
                            @RequestParam(required = false) MultipartFile zfbPraiseCode) {
         try {

@@ -53,7 +53,7 @@ public class RestTypeController {
     @RequiresPermissions("type:add")
     @PostMapping(value = "/add")
     @BussinessLog("添加分类")
-    public ResponseVO add(Type type) {
+    public ResponseVO<Object> add(Type type) {
         typeService.insert(type);
         return ResultUtil.success("文章类型添加成功！新类型 - " + type.getName());
     }
@@ -66,7 +66,7 @@ public class RestTypeController {
     @RequiresPermissions(value = {"type:batchDelete", "type:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除分类")
-    public ResponseVO remove(Long[] ids) {
+    public ResponseVO<Object> remove(Long[] ids) {
         if (null == ids) {
             return ResultUtil.error(500, "请至少选择一条记录");
         }
@@ -84,7 +84,7 @@ public class RestTypeController {
     @RequiresPermissions("type:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取分类详情")
-    public ResponseVO get(@PathVariable Long id) {
+    public ResponseVO<Object> get(@PathVariable Long id) {
         return ResultUtil.success(null, this.typeService.getByPrimaryKey(id));
     }
 
@@ -96,7 +96,7 @@ public class RestTypeController {
     @RequiresPermissions("type:edit")
     @PostMapping("/edit")
     @BussinessLog("编辑分类")
-    public ResponseVO edit(Type type) {
+    public ResponseVO<Object> edit(Type type) {
         try {
             typeService.updateSelective(type);
         } catch (Exception e) {
@@ -111,7 +111,7 @@ public class RestTypeController {
      * @return JSON
      */
     @PostMapping("/listAll")
-    public ResponseVO listType() {
+    public ResponseVO<Object> listType() {
         return ResultUtil.success(null, typeService.listTypeForMenu());
     }
 
@@ -120,7 +120,7 @@ public class RestTypeController {
      * @return JSON
      */
     @PostMapping("/listParent")
-    public ResponseVO listParent() {
+    public ResponseVO<Object> listParent() {
         return ResultUtil.success(null, typeService.listParent());
     }
 

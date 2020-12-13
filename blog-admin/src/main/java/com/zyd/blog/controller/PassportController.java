@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,7 +66,7 @@ public class PassportController {
     @BussinessLog("[{1}]登录系统")
     @PostMapping("/signin")
     @ResponseBody
-    public ResponseVO submitLogin(String username, String password, boolean rememberMe, String kaptcha) {
+    public ResponseVO<Object> submitLogin(String username, String password, boolean rememberMe, String kaptcha) {
         // 判断是否启用验证码
         if (config.isEnableKaptcha()) {
             // 若启用验证码，则判断验证码是否正确
@@ -85,10 +86,8 @@ public class PassportController {
             currentUser.login(token);
             SavedRequest savedRequest = WebUtils.getSavedRequest(RequestHolder.getRequest());
             String historyUrl = null;
-            if(null != savedRequest) {
-                if(!savedRequest.getMethod().equals("POST")) {
+            if (null != savedRequest && !savedRequest.getMethod().equals("POST")) {
                     historyUrl = savedRequest.getRequestUrl();
-                }
             }
             return ResultUtil.success(null, historyUrl);
         } catch (Exception e) {
@@ -106,9 +105,11 @@ public class PassportController {
     @BussinessLog("修改密码")
     @PostMapping("/updatePwd")
     @ResponseBody
-    public ResponseVO updatePwd(@Validated UserPwd userPwd, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            return ResultUtil.error(bindingResult.getFieldError().getDefaultMessage());
+    public ResponseVO<Object> updatePwd(@Validated UserPwd userPwd, BindingResult bindingResult) throws Exception {
+        FieldError fieldError = bindingResult.getFieldError();
+        if (bindingResult.hasErrors() && fieldError != null) {
+                return ResultUtil.error(fieldError.getDefaultMessage());
+
         }
         // 调用service的修改密码方法
         boolean result = userService.updatePwd(userPwd);
@@ -126,10 +127,12 @@ public class PassportController {
     @BussinessLog("退出系统")
     @GetMapping("/logout")
     public ModelAndView logout(RedirectAttributes redirectAttributes) {
-        // http://www.oschina.net/question/99751_91561
-        // 此处有坑： 退出登录，其实不用实现任何东西，只需要保留这个接口即可，也不可能通过下方的代码进行退出
-        // SecurityUtils.getSubject().logout();
-        // 因为退出操作是由Shiro控制的
+/*
+         http://www.oschina.net/question/99751_91561
+         此处有坑： 退出登录，其实不用实现任何东西，只需要保留这个接口即可，也不可能通过下方的代码进行退出SecurityUtils.getSubject().logout();
+         因为退出操作是由Shiro控制的
+
+*/
         redirectAttributes.addFlashAttribute("message", "您已安全退出");
         return ResultUtil.redirect("index");
     }

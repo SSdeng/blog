@@ -9,6 +9,7 @@ package com.zyd.blog.file.exception;
  * @since 1.8
  */
 public class QiniuApiException extends GlobalFileException {
+
     public QiniuApiException() {
         super();
     }

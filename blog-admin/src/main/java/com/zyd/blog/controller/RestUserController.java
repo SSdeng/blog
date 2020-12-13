@@ -61,7 +61,7 @@ public class RestUserController {
     @RequiresPermissions("user:allotRole")
     @PostMapping("/saveUserRoles")
     @BussinessLog("分配用户角色")
-    public ResponseVO saveUserRoles(Long userId, String roleIds) {
+    public ResponseVO<Object> saveUserRoles(Long userId, String roleIds) {
         if (StringUtils.isEmpty(userId)) {
             return ResultUtil.error("error");
         }
@@ -77,7 +77,7 @@ public class RestUserController {
     @RequiresPermissions("user:add")
     @PostMapping(value = "/add")
     @BussinessLog("添加用户")
-    public ResponseVO add(User user) {
+    public ResponseVO<Object> add(User user) {
         User u = userService.getByUserName(user.getUsername());
         if (u != null) {
             return ResultUtil.error("该用户名["+user.getUsername()+"]已存在！请更改用户名");
@@ -100,7 +100,7 @@ public class RestUserController {
     @RequiresPermissions(value = {"user:batchDelete", "user:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除用户")
-    public ResponseVO remove(Long[] ids) {
+    public ResponseVO<Object> remove(Long[] ids) {
         if (null == ids) {
             return ResultUtil.error(500, "请至少选择一条记录");
         }
@@ -119,7 +119,7 @@ public class RestUserController {
     @RequiresPermissions("user:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取用户详情")
-    public ResponseVO get(@PathVariable Long id) {
+    public ResponseVO<Object> get(@PathVariable Long id) {
         return ResultUtil.success(null, this.userService.getByPrimaryKey(id));
     }
 
@@ -131,7 +131,7 @@ public class RestUserController {
     @RequiresPermissions("user:edit")
     @PostMapping("/edit")
     @BussinessLog("编辑用户")
-    public ResponseVO edit(User user) {
+    public ResponseVO<Object> edit(User user) {
         try {
             userService.updateSelective(user);
         } catch (Exception e) {

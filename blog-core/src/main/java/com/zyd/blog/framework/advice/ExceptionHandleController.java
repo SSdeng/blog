@@ -44,6 +44,8 @@ public class ExceptionHandleController {
     @ResponseBody
     public ResponseVO unauthorizedExceptionHandle(Throwable e) {
         e.printStackTrace(); // 打印异常栈
+
+        //返回UNAUTHORIZED错误信息
         return ResultUtil.error(HttpStatus.UNAUTHORIZED.value(), e.getLocalizedMessage());
     }
 
@@ -57,6 +59,7 @@ public class ExceptionHandleController {
     @ResponseBody
     public ResponseVO maxUploadSizeExceededExceptionHandle(Throwable e) {
         e.printStackTrace(); // 打印异常栈
+        //返回文件上传失败错误信息
         return ResultUtil.error(CommonConst.DEFAULT_ERROR_CODE, ResponseStatus.UPLOAD_FILE_ERROR.getMessage() + "文件过大！");
     }
 
@@ -70,27 +73,48 @@ public class ExceptionHandleController {
     @ResponseBody
     public Object methodArgumentTypeMismatchException(Throwable e) {
         log.error("url参数异常，请检查参数类型是否匹配！", e);
+
+        //获取RequestHolder中的request
+        //判断request是否有效
+        //如果无效，则返回参数错误信息
         if (RequestUtil.isAjax(RequestHolder.getRequest())) {
             return ResultUtil.error(ResponseStatus.INVALID_PARAMS);
         }
+
+        //如果request有效，则是服务器内部错误
         return ResultUtil.forward("/error/500");
     }
 
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public ResponseVO handle(Throwable e) {
+        //如果是ZhydException及其子类，或GlobalFileException，则直接返回错误
         if (e instanceof ZhydException || e instanceof GlobalFileException) {
             return ResultUtil.error(e.getMessage());
         }
+
+        //判断e是否是抛出的异常是检查型异常，而代理类在处理异常时没有发现该类型的异常在接口中声明
         if (e instanceof UndeclaredThrowableException) {
             e = ((UndeclaredThrowableException) e).getUndeclaredThrowable();
         }
+
+        //用ResponseStatus中的参数进行判断，判断是否是在ResponseStatus中定义了的错误
         ResponseStatus responseStatus = ResponseStatus.getResponseStatus(e.getMessage());
+
+        //如果是，则日志记录错误信息，并班会错误信息
         if (responseStatus != null) {
+
+            //日志记录错误信息
             log.error(responseStatus.getMessage());
+
+            //返回错误信息
             return ResultUtil.error(responseStatus.getCode(), responseStatus.getMessage());
         }
+
+        //如果是未定义的错误，则打印出来
         e.printStackTrace(); // 打印异常栈
+
+        //返回程序默认的错误代码
         return ResultUtil.error(CommonConst.DEFAULT_ERROR_CODE, ResponseStatus.ERROR.getMessage());
     }
 }

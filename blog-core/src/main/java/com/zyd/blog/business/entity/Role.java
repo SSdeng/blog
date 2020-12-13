@@ -96,7 +96,11 @@ public class Role {//用户角色，包装了持久化中的数据实体SysRole
      */
     public boolean isAvailable() {
         Boolean value = this.sysRole.getAvailable();
-        return value != null ? value : false;
+        if(value != null){
+            return value;
+        }else{
+            return false;
+        }
     }
 
     /**

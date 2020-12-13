@@ -46,7 +46,7 @@ public class ShiroRealm extends AuthorizingRealm {
      * 提供账户信息返回认证信息（用户的角色信息集合）
      */
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) {
         //获取用户的输入的账号.
         String username = (String) token.getPrincipal();
         User user = userService.getByUserName(username);
@@ -100,8 +100,8 @@ public class ShiroRealm extends AuthorizingRealm {
         if (!CollectionUtils.isEmpty(resourcesList)) {
             Set<String> permissionSet = new HashSet<>();
             for (Resources resources : resourcesList) {
-                String permission = null;
-                if (!StringUtils.isEmpty(permission = resources.getPermission())) {
+                String permission = resources.getPermission();
+                if (!StringUtils.isEmpty(permission)) {
                     permissionSet.addAll(Arrays.asList(permission.trim().split(",")));
                 }
             }

@@ -79,7 +79,7 @@ public class MailDetail {//邮件的细节
         if (!CollectionUtils.isEmpty(getFilePaths())) {
             return filePaths.toArray(new String[filePaths.size()]);
         }
-        return null;
+        return new String[]{"NULL"};
     }
 
     public String[] getCc() {

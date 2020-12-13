@@ -170,7 +170,11 @@ public class Link {//业务实体链接，包装了持久化中的数据实体Sy
      */
     public Boolean isStatus() {
         Boolean value = this.sysLink.getStatus();
-        return value != null ? value : false;
+        if(value != null){
+            return value;
+        }else {
+            return false;
+        }
     }
 
     /**
@@ -226,7 +230,11 @@ public class Link {//业务实体链接，包装了持久化中的数据实体Sy
      */
     public Boolean isHomePageDisplay() {
         Boolean value = this.sysLink.getHomePageDisplay();
-        return value != null ? value : false;
+        if(value != null){
+            return value;
+        }else {
+            return false;
+        }
     }
 
     /**

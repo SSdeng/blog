@@ -39,14 +39,16 @@ import java.util.Map;
 @EnableConfigurationProperties({ServerProperties.class})
 public class ErrorPagesController implements ErrorController {
 
+
+    //可以向用户显示错误或提供访问权限的属性
     private ErrorAttributes errorAttributes;
 
+    //对于Web Server的外部化注释
     @Autowired
     private ServerProperties serverProperties;
 
     /**
-     * 初始化ExceptionController
-     *
+     * 初始化ExceptionController，获取错误信息
      * @param errorAttributes
      */
     @Autowired
@@ -57,7 +59,13 @@ public class ErrorPagesController implements ErrorController {
         this.errorAttributes = errorAttributes;
     }
 
-    //处理PAGE NOT FOUND 404 的情况
+    /**
+     * 处理PAGE NOT FOUND 404 的情况
+     * @param request
+     * @param response
+     * @param webRequest web请求的通用接口。主要用于一般的web请求拦截器，允许它们访问一般的请求元数据，而不是用于实际处理请求。
+     * @return
+     */
     @RequestMapping("/404")
     public ModelAndView errorHtml404(HttpServletRequest request, HttpServletResponse response, WebRequest webRequest) {
 
@@ -65,45 +73,92 @@ public class ErrorPagesController implements ErrorController {
         response.setStatus(HttpStatus.NOT_FOUND.value());
 
         //获取网页的错误信息并存放入model中
+        //MediaType选择HTML
         Map<String, Object> model = getErrorAttributes(webRequest, isIncludeStackTrace(request, MediaType.TEXT_HTML));
+
+        //getQueryString 获取请求的URL字符串
         model.put("queryString", request.getQueryString());
 
+        //ModelAndView是WebMVC框架中模型和视图的持有者。
+        //创建一个新的ModelAndView，给定一个视图名和model
         return new ModelAndView("error/404", model);
     }
 
+    //处理 403 FORBIDDEN 拒绝访问的情况
     @RequestMapping("/403")
     public ModelAndView errorHtml403(HttpServletRequest request, HttpServletResponse response, WebRequest webRequest) {
+
+        //将response的状态响应码设置为403
         response.setStatus(HttpStatus.FORBIDDEN.value());
-        // 404拦截规则，如果是静态文件发生的404则不记录到DB
+
+        //获取网页的错误信息并存放入model中
+        //MediaType选择HTML
         Map<String, Object> model = getErrorAttributes(webRequest, isIncludeStackTrace(request, MediaType.TEXT_HTML));
+
+        //getQueryString 获取请求的URL字符串
+        // 404拦截规则，如果是静态文件发生的404则不记录到DB
         model.put("queryString", request.getQueryString());
+
         if (!String.valueOf(model.get("path")).contains(".")) {
             model.put("status", HttpStatus.FORBIDDEN.value());
         }
+
+        //ModelAndView是WebMVC框架中模型和视图的持有者。
+        //创建一个新的ModelAndView，给定一个视图名和model
         return new ModelAndView("error/403", model);
     }
 
+    //处理 403 BAD REQUEST 的情况
     @RequestMapping("/400")
     public ModelAndView errorHtml400(HttpServletRequest request, HttpServletResponse response, WebRequest webRequest) {
+
+        //将response的状态响应码设置为400
         response.setStatus(HttpStatus.BAD_REQUEST.value());
+
+        //获取网页的错误信息并存放入model中
         Map<String, Object> model = getErrorAttributes(webRequest, isIncludeStackTrace(request, MediaType.TEXT_HTML));
+
+        //getQueryString 获取请求的URL字符串
         model.put("queryString", request.getQueryString());
+
+        //ModelAndView是WebMVC框架中模型和视图的持有者。
+        //创建一个新的ModelAndView，给定一个视图名和model
         return new ModelAndView("error/400", model);
     }
 
+    //处理 401 UNAUTHORIZED 的情况
     @RequestMapping("/401")
     public ModelAndView errorHtml401(HttpServletRequest request, HttpServletResponse response, WebRequest webRequest) {
+
+        //将response的状态响应码设置为401
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
+
+        //获取网页的错误信息并存放入model中
         Map<String, Object> model = getErrorAttributes(webRequest, isIncludeStackTrace(request, MediaType.TEXT_HTML));
+
+        //getQueryString 获取请求的URL字符串
         model.put("queryString", request.getQueryString());
+
+        //ModelAndView是WebMVC框架中模型和视图的持有者。
+        //创建一个新的ModelAndView，给定一个视图名和model
         return new ModelAndView("error/401", model);
     }
 
+    //处理 500 INTERNAL_SERVER_ERROR 的情况
     @RequestMapping("/500")
     public ModelAndView errorHtml500(HttpServletRequest request, HttpServletResponse response, WebRequest webRequest) {
+
+        //将response的状态响应码设置为500
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+
+        //获取网页的错误信息并存放入model中
         Map<String, Object> model = getErrorAttributes(webRequest, isIncludeStackTrace(request, MediaType.TEXT_HTML));
+
+        //getQueryString 获取请求的URL字符串
         model.put("queryString", request.getQueryString());
+
+        //ModelAndView是WebMVC框架中模型和视图的持有者。
+        //创建一个新的ModelAndView，给定一个视图名和model
         return new ModelAndView("error/500", model);
     }
 
@@ -116,12 +171,21 @@ public class ErrorPagesController implements ErrorController {
      *         the media type produced (or {@code MediaType.ALL})
      * @return if the stacktrace attribute should be included
      */
+
+    //MediaType是添加了参数的MimeType，MimeType中封装了RFC 2046中定义的Internet协议，包括HTTP
     protected boolean isIncludeStackTrace(HttpServletRequest request,
                                           MediaType produces) {
+
+        //获取StackTrace的选择
         ErrorProperties.IncludeStacktrace include = this.serverProperties.getError().getIncludeStacktrace();
+
+        //如果是ALWAYS的话，直接返回true
         if (include == ErrorProperties.IncludeStacktrace.ALWAYS) {
             return true;
         }
+
+        //如果是ON_TRACE_PARAM（不是NEVER）进行下一步判断
+        //判断HttpServletRequest中是否包含trace
         return include == ErrorProperties.IncludeStacktrace.ON_TRACE_PARAM && getTraceParameter(request);
     }
 
@@ -135,6 +199,7 @@ public class ErrorPagesController implements ErrorController {
      */
     private Map<String, Object> getErrorAttributes(WebRequest webRequest,
                                                    boolean includeStackTrace) {
+        //返回ErrorAttributes中包含的错误属性
         return this.errorAttributes.getErrorAttributes(webRequest, includeStackTrace);
     }
 
@@ -145,7 +210,12 @@ public class ErrorPagesController implements ErrorController {
      * @return
      */
     private boolean getTraceParameter(HttpServletRequest request) {
+
+        //从HttpServletRequest中获得trace
         String parameter = request.getParameter("trace");
+
+        //如果trace不为空
+        //且trace的内容为false
         return parameter != null && !"false".equalsIgnoreCase(parameter);
     }
 
@@ -156,14 +226,22 @@ public class ErrorPagesController implements ErrorController {
      * @return
      */
     private HttpStatus getStatus(HttpServletRequest request) {
+
+        //获取错误编码
         Integer statusCode = (Integer) request
                 .getAttribute("javax.servlet.error.status_code");
+
+        //如果发生错误而没有错误编码，则是服务器错误
         if (statusCode == null) {
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }
+
+        //返回Http的状态
         try {
             return HttpStatus.valueOf(statusCode);
         } catch (Exception ex) {
+
+            //如果返回status错误，则返回服务器内部错误
             log.error("获取当前HttpStatus发生异常", ex);
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }

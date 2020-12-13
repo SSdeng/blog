@@ -44,7 +44,7 @@ public class RestRemoverController {
     @PostMapping("/run")
     @ResponseBody
     @BussinessLog("运行文章搬运工")
-    public void run(Long typeId, HunterConfig config, HttpServletResponse response) throws IOException, InterruptedException {
+    public void run(Long typeId, HunterConfig config, HttpServletResponse response) throws IOException {
         removerService.run(typeId, config, response.getWriter());
     }
 
@@ -55,7 +55,7 @@ public class RestRemoverController {
     @PostMapping("/stop")
     @ResponseBody
     @BussinessLog("停止文章搬运工")
-    public ResponseVO stop() {
+    public ResponseVO<Object> stop() {
         try {
             removerService.stop();
         } catch (Exception e) {
@@ -76,7 +76,7 @@ public class RestRemoverController {
     @PostMapping("/single")
     @ResponseBody
     @BussinessLog("抓取单个文章")
-    public void single(Long typeId, String[] url, boolean convertImg, HttpServletResponse response) throws IOException, InterruptedException {
+    public void single(Long typeId, String[] url, boolean convertImg, HttpServletResponse response) throws IOException {
         removerService.crawlSingle(typeId, url, convertImg, response.getWriter());
     }
 

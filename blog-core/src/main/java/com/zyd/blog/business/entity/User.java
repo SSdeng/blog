@@ -213,10 +213,10 @@ public class User extends AbstractBO {//业务实体User，包装了持久化中
     /**
      * 设置用户的性别
      *
-     * @param Gender
+     * @param gender
      */
-    public void setGender(Integer Gender) {
-        this.sysUser.setGender(Gender);
+    public void setGender(Integer gender) {
+        this.sysUser.setGender(gender);
     }
 
     /**

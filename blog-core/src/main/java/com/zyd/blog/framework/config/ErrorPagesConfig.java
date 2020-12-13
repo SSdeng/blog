@@ -25,7 +25,12 @@ public class ErrorPagesConfig {
      */
     @Bean
     public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> containerCustomizer() {
-        return factory -> {
+		/**
+		 * 使用lambda表达式，将factory的函数customize作为参数传入
+		 */
+		return factory -> {
+			//向factory中加入错误页面
+			//ErrorPage中定义了错误属性的HTTP状态及对应的路径
 			factory.addErrorPages(new ErrorPage(HttpStatus.BAD_REQUEST, "/error/400"));
 			factory.addErrorPages(new ErrorPage(HttpStatus.UNAUTHORIZED, "/error/401"));
 			factory.addErrorPages(new ErrorPage(HttpStatus.FORBIDDEN, "/error/403"));
@@ -34,4 +39,6 @@ public class ErrorPagesConfig {
 			factory.addErrorPages(new ErrorPage(Throwable.class, "/error/500"));
 		};
     }
+
+
 }

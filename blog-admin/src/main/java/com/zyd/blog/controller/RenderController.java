@@ -13,7 +13,6 @@ package com.zyd.blog.controller;
 import com.zyd.blog.business.annotation.BussinessLog;
 import com.zyd.blog.business.entity.Article;
 import com.zyd.blog.business.service.BizArticleService;
-import com.zyd.blog.business.service.SysConfigService;
 import com.zyd.blog.core.websocket.server.ZydWebsocketServer;
 import com.zyd.blog.util.ResultUtil;
 import me.zhyd.hunter.config.HunterConfigTemplate;
@@ -43,11 +42,11 @@ import org.springframework.web.servlet.ModelAndView;
 public class RenderController {
 
     @Autowired
-    private BizArticleService articleService;//文章业务层对象
-/*    @Autowired
-    private SysConfigService configService;*/
+    //文章业务层对象
+    private BizArticleService articleService;
     @Autowired
-    private ZydWebsocketServer websocketServer;//web socket业务层对象
+    //web socket业务层对象
+    private ZydWebsocketServer websocketServer;
 
     /**
      * 进入首页

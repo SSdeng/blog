@@ -170,7 +170,7 @@ public class BizFileServiceImpl implements BizFileService {
         // 记录更新时间
         entity.setUpdateTime(new Date());
         // 插入到数据库
-        shopFileMapper.insertSelective(entity.getFile());
+        shopFileMapper.insertSelective(entity.getBizFile());
         // 更新后实体
         return entity;
     }
@@ -205,7 +205,7 @@ public class BizFileServiceImpl implements BizFileService {
         // 记录更新时间
         entity.setUpdateTime(new Date());
         // 操作数据库更新 返回结果
-        return shopFileMapper.updateByPrimaryKeySelective(entity.getFile()) > 0;
+        return shopFileMapper.updateByPrimaryKeySelective(entity.getBizFile()) > 0;
     }
 
     /**

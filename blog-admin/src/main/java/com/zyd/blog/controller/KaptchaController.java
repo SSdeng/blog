@@ -24,6 +24,7 @@ public class KaptchaController {
 
     /**
      * 得到验证码
+     * @param response http响应
      */
     @GetMapping("/getKaptcha")
     @ResponseBody

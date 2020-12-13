@@ -56,7 +56,7 @@ public class RestNoticeController {
     @RequiresPermissions("notice:add")
     @PostMapping(value = "/add")
     @BussinessLog("添加公告通知")
-    public ResponseVO add(Notice notice) {
+    public ResponseVO<Object> add(Notice notice) {
         User user = SessionUtil.getUser();
         if (null != user) {
             notice.setUserId(user.getId());
@@ -73,7 +73,7 @@ public class RestNoticeController {
     @RequiresPermissions(value = {"notice:batchDelete", "notice:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除公告通知")
-    public ResponseVO remove(Long[] ids) {
+    public ResponseVO<Object> remove(Long[] ids) {
         if (null == ids) {
             return ResultUtil.error(500, "请至少选择一条记录");
         }
@@ -91,7 +91,7 @@ public class RestNoticeController {
     @RequiresPermissions("notice:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取公告通知详情")
-    public ResponseVO get(@PathVariable Long id) {
+    public ResponseVO<Object> get(@PathVariable Long id) {
         return ResultUtil.success(null, this.noticeService.getByPrimaryKey(id));
     }
 
@@ -103,7 +103,7 @@ public class RestNoticeController {
     @RequiresPermissions("notice:edit")
     @PostMapping("/edit")
     @BussinessLog("编辑公告通知")
-    public ResponseVO edit(Notice notice) {
+    public ResponseVO<Object> edit(Notice notice) {
         try {
             noticeService.updateSelective(notice);
         } catch (Exception e) {
@@ -121,7 +121,7 @@ public class RestNoticeController {
     @RequiresPermissions("notice:release")
     @PostMapping("/release/{id}")
     @BussinessLog("发布公告通知")
-    public ResponseVO release(@PathVariable Long id) {
+    public ResponseVO<Object> release(@PathVariable Long id) {
         try {
             Notice notice = new Notice();
             notice.setId(id);
@@ -142,7 +142,7 @@ public class RestNoticeController {
     @RequiresPermissions("notice:withdraw")
     @PostMapping("/withdraw/{id}")
     @BussinessLog("撤回公告通知")
-    public ResponseVO withdraw(@PathVariable Long id) {
+    public ResponseVO<Object> withdraw(@PathVariable Long id) {
         try {
             Notice notice = new Notice();
             notice.setId(id);

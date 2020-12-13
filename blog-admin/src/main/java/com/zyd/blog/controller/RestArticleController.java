@@ -27,6 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
+import static com.alibaba.fastjson.JSON.parseObject;
+
 /**
  * 文章管理
  *
@@ -41,9 +43,20 @@ import java.util.Map;
 @RequestMapping("/article")
 public class RestArticleController {
     @Autowired
-    private BizArticleService articleService;// 文章业务层对象
+    /**
+     * 文章业务层对象
+     */
+    private BizArticleService articleService;
     @Autowired
-    private SysConfigService configService;//配置业务层对象 面向接口
+    /**
+     *  配置业务层对象 面向接口
+     */
+    private SysConfigService configService;
+    /**
+     * 字符串常量
+     *
+     */
+    private static final String AT_LEAST_ONE = "请至少选择一条记录";
 
     /**
      * 文章分页
@@ -65,9 +78,9 @@ public class RestArticleController {
     @RequiresPermissions(value = {"article:batchDelete", "article:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除文章[{1}]")
-    public ResponseVO remove(Long[] ids) {
+    public ResponseVO<Object> remove(Long[] ids) {
         if (null == ids) {
-            return ResultUtil.error(500, "请至少选择一条记录");
+            return ResultUtil.error(500, AT_LEAST_ONE);
         }
         for (Long id : ids) {
             articleService.removeByPrimaryKey(id);
@@ -83,7 +96,7 @@ public class RestArticleController {
     @RequiresPermissions("article:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取文章[{1}]详情")
-    public ResponseVO get(@PathVariable Long id) {
+    public ResponseVO<Object> get(@PathVariable Long id) {
         return ResultUtil.success(null, this.articleService.getByPrimaryKey(id));
     }
 
@@ -97,7 +110,7 @@ public class RestArticleController {
     @RequiresPermissions(value = {"article:edit", "article:publish"}, logical = Logical.OR)
     @PostMapping("/save")
     @BussinessLog("发布文章")
-    public ResponseVO edit(Article article, Long[] tags, MultipartFile file) {
+    public ResponseVO<Object> edit(Article article, Long[] tags, MultipartFile file) {
         articleService.publish(article, tags, file);
         return ResultUtil.success(ResponseStatus.SUCCESS);
     }
@@ -111,7 +124,7 @@ public class RestArticleController {
     @RequiresPermissions(value = {"article:top", "article:recommend"}, logical = Logical.OR)
     @PostMapping("/update/{type}")
     @BussinessLog("修改文章[{2}]的状态[{1}]")
-    public ResponseVO update(@PathVariable("type") String type, Long id) {
+    public ResponseVO<Object> update(@PathVariable("type") String type, Long id) {
         articleService.updateTopOrRecommendedById(type, id);
         return ResultUtil.success(ResponseStatus.SUCCESS);
     }
@@ -125,11 +138,11 @@ public class RestArticleController {
     @RequiresPermissions(value = {"article:batchPush", "article:push"}, logical = Logical.OR)
     @PostMapping(value = "/pushToBaidu/{type}")
     @BussinessLog("推送文章[{2}]到百度站长平台")
-    public ResponseVO pushToBaidu(@PathVariable("type") BaiduPushTypeEnum type, Long[] ids) {
+    public ResponseVO<Object> pushToBaidu(@PathVariable("type") BaiduPushTypeEnum type, Long[] ids) {
         if (null == ids) {
-            return ResultUtil.error(500, "请至少选择一条记录");
+            return ResultUtil.error(500, AT_LEAST_ONE);
         }
-        Map config = configService.getConfigs();
+        Map<String, Object> config = configService.getConfigs();
         String siteUrl = (String) config.get(ConfigKeyEnum.SITE_URL.getKey());
         StringBuilder params = new StringBuilder();
         for (Long id : ids) {
@@ -139,7 +152,8 @@ public class RestArticleController {
         String url = UrlBuildUtil.getBaiduPushUrl(type.toString(), (String) config.get(ConfigKeyEnum.SITE_URL.getKey()), (String) config.get(ConfigKeyEnum.BAIDU_PUSH_TOKEN.getKey()));
         String result = BaiduPushUtil.doPush(url, params.toString(), (String) config.get(ConfigKeyEnum.BAIDU_PUSH_COOKIE.getKey()));
         log.info(result);
-        JSONObject resultJson = JSONObject.parseObject(result);
+
+        JSONObject resultJson = parseObject(result);
 
         if (resultJson.containsKey("error")) {
             return ResultUtil.error(resultJson.getString("message"));
@@ -155,9 +169,9 @@ public class RestArticleController {
     @RequiresPermissions(value = {"article:publish"}, logical = Logical.OR)
     @PostMapping(value = "/batchPublish")
     @BussinessLog("批量发布文章[{1}]")
-    public ResponseVO batchPublish(Long[] ids) {
+    public ResponseVO<Object> batchPublish(Long[] ids) {
         if (null == ids) {
-            return ResultUtil.error(500, "请至少选择一条记录");
+            return ResultUtil.error(500, AT_LEAST_ONE);
         }
         articleService.batchUpdateStatus(ids, true);
         return ResultUtil.success("批量发布完成");
