@@ -12,6 +12,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.data.keyvalue.core.event.KeyValueEvent;
 
 import java.io.*;
 import java.util.UUID;
@@ -77,10 +78,12 @@ public class ImageDownloadUtil {
         if (StringUtils.isNotEmpty(referer)) {
             httpGet.setHeader("referer", referer);
         }
-        CloseableHttpClient httpclient = HttpClients.createDefault();
+
+        CloseableHttpClient httpclient = null;
         CloseableHttpResponse response = null;
         InputStream in = null;
         try {
+            httpclient = HttpClients.createDefault();
             response = httpclient.execute(httpGet);
             in = response.getEntity().getContent();
             if (response.getStatusLine().getStatusCode() == 200) {
@@ -91,6 +94,14 @@ public class ImageDownloadUtil {
             }
         } catch (IOException e) {
             log.error(e.getMessage(), e);
+        } finally {
+            try {
+                httpclient.close();
+                response.close();
+                in.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return in;
     }

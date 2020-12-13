@@ -57,7 +57,7 @@ public class RestLinkController {
     @RequiresPermissions("link:add")
     @PostMapping(value = "/add")
     @BussinessLog("添加友情链接")
-    public ResponseVO add(Link link) {
+    public ResponseVO<Object> add(Link link) {
         link.setSource(LinkSourceEnum.ADMIN);
         linkService.insert(link);
         mailService.send(link, TemplateKeyEnum.TM_LINKS);
@@ -72,7 +72,7 @@ public class RestLinkController {
     @RequiresPermissions(value = {"link:batchDelete", "link:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除友情链接")
-    public ResponseVO remove(Long[] ids) {
+    public ResponseVO<Object> remove(Long[] ids) {
         if (null == ids) {
             return ResultUtil.error(500, "请至少选择一条记录");
         }
@@ -90,7 +90,7 @@ public class RestLinkController {
     @RequiresPermissions("link:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取友情链接详情")
-    public ResponseVO get(@PathVariable Long id) {
+    public ResponseVO<Object> get(@PathVariable Long id) {
         return ResultUtil.success(null, this.linkService.getByPrimaryKey(id));
     }
 
@@ -102,7 +102,7 @@ public class RestLinkController {
     @RequiresPermissions("link:edit")
     @PostMapping("/edit")
     @BussinessLog("编辑友情链接")
-    public ResponseVO edit(Link link) {
+    public ResponseVO<Object> edit(Link link) {
         try {
             linkService.updateSelective(link);
         } catch (Exception e) {

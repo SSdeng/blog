@@ -9,6 +9,7 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -28,7 +29,7 @@ public class ZydWebsocketServer {
     /**
      * 线程安全的socket集合
      */
-    private static CopyOnWriteArraySet<Session> webSocketSet = new CopyOnWriteArraySet<>();
+    private static Set<Session> webSocketSet = new CopyOnWriteArraySet<>();
     /**
      * 初始在线人数
      */
@@ -81,7 +82,7 @@ public class ZydWebsocketServer {
      *
      * @return
      */
-    public CopyOnWriteArraySet<Session> getOnlineUsers() {
+    public Set<Session> getOnlineUsers() {
         return webSocketSet;
     }
 }

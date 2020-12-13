@@ -50,13 +50,22 @@ public class RetryLimitCredentialsMatcher extends CredentialsMatcher {
     private static final TimeUnit DEFAULT_SESSIONTIME_OUT_UNIT = TimeUnit.HOURS;
 
     @Autowired
-    private RedisTemplate redisTemplate;//redis模板类
+    /*
+      redis模板类
+     */
+    private RedisTemplate<String, String> redisTemplate;
     @Autowired
-    private SysUserService userService;//用户业务层
+    /*
+     * 用户业务层
+     */
+    private SysUserService userService;
     @Autowired
-    private SysConfigService configService;//配置业务层
+    /*
+     * 配置业务层
+     */
+    private SysConfigService configService;
 
-    /**
+    /*
      * 此方法实现了密码输入错误的状态下重试次数的匹配管理
      * @param token
      * @param info
@@ -73,7 +82,7 @@ public class RetryLimitCredentialsMatcher extends CredentialsMatcher {
         String isLockKey = SHIRO_IS_LOCK + username;
         opsForValue.increment(loginCountKey, 1);
 
-        if (redisTemplate.hasKey(isLockKey)) {
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(isLockKey))) {
             String unit = "分钟";
             long time = TimeUnit.SECONDS.toMinutes(redisTemplate.getExpire(isLockKey));
             if (time <= 0) {

@@ -52,7 +52,7 @@ public class RestTemplateController {
     @RequiresPermissions("template:add")
     @PostMapping(value = "/add")
     @BussinessLog("添加模板")
-    public ResponseVO add(Template template) {
+    public ResponseVO<Object> add(Template template) {
         templateService.insert(template);
         return ResultUtil.success("成功");
     }
@@ -65,7 +65,7 @@ public class RestTemplateController {
     @RequiresPermissions(value = {"template:batchDelete", "template:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除模板")
-    public ResponseVO remove(Long[] ids) {
+    public ResponseVO<Object> remove(Long[] ids) {
         if (null == ids) {
             return ResultUtil.error(500, "请至少选择一条记录");
         }
@@ -83,7 +83,7 @@ public class RestTemplateController {
     @RequiresPermissions("template:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取模板详情")
-    public ResponseVO get(@PathVariable Long id) {
+    public ResponseVO<Object> get(@PathVariable Long id) {
         return ResultUtil.success(null, this.templateService.getByPrimaryKey(id));
     }
 
@@ -95,7 +95,7 @@ public class RestTemplateController {
     @RequiresPermissions("template:edit")
     @PostMapping("/edit")
     @BussinessLog("编辑模板")
-    public ResponseVO edit(Template template) {
+    public ResponseVO<Object> edit(Template template) {
         try {
             templateService.updateSelective(template);
         } catch (Exception e) {

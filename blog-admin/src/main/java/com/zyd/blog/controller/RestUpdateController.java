@@ -52,7 +52,7 @@ public class RestUpdateController {
     @RequiresPermissions("updateLog:add")
     @PostMapping(value = "/add")
     @BussinessLog("添加更新日志")
-    public ResponseVO add(UpdateRecorde updateRecorde) {
+    public ResponseVO<Object> add(UpdateRecorde updateRecorde) {
         updateRecordeService.insert(updateRecorde);
         return ResultUtil.success("成功");
     }
@@ -65,7 +65,7 @@ public class RestUpdateController {
     @RequiresPermissions(value = {"updateLog:batchDelete", "updateLog:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除更新日志")
-    public ResponseVO remove(Long[] ids) {
+    public ResponseVO<Object> remove(Long[] ids) {
         if (null == ids) {
             return ResultUtil.error(500, "请至少选择一条记录");
         }
@@ -83,7 +83,7 @@ public class RestUpdateController {
     @RequiresPermissions("updateLog:get")
     @PostMapping("/get/{id}")
     @BussinessLog("获取更新日志详情")
-    public ResponseVO get(@PathVariable Long id) {
+    public ResponseVO<Object> get(@PathVariable Long id) {
         return ResultUtil.success(null, this.updateRecordeService.getByPrimaryKey(id));
     }
 
@@ -95,7 +95,7 @@ public class RestUpdateController {
     @RequiresPermissions("updateLog:edit")
     @PostMapping("/edit")
     @BussinessLog("编辑更新日志")
-    public ResponseVO edit(UpdateRecorde updateRecorde) {
+    public ResponseVO<Object> edit(UpdateRecorde updateRecorde) {
         try {
             updateRecordeService.updateSelective(updateRecorde);
         } catch (Exception e) {

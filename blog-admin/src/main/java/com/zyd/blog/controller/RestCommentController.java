@@ -35,9 +35,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/comment")
 public class RestCommentController {
     @Autowired
-    private BizCommentService commentService;//评论业务层对象
+    //评论业务层对象
+    private BizCommentService commentService;
     @Autowired
-    private MailService mailService;//邮件业务层对象
+    //邮件业务层对象
+    private MailService mailService;
 
     /**
      * 评论分页
@@ -59,7 +61,7 @@ public class RestCommentController {
     @RequiresPermissions("comment:reply")
     @PostMapping(value = "/reply")
     @BussinessLog("回复评论")
-    public ResponseVO reply(Comment comment) {
+    public ResponseVO<Object> reply(Comment comment) {
         try {
             commentService.commentForAdmin(comment);
         } catch (ZhydCommentException e){
@@ -76,7 +78,7 @@ public class RestCommentController {
     @RequiresPermissions(value = {"comment:batchDelete", "comment:delete"}, logical = Logical.OR)
     @PostMapping(value = "/remove")
     @BussinessLog("删除评论[{1}]")
-    public ResponseVO remove(Long[] ids) {
+    public ResponseVO<Object> remove(Long[] ids) {
         if (null == ids) {
             return ResultUtil.error(500, "请至少选择一条记录");
         }
@@ -94,7 +96,7 @@ public class RestCommentController {
     @RequiresPermissions("comments")
     @PostMapping("/get/{id}")
     @BussinessLog("获取评论[{1}]详情")
-    public ResponseVO get(@PathVariable Long id) {
+    public ResponseVO<Object> get(@PathVariable Long id) {
         return ResultUtil.success(null, this.commentService.getByPrimaryKey(id));
     }
 
@@ -106,7 +108,7 @@ public class RestCommentController {
     @RequiresPermissions("comments")
     @PostMapping("/edit")
     @BussinessLog("编辑评论")
-    public ResponseVO edit(Comment comment) {
+    public ResponseVO<Object> edit(Comment comment) {
         try {
             commentService.updateSelective(comment);
         } catch (Exception e) {
@@ -126,7 +128,7 @@ public class RestCommentController {
     @RequiresPermissions("comment:audit")
     @PostMapping("/audit")
     @BussinessLog("审核评论")
-    public ResponseVO audit(Comment comment, String contentText, Boolean sendEmail) {
+    public ResponseVO<Object> audit(Comment comment, String contentText, Boolean sendEmail) {
         try {
             commentService.updateSelective(comment);
             if(!StringUtils.isEmpty(contentText)){
@@ -152,7 +154,7 @@ public class RestCommentController {
      */
     @RequiresUser
     @PostMapping("/listVerifying")
-    public ResponseVO listVerifying(Comment comment) {
+    public ResponseVO<Object> listVerifying(Comment comment) {
         return ResultUtil.success(null, commentService.listVerifying(10));
     }
 

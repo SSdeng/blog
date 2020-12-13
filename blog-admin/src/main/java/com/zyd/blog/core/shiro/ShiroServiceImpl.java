@@ -53,7 +53,7 @@ public class ShiroServiceImpl implements ShiroService {
             - authc: 需要认证才能进行访问（此处指所有非匿名的路径都需要登录才能访问）
             - user:配置记住我或认证通过可以访问
          */
-        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
+        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         // 配置退出过滤器,其中的具体的退出代码Shiro已经替我们实现了
         filterChainDefinitionMap.put("/passport/logout", "logout");
         filterChainDefinitionMap.put("/passport/login", "anon");
