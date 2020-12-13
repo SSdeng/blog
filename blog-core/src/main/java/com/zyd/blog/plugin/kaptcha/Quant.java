@@ -24,12 +24,9 @@ public class Quant
 	   ----------------
 	   [select samplefac in range 1..30]
 	   [read image from input file]
-	   pic = (unsigned char*) malloc(3*width*height);
-	   initnet(pic,3*width*height,samplefac);
-	   learn();
-	   unbiasnet();
+
 	   [write output image header, using writecolourmap(f)]
-	   inxbuild();
+
 	   write output image using inxsearch(b,g,r)      */
 
 	/* Network Definitions
@@ -41,9 +38,9 @@ public class Quant
 
     /* defs for freq and bias */
     protected static final int intbiasshift = 16; /* bias for fractions */
-    protected static final int intbias = (((int) 1) << intbiasshift);
+    protected static final int intbias = ((1) << intbiasshift);
     protected static final int gammashift = 10; /* gamma = 1024 */
-    protected static final int gamma = (((int) 1) << gammashift);
+    protected static final int gamma = ((1) << gammashift);
     protected static final int betashift = 10;
     protected static final int beta = (intbias >> betashift); /* beta = 1/1024 */
     protected static final int betagamma =
@@ -52,21 +49,21 @@ public class Quant
     /* defs for decreasing radius factor */
     protected static final int initrad = (netsize >> 3); /* for 256 cols, radius starts */
     protected static final int radiusbiasshift = 6; /* at 32.0 biased by 6 bits */
-    protected static final int radiusbias = (((int) 1) << radiusbiasshift);
+    protected static final int radiusbias = ((1) << radiusbiasshift);
     protected static final int initradius = (initrad * radiusbias); /* and decreases by a */
     protected static final int radiusdec = 30; /* factor of 1/30 each cycle */
 
     /* defs for decreasing alpha factor */
     protected static final int alphabiasshift = 10; /* alpha starts at 1.0 */
-    protected static final int initalpha = (((int) 1) << alphabiasshift);
+    protected static final int initalpha = ((1) << alphabiasshift);
 
     protected int alphadec; /* biased by 10 bits */
 
     /* radbias and alpharadbias used for radpower calculation */
     protected static final int radbiasshift = 8;
-    protected static final int radbias = (((int) 1) << radbiasshift);
+    protected static final int radbias = ((1) << radbiasshift);
     protected static final int alpharadbshift = (alphabiasshift + radbiasshift);
-    protected static final int alpharadbias = (((int) 1) << alpharadbshift);
+    protected static final int alpharadbias = ((1) << alpharadbshift);
 
 	/* Types and Global Variables
 	-------------------------- */
@@ -140,10 +137,14 @@ public class Quant
 
     public void inxbuild() {
 
-        int i, j, smallpos, smallval;
+        int i;
+        int j;
+        int smallpos;
+        int smallval;
         int[] p;
         int[] q;
-        int previouscol, startpos;
+        int previouscol;
+        int startpos;
 
         previouscol = 0;
         startpos = 0;
@@ -193,10 +194,20 @@ public class Quant
        ------------------ */
     public void learn() {
 
-        int i, j, b, g, r;
-        int radius, rad, alpha, step, delta, samplepixels;
+        int i;
+        int j;
+        int b;
+        int g;
+        int r;
+        int radius;
+        int rad;
+        int alpha;
+        int step;
+        int delta;
+        int samplepixels;
         byte[] p;
-        int pix, lim;
+        int pix;
+        int lim;
 
         if (lengthcount < minpicturebytes)
             samplefac = 1;
@@ -216,7 +227,6 @@ public class Quant
             radpower[i] =
                     alpha * (((rad * rad - i * i) * radbias) / (rad * rad));
 
-        //fprintf(stderr,"beginning 1D learning: initial radius=%d\n", rad);
 
         if (lengthcount < minpicturebytes)
             step = 3;
@@ -262,7 +272,7 @@ public class Quant
                             alpha * (((rad * rad - j * j) * radbias) / (rad * rad));
             }
         }
-        //fprintf(stderr,"finished 1D learning: final alpha=%f !\n",((float)alpha)/initalpha);
+
     }
 
 
@@ -275,7 +285,11 @@ public class Quant
      */
     public int map(int b, int g, int r) {
 
-        int i, j, dist, a, bestd;
+        int i;
+        int j;
+        int dist;
+        int a;
+        int bestd;
         int[] p;
         int best;
 
@@ -349,7 +363,7 @@ public class Quant
        ----------------------------------------------------------------------------------- */
     public void unbiasnet() {
 
-        int i;// j;
+        int i;
 
         for (i = 0; i < netsize; i++) {
             network[i][0] >>= netbiasshift;
@@ -371,7 +385,12 @@ public class Quant
      */
     protected void alterneigh(int rad, int i, int b, int g, int r) {
 
-        int j, k, lo, hi, a, m;
+        int j;
+        int k;
+        int lo;
+        int hi;
+        int a;
+        int m;
         int[] p;
 
         lo = i - rad;
@@ -393,6 +412,7 @@ public class Quant
                     p[1] -= (a * (p[1] - g)) / alpharadbias;
                     p[2] -= (a * (p[2] - r)) / alpharadbias;
                 } catch (Exception e) {
+                    e.printStackTrace();
                 } // prevents 1.3 miscompilation
             }
             if (k > lo) {
@@ -402,6 +422,7 @@ public class Quant
                     p[1] -= (a * (p[1] - g)) / alpharadbias;
                     p[2] -= (a * (p[2] - r)) / alpharadbias;
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -438,11 +459,18 @@ public class Quant
 		/* for frequently chosen neurons, freq[i] is high and bias[i] is negative */
 		/* bias[i] = gamma*((1/netsize)-freq[i]) */
 
-        int i, dist, a, biasdist, betafreq;
-        int bestpos, bestbiaspos, bestd, bestbiasd;
+        int i;
+        int dist;
+        int a;
+        int biasdist;
+        int betafreq;
+        int bestpos;
+        int bestbiaspos;
+        int bestd;
+        int bestbiasd;
         int[] n;
 
-        bestd = ~(((int) 1) << 31);
+        bestd = ~((1) << 31);
         bestbiasd = bestd;
         bestpos = -1;
         bestbiaspos = bestpos;

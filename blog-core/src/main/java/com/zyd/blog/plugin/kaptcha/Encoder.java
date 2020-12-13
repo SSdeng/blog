@@ -36,7 +36,7 @@ public class Encoder {
     //              James A. Woods         (decvax!ihnp4!ames!jaw)
     //              Joe Orost              (decvax!vax135!petsd!joe)
     int[] codetab = new int[HSIZE];
-    int hsize = HSIZE; // for dynamic table sizing
+    int hsize1 = HSIZE; // for dynamic table sizing
     int free_ent = 0; // first unused entry
     // block compression parameters -- after all codes are used up,
     // and compression rate changes, start over.
@@ -58,7 +58,7 @@ public class Encoder {
     // for the decompressor.  Late addition:  construct the table according to
     // file size for noticeable speed improvement on small files.  Please direct
     // questions about this implementation to ames!jaw.
-    int masks[] =
+    int[] masks =
             {
                     0x0000,
                     0x0001,
@@ -96,7 +96,8 @@ public class Encoder {
     //      Maintain a BITS character long buffer (so that 8 codes will
     // fit in it exactly).  Use the VAX insv instruction to insert each
     // code in turn.  When the buffer fills up empty it and start over.
-    private int imgW, imgH;
+    private int imgW;
+    private int imgH;
     private byte[] pixAry;
     private int initCodeSize;
     private int remaining;
@@ -141,7 +142,7 @@ public class Encoder {
      * @throws IOException
      */
     void cl_block(OutputStream outs) throws IOException {
-        cl_hash(hsize);
+        cl_hash(hsize1);
         free_ent = ClearCode + 2;
         clear_flg = true;
 
@@ -180,7 +181,7 @@ public class Encoder {
         // Set up the necessary values
         clear_flg = false;
         n_bits = g_init_bits;
-        maxcode = MAXCODE(n_bits);
+        maxcode = MAX_CODE(n_bits);
 
         ClearCode = 1 << (init_bits - 1);
         EOFCode = ClearCode + 1;
@@ -191,11 +192,11 @@ public class Encoder {
         ent = nextPixel();
 
         hshift = 0;
-        for (fcode = hsize; fcode < 65536; fcode *= 2)
+        for (fcode = hsize1; fcode < 65536; fcode *= 2)
             ++hshift;
         hshift = 8 - hshift; // set hash code range bound
 
-        hsize_reg = hsize;
+        hsize_reg = hsize1;
         cl_hash(hsize_reg); // clear hash table
 
         output(ClearCode, outs);
@@ -214,7 +215,8 @@ public class Encoder {
                 if (i == 0)
                     disp = 1;
                 do {
-                    if ((i -= disp) < 0)
+                    i -= disp;
+                    if (i < 0)
                         i += hsize_reg;
 
                     if (htab[i] == fcode) {
@@ -269,7 +271,7 @@ public class Encoder {
         }
     }
 
-    final int MAXCODE(int n_bits) {
+    final int MAX_CODE(int n_bits) {
         return (1 << n_bits) - 1;
     }
 
@@ -318,14 +320,15 @@ public class Encoder {
         // then increase it, if possible.
         if (free_ent > maxcode || clear_flg) {
             if (clear_flg) {
-                maxcode = MAXCODE(n_bits = g_init_bits);
+                n_bits=g_init_bits;
+                maxcode = MAX_CODE(n_bits);
                 clear_flg = false;
             } else {
                 ++n_bits;
                 if (n_bits == maxbits)
                     maxcode = maxmaxcode;
                 else
-                    maxcode = MAXCODE(n_bits);
+                    maxcode = MAX_CODE(n_bits);
             }
         }
 

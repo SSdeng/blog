@@ -268,7 +268,8 @@ public class GifEncoder {
         } catch (IOException e) {
             ok = false;
         }
-        return started = ok;
+        started = ok;
+        return started ;
     }
 
     /**
@@ -287,7 +288,8 @@ public class GifEncoder {
         } catch (IOException e) {
             ok = false;
         }
-        return started = ok;
+        started = ok;
+        return started ;
     }
 
     /**
@@ -339,7 +341,7 @@ public class GifEncoder {
         int minpos = 0;
         int dmin = 256 * 256 * 256;
         int len = colorTab.length;
-        for (int i = 0; i < len; ) {
+        for (int i = 0; i < len;  ) {
             int dr = r - (colorTab[i++] & 0xff);
             int dg = g - (colorTab[i++] & 0xff);
             int db = b - (colorTab[i] & 0xff);
@@ -382,7 +384,8 @@ public class GifEncoder {
         out.write(0x21); // extension introducer
         out.write(0xf9); // GCE label
         out.write(4); // data block size
-        int transp, disp;
+        int transp;
+        int disp;
         if (transparent == null) {
             transp = 0;
             disp = 0; // dispose = no action
@@ -396,10 +399,10 @@ public class GifEncoder {
         disp <<= 2;
 
         // packed fields
-        out.write(0 | // 1:3 reserved
-                disp | // 4:6 disposal
-                0 | // 7   user input - 0 = none
-                transp); // 8   transparency flag
+        out.write(0 |
+                disp |
+                0 |
+                transp);
 
         writeShort(delay); // delay x 1/100 sec
         out.write(transIndex); // transparent color index

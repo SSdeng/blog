@@ -3,7 +3,6 @@ package com.zyd.blog.plugin.oauth;
 import com.zyd.blog.framework.property.JustAuthProperties;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.request.AuthBaiduRequest;
-import me.zhyd.oauth.request.AuthDingTalkRequest;
 import me.zhyd.oauth.request.AuthRequest;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;

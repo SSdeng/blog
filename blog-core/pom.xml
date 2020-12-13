@@ -232,5 +232,10 @@
             <artifactId>JustAuth</artifactId>
             <version>${justauth.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.zyd</groupId>
+            <artifactId>blog</artifactId>
+            <version>2.2.2</version>
+        </dependency>
     </dependencies>
 </project>

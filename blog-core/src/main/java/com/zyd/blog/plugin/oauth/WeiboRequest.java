@@ -2,7 +2,6 @@ package com.zyd.blog.plugin.oauth;
 
 import com.zyd.blog.framework.property.JustAuthProperties;
 import me.zhyd.oauth.config.AuthConfig;
-import me.zhyd.oauth.request.AuthDingTalkRequest;
 import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.request.AuthWeiboRequest;
 import org.springframework.beans.factory.InitializingBean;
