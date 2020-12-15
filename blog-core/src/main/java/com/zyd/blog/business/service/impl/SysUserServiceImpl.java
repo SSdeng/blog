@@ -17,8 +17,8 @@ import com.zyd.blog.persistence.beans.SysUser;
 import com.zyd.blog.persistence.mapper.SysUserMapper;
 import com.zyd.blog.util.IpUtil;
 import com.zyd.blog.util.PasswordUtil;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -44,6 +44,10 @@ public class SysUserServiceImpl implements SysUserService {
     // 注入用户mapper类
     @Autowired
     private SysUserMapper sysUserMapper;
+
+    @Autowired
+    @Lazy
+    private SysUserService sysUserService;
 
     /**
      * 插入单个用户
@@ -205,7 +209,7 @@ public class SysUserServiceImpl implements SysUserService {
             // 调用Ip工具类和RequestHolder类获取实际IP
             user.setLastLoginIp(IpUtil.getRealIp(RequestHolder.getRequest()));
             user.setPassword(null);
-            ((SysUserService) AopContext.currentProxy()).updateSelective(user);
+            sysUserService.updateSelective(user);
         }
         return user;
     }

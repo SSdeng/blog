@@ -27,7 +27,6 @@ import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;
 import eu.bitwalker.useragentutils.Version;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -65,6 +64,8 @@ public class BizCommentServiceImpl implements BizCommentService {
     @Autowired
     private SysConfigService configService;
 
+    @Autowired
+    private BizCommentService bizCommentService;
     /**
      * 分页查询
      *
@@ -249,7 +250,7 @@ public class BizCommentServiceImpl implements BizCommentService {
         this.setCurrentLocation(comment);
 
         // 保存到数据库
-        ((BizCommentServiceImpl) AopContext.currentProxy()).insert(comment);
+        bizCommentService.insert(comment);
 
         // 发送邮件通知
         this.sendEmail(comment);

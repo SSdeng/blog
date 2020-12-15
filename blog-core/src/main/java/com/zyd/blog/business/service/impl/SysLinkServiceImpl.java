@@ -1,6 +1,5 @@
 package com.zyd.blog.business.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.page.PageMethod;
 import com.zyd.blog.business.annotation.RedisCache;
@@ -18,8 +17,8 @@ import com.zyd.blog.persistence.beans.SysLink;
 import com.zyd.blog.persistence.mapper.SysLinkMapper;
 import com.zyd.blog.util.HtmlUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -47,7 +46,9 @@ public class SysLinkServiceImpl implements SysLinkService {
     private MailService mailService;
     @Autowired
     private SysConfigService configService;
-
+    @Autowired
+    @Lazy
+    private SysLinkService sysLinkService;
     /**
      * 分页查询
      * 使用PageHelper开源项目
@@ -197,7 +198,7 @@ public class SysLinkServiceImpl implements SysLinkService {
             link.setDescription(HtmlUtil.html2Text(link.getDescription()));
         }
         // 调用insert（）方法插入友链
-        ((SysLinkService)AopContext.currentProxy()).insert(link);
+        sysLinkService.insert(link);
         log.info("友联自动申请成功,开始发送邮件通知...");
         // 发送邮件通知
         mailService.send(link, TemplateKeyEnum.TM_LINKS);
