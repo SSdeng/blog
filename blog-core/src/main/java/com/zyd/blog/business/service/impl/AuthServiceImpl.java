@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    // 注入用户服务
+    /** 注入用户服务 */
     @Autowired
     private SysUserService userService;
 
@@ -44,19 +44,22 @@ public class AuthServiceImpl implements AuthService {
         AuthRequest authRequest = RequestFactory.getInstance(source).getRequest();
         // 登录并获取登录信息
         AuthResponse<? extends Object> response = authRequest.login(callback);
-        if (response.ok()) { // 如果登录成功
+        // 如果登录成功
+        if (response.ok()) {
             // 获取到的用户资料
             AuthUser authUser = (AuthUser) response.getData();
             // 转换为OneBlog内部所需的用户类
             User newUser = BeanConvertUtil.doConvert(authUser, User.class);
             newUser.setSource(authUser.getSource().toString());
-            if (null != authUser.getGender()) { // 若获取的资料中有性别资料，则设置User中的性别属性
+            // 若获取的资料中有性别资料，则设置User中的性别属性
+            if (null != authUser.getGender()) {
                 newUser.setGender(authUser.getGender().getCode());
             }
             // 通过uuid和source来查找数据库中是否已创建该用户
             User user = userService.getByUuidAndSource(authUser.getUuid(), authUser.getSource().toString());
             newUser.setUserType(UserTypeEnum.USER);
-            if (null != user) { // 已创建，更新用户信息
+            // 已创建，更新用户信息
+            if (null != user) {
                 newUser.setId(user.getId());
                 userService.updateSelective(newUser);
             } else { // 未创建，插入新用户

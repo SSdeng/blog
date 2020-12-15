@@ -133,7 +133,12 @@ public class Article {//业务实体：文章，包装了持久化中的数据�
      */
     public boolean getIsMarkdown() {
         Boolean value = this.bizArticle.getIsMarkdown();
-        return null == value ? false : value;
+        if(value == null){
+            return false;
+        }else{
+            return value;
+        }
+
     }
 
     /**
@@ -180,7 +185,11 @@ public class Article {//业务实体：文章，包装了持久化中的数据�
      */
     public boolean isTop() {
         Boolean value = this.bizArticle.getTop();
-        return value != null ? value : false;
+        if(value != null){
+            return value;
+        }else{
+            return false;
+        }
     }
 
     /**
@@ -234,7 +243,11 @@ public class Article {//业务实体：文章，包装了持久化中的数据�
      */
     public boolean getRecommended() {
         Boolean value = this.bizArticle.getRecommended();
-        return value == null ? false : value;
+        if(value == null){
+            return false;
+        }else {
+            return value;
+        }
     }
 
     /**
@@ -251,7 +264,11 @@ public class Article {//业务实体：文章，包装了持久化中的数据�
      */
     public boolean isOriginal() {
         Boolean value = this.bizArticle.getOriginal();
-        return value != null ? value : false;
+        if(value != null){
+            return value;
+        }else{
+            return false;
+        }
     }
 
     /**
@@ -335,7 +352,11 @@ public class Article {//业务实体：文章，包装了持久化中的数据�
      */
     public boolean isComment() {
         Boolean value = this.bizArticle.getComment();
-        return value != null ? value : false;
+       if(value != null){
+           return value;
+       }else{
+           return false;
+       }
     }
 
     /**

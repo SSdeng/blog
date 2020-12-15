@@ -19,19 +19,19 @@ public class VirtualFile {
     /**
      * 文件大小
      */
-    public Long size;
+    private Long size;
     /**
      * 文件后缀（Suffix）
      */
-    public String suffix;
+    private String suffix;
     /**
      * 图片文件的宽
      */
-    public Integer width;
+    private Integer width;
     /**
      * 图片文件的高
      */
-    public Integer height;
+    private Integer height;
     /**
      * 文件hash
      */
@@ -129,12 +129,12 @@ public class VirtualFile {
      * @return 文件上传所用时间
      */
     public long getUseTime() {
-        Date uploadEndTime = this.getUploadEndTime();
-        Date uploadStartTime = this.getUploadStartTime();
-        if (null == uploadStartTime || null == uploadEndTime) {
+        Date endTime = this.getUploadEndTime();
+        Date startTime = this.getUploadStartTime();
+        if (null == startTime || null == endTime) {
             return -1;
         }
-        return uploadEndTime.getTime() - uploadStartTime.getTime();
+        return endTime.getTime() - startTime.getTime();
     }
 
     /**

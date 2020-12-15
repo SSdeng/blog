@@ -17,10 +17,10 @@ import lombok.EqualsAndHashCode;
 public abstract class AbstractEntity {
     private String bucketName;
 
-    public AbstractEntity() {
+    protected AbstractEntity() {
     }
 
-    public AbstractEntity(String bucketName) {
+    protected AbstractEntity(String bucketName) {
         this.bucketName = bucketName;
     }
 }

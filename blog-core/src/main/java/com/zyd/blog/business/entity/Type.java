@@ -133,7 +133,11 @@ public class Type {//业务实体分类，包装了持久化中的数据实体Bi
      */
     public boolean isAvailable() {
         Boolean value = this.bizType.getAvailable();
-        return value != null ? value : false;
+        if (value != null){
+            return value;
+        }else{
+            return false;
+        }
     }
 
     /**

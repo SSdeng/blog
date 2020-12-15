@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +38,9 @@ public class RenderController {
      * sidebar部分的推荐、近期和随机tab页中显示的文章数
      */
     private static final int SIDEBAR_ARTICLE_SIZE = 8;
+    /**
+     * 首页地址属性名
+     */
     private static final String INDEX_URL = "index";
 
     /**
@@ -288,7 +290,7 @@ public class RenderController {
     @BussinessLog(value = "进入归档目录页", platform = PlatformEnum.WEB)
     public ModelAndView archives(Model model) {
         //获取归档目录列表
-        Map<String, List> map = bizArticleArchivesService.listArchives();
+        Map<String, List<Object> > map = bizArticleArchivesService.listArchives();
         model.addAttribute("archives", map);
         //返回归档目录视图
         return ResultUtil.view("archives");

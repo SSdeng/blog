@@ -20,6 +20,18 @@ import java.io.*;
 public class ImageUtil {
 
     /**
+     *  异常信息
+     */
+    private static final String ERROR = "获取图片信息发生异常！";
+
+    /**
+     * 隐藏工具类的public构造方法
+     */
+    private ImageUtil(){
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * 通过File对象获取图片信息
      *
      * @param file File对象
@@ -33,10 +45,10 @@ public class ImageUtil {
             return getInfo(new FileInputStream(file))
                     .setSize(file.length())
                     .setOriginalFileName(file.getName())
-                    .setSuffix(FileUtil.getSuffix(file.getName()));
+                    .setSuffix(BlogFileUtil.getSuffix(file.getName()));
         } catch (Exception e) {
             e.printStackTrace();
-            throw new GlobalFileException("获取图片信息发生异常！", e);
+            throw new GlobalFileException(ERROR, e);
         }
     }
 
@@ -54,10 +66,10 @@ public class ImageUtil {
             return getInfo(multipartFile.getInputStream())
                     .setSize(multipartFile.getSize())
                     .setOriginalFileName(multipartFile.getOriginalFilename())
-                    .setSuffix(FileUtil.getSuffix(multipartFile.getOriginalFilename()));
+                    .setSuffix(BlogFileUtil.getSuffix(multipartFile.getOriginalFilename()));
         } catch (Exception e) {
             e.printStackTrace();
-            throw new GlobalFileException("获取图片信息发生异常！", e);
+            throw new GlobalFileException(ERROR, e);
         }
     }
 
@@ -80,7 +92,7 @@ public class ImageUtil {
                     .setHeight(bi.getHeight(null))
                     .setSize(inputStream.available());
         } catch (Exception e) {
-            throw new GlobalFileException("获取图片信息发生异常！", e);
+            throw new GlobalFileException(ERROR, e);
         }
     }
 }

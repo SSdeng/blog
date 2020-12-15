@@ -48,7 +48,9 @@ public class ArticleLookTask {
         if (null == articleLook) {
             return;
         }
-        queue.offer(articleLook);
+        if(!queue.offer(articleLook)){
+            log.warn("文章浏览记录入队失败！", articleLook.getArticleId());
+        }
     }
 
     /**

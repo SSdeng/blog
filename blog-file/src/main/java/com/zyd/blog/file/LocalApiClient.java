@@ -2,8 +2,9 @@ package com.zyd.blog.file;
 
 import com.zyd.blog.file.entity.VirtualFile;
 import com.zyd.blog.file.exception.LocalApiException;
-import com.zyd.blog.file.util.FileUtil;
+import com.zyd.blog.file.util.BlogFileUtil;
 import com.zyd.blog.file.util.StreamUtil;
+import cn.hutool.core.io.FileUtil;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
@@ -50,8 +51,16 @@ public class LocalApiClient extends BaseApiClient {
     public LocalApiClient init(String url, String rootPath, String uploadType) {
         this.url = url;
         this.rootPath = rootPath;
+        StringBuilder builder = new StringBuilder();
 
-        this.pathPrefix = StringUtils.isEmpty(uploadType) ? DEFAULT_PREFIX : uploadType.endsWith("/") ? uploadType : uploadType + "/";
+        if(StringUtils.isEmpty(uploadType)){
+            builder.append(DEFAULT_PREFIX);
+        }
+        else{
+            builder.append(uploadType);
+            if(!uploadType.endsWith("/")) builder.append("/");
+        }
+        this.pathPrefix = builder.toString();
         return this;
     }
 
@@ -68,7 +77,7 @@ public class LocalApiClient extends BaseApiClient {
         this.check();
 
         //获得文件key
-        String key = FileUtil.generateTempFileName(imageUrl);
+        String key = BlogFileUtil.generateTempFileName(imageUrl);
         //设置文件名
         this.createNewFileName(key, this.pathPrefix);
         Date startTime = new Date();
@@ -76,7 +85,7 @@ public class LocalApiClient extends BaseApiClient {
         //创建文件完整路径
         String realFilePath = this.rootPath + this.newFileName;
         //检查路径
-        FileUtil.checkFilePath(realFilePath);
+        BlogFileUtil.checkFilePath(realFilePath);
         //JDK1.7后的try with resources写法，用于对资源申请，确保异常时资源实时关闭
         //创建上传文件输入流，文件哈希输入流和文件输出流资源
         try (InputStream uploadIs = StreamUtil.clone(is);

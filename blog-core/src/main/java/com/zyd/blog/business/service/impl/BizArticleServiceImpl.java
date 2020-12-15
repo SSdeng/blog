@@ -1,7 +1,8 @@
 package com.zyd.blog.business.service.impl;
 
-import com.github.pagehelper.PageHelper;
+
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.zyd.blog.business.annotation.RedisCache;
 import com.zyd.blog.business.entity.Article;
 import com.zyd.blog.business.entity.User;
@@ -59,7 +60,7 @@ public class BizArticleServiceImpl implements BizArticleService {
     @Autowired
     private BizArticleTagsMapper bizArticleTagsMapper;
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private BizArticleTagsService articleTagsService;
     @Autowired
@@ -74,7 +75,7 @@ public class BizArticleServiceImpl implements BizArticleService {
     @Override
     public PageInfo<Article> findPageBreakByCondition(ArticleConditionVO vo) {
         // 按照vo中参数分页
-        PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(), vo.getPageSize());
         // 查询
         List<BizArticle> list = bizArticleMapper.findPageBreakByCondition(vo);
         // 列表为空
@@ -108,11 +109,8 @@ public class BizArticleServiceImpl implements BizArticleService {
             // 更新完毕后 将文章信息存入表中
             boList.add(new Article(bizArticle));
         }
-        // 封装list到pageInfo对象实现分页
-        PageInfo bean = new PageInfo<BizArticle>(list);
-        // 将boList放入pageInfo
-        bean.setList(boList);
-        return bean;
+        // 封装bolist到pageInfo对象实现分页
+        return new PageInfo<>(boList);
     }
 
     /**
@@ -132,7 +130,7 @@ public class BizArticleServiceImpl implements BizArticleService {
         // 设定分页大小
         vo.setPageSize(pageSize);
         // 调用分页查询 获取PageInfo类查询结果
-        PageInfo pageInfo = this.findPageBreakByCondition(vo);
+        PageInfo<Article> pageInfo = this.findPageBreakByCondition(vo);
         // 为空返回空指针 否则返回pageInfo中封装的列表
         return null == pageInfo ? null : pageInfo.getList();
     }
@@ -152,7 +150,7 @@ public class BizArticleServiceImpl implements BizArticleService {
         // 已发布
         vo.setStatus(ArticleStatusEnum.PUBLISHED.getCode());
         // 查找符合文章
-        PageInfo pageInfo = this.findPageBreakByCondition(vo);
+        PageInfo<Article> pageInfo = this.findPageBreakByCondition(vo);
         // 不为空返回pageInfo中封装的列表
         return null == pageInfo ? null : pageInfo.getList();
     }
@@ -174,7 +172,7 @@ public class BizArticleServiceImpl implements BizArticleService {
         // 设置分页大小
         vo.setPageSize(pageSize);
         // 查找符合文章
-        PageInfo pageInfo = this.findPageBreakByCondition(vo);
+        PageInfo<Article> pageInfo = this.findPageBreakByCondition(vo);
         // 不为空则返回pageInfo中封装的列表
         return null == pageInfo ? null : pageInfo.getList();
     }
@@ -188,7 +186,7 @@ public class BizArticleServiceImpl implements BizArticleService {
     @Override
     public List<Article> listHotArticle(int pageSize) {
         // 分页
-        PageHelper.startPage(1, pageSize);
+        PageMethod.startPage(1, pageSize);
         // 获取热门文章列表
         List<BizArticle> entityList = bizArticleMapper.listHotArticle();
 
@@ -242,7 +240,7 @@ public class BizArticleServiceImpl implements BizArticleService {
         // 设置分页大小
         vo.setPageSize(pageSize);
         // 按条件搜索文章
-        PageInfo pageInfo = this.findPageBreakByCondition(vo);
+        PageInfo<Article> pageInfo = this.findPageBreakByCondition(vo);
         // 不为空则返回pageInfo中封装的列表
         return null == pageInfo ? null : pageInfo.getList();
     }
@@ -293,7 +291,7 @@ public class BizArticleServiceImpl implements BizArticleService {
         // 获取缓存值
         ValueOperations<String, Object> operations = redisTemplate.opsForValue();
         // 缓存中存有该操作key
-        if (redisTemplate.hasKey(key)) {
+        if ((boolean)redisTemplate.hasKey(key)) {
             // 同一ip对同一文章一小时内不能多次点赞
             throw new ZhydArticleException("一个小时只能点赞一次哈，感谢支持~~");
         }
@@ -461,6 +459,7 @@ public class BizArticleServiceImpl implements BizArticleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeByPrimaryKey(Long primaryKey) {
+        final String articleId = "articleId";
         // 从数据库中删除 记录结果
         boolean result = bizArticleMapper.deleteByPrimaryKey(primaryKey) > 0;
         // 删除标签记录
@@ -468,7 +467,7 @@ public class BizArticleServiceImpl implements BizArticleService {
         Example tagsExample = new Example(BizArticleTags.class);
         Example.Criteria tagsCriteria = tagsExample.createCriteria();
         // where articleId = 'primaryKdy'
-        tagsCriteria.andEqualTo("articleId", primaryKey);
+        tagsCriteria.andEqualTo(articleId, primaryKey);
         // 从数据库中删除对应实体
         bizArticleTagsMapper.deleteByExample(tagsExample);
 
@@ -477,7 +476,7 @@ public class BizArticleServiceImpl implements BizArticleService {
         Example lookExample = new Example(BizArticleLook.class);
         Example.Criteria lookCriteria = lookExample.createCriteria();
         // where articleId = 'primaryKdy'
-        lookCriteria.andEqualTo("articleId", primaryKey);
+        lookCriteria.andEqualTo(articleId, primaryKey);
         // 从数据库中删除对应实体
         bizArticleLookMapper.deleteByExample(lookExample);
 
@@ -486,7 +485,7 @@ public class BizArticleServiceImpl implements BizArticleService {
         Example loveExample = new Example(BizArticleLove.class);
         Example.Criteria loveCriteria = loveExample.createCriteria();
         // where articleId = 'primaryKdy'
-        loveCriteria.andEqualTo("articleId", primaryKey);
+        loveCriteria.andEqualTo(articleId, primaryKey);
         // 从数据库中删除对应实体
         bizArticleLoveMapper.deleteByExample(loveExample);
         // 返回结果

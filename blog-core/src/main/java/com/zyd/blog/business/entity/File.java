@@ -19,15 +19,15 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class File {//业务实体图片，包装了持久化中的数据实体BizFile
-    private BizFile file;
+    private BizFile bizFile;
 
     /**
      * 带参数的构造函数
      *
-     * @param file
+     * @param bizFile
      */
-    public File(BizFile file) {
-        this.file = file;
+    public File(BizFile bizFile) {
+        this.bizFile = bizFile;
     }
 
     /**
@@ -40,18 +40,18 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回图片
      */
     @JsonIgnore//在json序列化时将pojo中的一些属性忽略掉，标记在属性或者方法上，返回的json数据即不包含该属性。
-    public BizFile getFile() {
-        return file;
+    public BizFile getBizFile() {
+        return bizFile;
     }
 
     /**
      * 设置图片
      *
-     * @param file
+     * @param bizFile
      * @return 返回图片
      */
-    public File setFile(BizFile file) {
-        this.file = file;
+    public File setBizFile(BizFile bizFile) {
+        this.bizFile = bizFile;
         return this;
     }
 
@@ -59,7 +59,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回文件这条记录对应的ID
      */
     public Long getId() {
-        return this.file.getId();
+        return this.bizFile.getId();
     }
 
     /**
@@ -69,7 +69,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 图片
      */
     public File setId(Long id) {
-        this.file.setId(id);
+        this.bizFile.setId(id);
         return this;
     }
 
@@ -77,7 +77,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回使用这个头像的用户ID
      */
     public Long getUserId() {
-        return this.file.getUserId();
+        return this.bizFile.getUserId();
     }
 
     /**
@@ -87,7 +87,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 图片
      */
     public File setUserId(Long userId) {
-        this.file.setUserId(userId);
+        this.bizFile.setUserId(userId);
         return this;
     }
 
@@ -95,7 +95,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回原本的文件名
      */
     public String getOriginalFileName() {
-        return this.file.getOriginalFileName();
+        return this.bizFile.getOriginalFileName();
     }
 
     /**
@@ -105,7 +105,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 图片（文件）
      */
     public File setOriginalFileName(String originalFileName) {
-        this.file.setOriginalFileName(originalFileName);
+        this.bizFile.setOriginalFileName(originalFileName);
         return this;
     }
 
@@ -113,7 +113,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回图片的路径
      */
     public String getFilePath() {
-        return this.file.getFilePath();
+        return this.bizFile.getFilePath();
     }
 
     /**
@@ -123,7 +123,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 图片
      */
     public File setFilePath(String filePath) {
-        this.file.setFilePath(filePath);
+        this.bizFile.setFilePath(filePath);
         return this;
     }
 
@@ -131,7 +131,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回图片的完整路径（带域名）
      */
     public String getFullFilePath() {
-        return this.file.getFullFilePath();
+        return this.bizFile.getFullFilePath();
     }
 
     /**
@@ -141,7 +141,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 图片
      */
     public File setFullFilePath(String fullFilePath) {
-        this.file.setFullFilePath(fullFilePath);
+        this.bizFile.setFullFilePath(fullFilePath);
         return this;
     }
 
@@ -149,7 +149,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回图片的Hash值，计算图片是否传输成功？还是查找。。。
      */
     public String getFileHash() {
-        return this.file.getFileHash();
+        return this.bizFile.getFileHash();
     }
 
     /**
@@ -159,7 +159,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 图片
      */
     public File setFileHash(String fileHash) {
-        this.file.setFileHash(fileHash);
+        this.bizFile.setFileHash(fileHash);
         return this;
     }
 
@@ -167,7 +167,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回图片的上传格式
      */
     public String getUploadType() {
-        return this.file.getUploadType();
+        return this.bizFile.getUploadType();
     }
 
     /**
@@ -177,7 +177,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 图片
      */
     public File setUploadType(String uploadType) {
-        this.file.setUploadType(uploadType);
+        this.bizFile.setUploadType(uploadType);
         return this;
     }
 
@@ -185,7 +185,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回图片的上传时间
      */
     public Date getUploadStartTime() {
-        return this.file.getUploadStartTime();
+        return this.bizFile.getUploadStartTime();
     }
 
     /**
@@ -195,7 +195,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 图片
      */
     public File setUploadStartTime(Date uploadStartTime) {
-        this.file.setUploadStartTime(uploadStartTime);
+        this.bizFile.setUploadStartTime(uploadStartTime);
         return this;
     }
 
@@ -203,7 +203,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回上传的结束时间
      */
     public Date getUploadEndTime() {
-        return this.file.getUploadEndTime();
+        return this.bizFile.getUploadEndTime();
     }
 
     /**
@@ -213,7 +213,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return
      */
     public File setUploadEndTime(Date uploadEndTime) {
-        this.file.setUploadEndTime(uploadEndTime);
+        this.bizFile.setUploadEndTime(uploadEndTime);
         return this;
     }
 
@@ -221,7 +221,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回这条记录的创建时间，来源是继承了AbstractDO中的方法
      */
     public Date getCreateTime() {
-        return this.file.getCreateTime();
+        return this.bizFile.getCreateTime();
     }
 
     /**
@@ -231,7 +231,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 图片
      */
     public File setCreateTime(Date createTime) {
-        this.file.setCreateTime(createTime);
+        this.bizFile.setCreateTime(createTime);
         return this;
     }
 
@@ -239,7 +239,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回这条记录的更新时间
      */
     public Date getUpdateTime() {
-        return this.file.getUpdateTime();
+        return this.bizFile.getUpdateTime();
     }
 
     /**
@@ -249,7 +249,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 图片
      */
     public File setUpdateTime(Date updateTime) {
-        this.file.setUpdateTime(updateTime);
+        this.bizFile.setUpdateTime(updateTime);
         return this;
     }
 
@@ -257,7 +257,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回图片的大小
      */
     public Long getSize() {
-        return this.file.getSize();
+        return this.bizFile.getSize();
     }
 
     /**
@@ -267,7 +267,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 图片
      */
     public File setSize(Long size) {
-        this.file.setSize(size);
+        this.bizFile.setSize(size);
         return this;
     }
 
@@ -275,7 +275,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回图片格式的后缀
      */
     public String getSuffix() {
-        return this.file.getSuffix();
+        return this.bizFile.getSuffix();
     }
 
     /**
@@ -285,7 +285,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 图片
      */
     public File setSuffix(String suffix) {
-        this.file.setSuffix(suffix);
+        this.bizFile.setSuffix(suffix);
         return this;
     }
 
@@ -293,7 +293,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回图片的宽度
      */
     public Integer getWidth() {
-        return this.file.getWidth();
+        return this.bizFile.getWidth();
     }
 
     /**
@@ -303,7 +303,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 图片
      */
     public File setWidth(Integer width) {
-        this.file.setWidth(width);
+        this.bizFile.setWidth(width);
         return this;
     }
 
@@ -311,7 +311,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回图片的高度
      */
     public Integer getHeight() {
-        return this.file.getHeight();
+        return this.bizFile.getHeight();
     }
 
     /**
@@ -321,7 +321,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 图片
      */
     public File setHeight(Integer height) {
-        this.file.setHeight(height);
+        this.bizFile.setHeight(height);
         return this;
     }
 
@@ -329,7 +329,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 返回图片的存储格式
      */
     public String getStorageType() {
-        return this.file.getStorageType();
+        return this.bizFile.getStorageType();
     }
 
     /**
@@ -339,7 +339,7 @@ public class File {//业务实体图片，包装了持久化中的数据实体Bi
      * @return 图片
      */
     public File setStorageType(String storageTypeEnum) {
-        this.file.setStorageType(storageTypeEnum);
+        this.bizFile.setStorageType(storageTypeEnum);
         return this;
     }
 

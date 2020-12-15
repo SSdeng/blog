@@ -1,7 +1,6 @@
 package com.zyd.blog.business.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.zyd.blog.business.entity.Article;
 import com.zyd.blog.persistence.beans.BizArticleArchives;
 
 import java.util.List;

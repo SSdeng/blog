@@ -31,7 +31,7 @@ public class RestStatisticsController {
      * @return JSON
      */
     @RequestMapping("/siteInfo")
-    public ResponseVO getSiteInfo(){
+    public ResponseVO<Object> getSiteInfo(){
         return ResultUtil.success("", configService.getSiteInfo());
     }
 
@@ -40,7 +40,7 @@ public class RestStatisticsController {
      * @return JSON
      */
     @RequestMapping("/listSpider")
-    public ResponseVO listSpider(){
+    public ResponseVO<Object> listSpider(){
         return ResultUtil.success("", statisticsService.listSpider(10));
     }
 
@@ -49,7 +49,7 @@ public class RestStatisticsController {
      * @return JSON
      */
     @RequestMapping("/listType")
-    public ResponseVO listType(){
+    public ResponseVO<Object> listType(){
         return ResultUtil.success("", statisticsService.listType(10));
     }
 

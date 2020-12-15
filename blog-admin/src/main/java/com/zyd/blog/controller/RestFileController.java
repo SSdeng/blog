@@ -2,6 +2,7 @@ package com.zyd.blog.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.zyd.blog.business.annotation.BussinessLog;
+import com.zyd.blog.business.entity.File;
 import com.zyd.blog.business.service.BizFileService;
 import com.zyd.blog.business.vo.FileConditionVO;
 import com.zyd.blog.framework.object.ResponseVO;
@@ -35,7 +36,7 @@ public class RestFileController {
      */
     @RequiresPermissions("files")
     @PostMapping("/list")
-    public PageInfo list(FileConditionVO vo) {
+    public PageInfo<File> list(FileConditionVO vo) {
         vo.setPageSize(20);
         return fileService.findPageBreakByCondition(vo);
     }
@@ -48,7 +49,7 @@ public class RestFileController {
     @RequiresPermissions("files")
     @PostMapping(value = "/remove")
     @BussinessLog("删除文件，ids:{1}")
-    public ResponseVO remove(Long[] ids) {
+    public ResponseVO<Object> remove(Long[] ids) {
         if (null == ids) {
             return ResultUtil.error(500, "请至少选择一条记录");
         }
@@ -65,7 +66,7 @@ public class RestFileController {
     @RequiresPermissions("files")
     @PostMapping(value = "/add")
     @BussinessLog("添加文件")
-    public ResponseVO add(MultipartFile[] file) {
+    public ResponseVO<Object> add(MultipartFile[] file) {
         if (null == file || file.length == 0) {
             return ResultUtil.error("请至少选择一张图片！");
         }

@@ -1,7 +1,7 @@
 package com.zyd.blog.business.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.zyd.blog.business.entity.File;
 import com.zyd.blog.business.enums.FileUploadType;
 import com.zyd.blog.business.service.BizFileService;
@@ -35,6 +35,8 @@ public class BizFileServiceImpl implements BizFileService {
     @Autowired
     private BizFileMapper shopFileMapper;
 
+    private static final String INVALID_PARAMETER = "Invalid parameter";
+
     /**
      * 分页查询
      *
@@ -44,7 +46,7 @@ public class BizFileServiceImpl implements BizFileService {
     @Override
     public PageInfo<File> findPageBreakByCondition(FileConditionVO vo) {
         // 按vo属性值分页
-        PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(), vo.getPageSize());
         // 按vo设定条件搜索
         List<BizFile> list = shopFileMapper.findPageBreakByCondition(vo);
         // 转换元素类型
@@ -53,11 +55,8 @@ public class BizFileServiceImpl implements BizFileService {
         if (boList == null) {
             return null;
         }
-        // 封装list到pageInfo对象实现分页
-        PageInfo bean = new PageInfo<BizFile>(list);
-        // 将boList放入pageInfo
-        bean.setList(boList);
-        return bean;
+        // 封装boList到pageInfo对象实现分页
+        return new PageInfo<>(boList);
     }
 
     /**
@@ -97,9 +96,8 @@ public class BizFileServiceImpl implements BizFileService {
         BizFile file = new BizFile();
         // 设置路径
         file.setFilePath(filePath);
-        // TODO
-        // 错误代码？
-        if (StringUtils.isEmpty(uploadType)) {
+        // 上传类型不为空
+        if (!StringUtils.isEmpty(uploadType)) {
             // 记录文件类型
             file.setUploadType(uploadType);
         }
@@ -128,6 +126,7 @@ public class BizFileServiceImpl implements BizFileService {
                 FileUploader uploader = new GlobalFileUploader();
                 uploader.delete(oldFile.getFilePath(), oldFile.getUploadType());
             } catch (Exception ignored) {
+                ignored.printStackTrace();
             }
         }
     }
@@ -165,13 +164,13 @@ public class BizFileServiceImpl implements BizFileService {
     @Transactional(rollbackFor = Exception.class)
     public File insert(File entity) {
         // 实体不可为空
-        Assert.notNull(entity, "Invalid parameter");
+        Assert.notNull(entity, INVALID_PARAMETER);
         // 记录创建时间
         entity.setCreateTime(new Date());
         // 记录更新时间
         entity.setUpdateTime(new Date());
         // 插入到数据库
-        shopFileMapper.insertSelective(entity.getFile());
+        shopFileMapper.insertSelective(entity.getBizFile());
         // 更新后实体
         return entity;
     }
@@ -186,7 +185,7 @@ public class BizFileServiceImpl implements BizFileService {
     @Transactional(rollbackFor = Exception.class)
     public boolean removeByPrimaryKey(Long primaryKey) {
         // 主键参数不可为空
-        Assert.notNull(primaryKey, "Invalid parameter");
+        Assert.notNull(primaryKey, INVALID_PARAMETER);
         // 返回删除结果
         return shopFileMapper.deleteByPrimaryKey(primaryKey) > 0;
     }
@@ -202,11 +201,11 @@ public class BizFileServiceImpl implements BizFileService {
     @Transactional(rollbackFor = Exception.class)
     public boolean updateSelective(File entity) {
         // 参数不可为空
-        Assert.notNull(entity, "Invalid parameter");
+        Assert.notNull(entity, INVALID_PARAMETER);
         // 记录更新时间
         entity.setUpdateTime(new Date());
         // 操作数据库更新 返回结果
-        return shopFileMapper.updateByPrimaryKeySelective(entity.getFile()) > 0;
+        return shopFileMapper.updateByPrimaryKeySelective(entity.getBizFile()) > 0;
     }
 
     /**
@@ -218,7 +217,7 @@ public class BizFileServiceImpl implements BizFileService {
     @Override
     public File getByPrimaryKey(Long primaryKey) {
         // 主键参数不可为空
-        Assert.notNull(primaryKey, "Invalid parameter");
+        Assert.notNull(primaryKey, INVALID_PARAMETER);
         // 从数据库按主键获取文件
         BizFile entity = shopFileMapper.selectByPrimaryKey(primaryKey);
         // 转换File类对象并返回

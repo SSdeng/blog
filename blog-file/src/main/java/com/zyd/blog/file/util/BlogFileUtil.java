@@ -3,6 +3,8 @@ package com.zyd.blog.file.util;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 
 /**
@@ -14,7 +16,7 @@ import java.util.Arrays;
  * @date 2018/01/09 17:40
  * @since 1.0
  */
-public class FileUtil extends cn.hutool.core.io.FileUtil {
+public class BlogFileUtil extends cn.hutool.core.io.FileUtil {
     private static final String[] PICTURE_SUFFIXS = {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg"};
 
     /**
@@ -24,7 +26,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * @param fileNum  已删除的文件个数
      * @return 已删除的文件个数
      */
-    public static int deleteFiles(String rootPath, int fileNum) {
+    public static int deleteFiles(String rootPath, int fileNum) throws IOException {
         File file = new File(rootPath);
         if (!file.exists()) {
             return -1;
@@ -35,14 +37,15 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
                 for (File sonFile : sonFiles) {
                     if (sonFile.isDirectory()) {
                         fileNum = deleteFiles(sonFile.getAbsolutePath(), fileNum);//递归删除子目录
-                    } else {
-                        sonFile.delete();
+                    }
+                    else {
+                        Files.delete(sonFile.toPath());
                         fileNum++;
                     }
                 }
             }
         } else {
-            file.delete();
+            Files.delete(file.toPath());
         }
         return fileNum;
     }
