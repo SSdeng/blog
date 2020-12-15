@@ -18,6 +18,7 @@ import com.zyd.blog.util.SessionUtil;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +41,10 @@ public class SysLogServiceImpl implements SysLogService {
 
     @Autowired
     private SysLogMapper sysLogMapper;
+
+    @Autowired
+    @Lazy
+    private SysLogService sysLogService;
 
     /**
      * 分页查询
@@ -108,7 +113,7 @@ public class SysLogServiceImpl implements SysLogService {
             sysLog.setBrowser(agent.getBrowser().getName());
             sysLog.setOs(agent.getOperatingSystem().getName());
             // 调用insert方法保存log到数据库
-            ((SysLogServiceImpl) AopContext.currentProxy()).insert(sysLog);
+            sysLogService.insert(sysLog);
         } catch (Exception e) {
             e.printStackTrace();
         }

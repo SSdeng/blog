@@ -4,7 +4,7 @@ import com.zyd.blog.business.enums.FileUploadType;
 import com.zyd.blog.file.FileUploader;
 import com.zyd.blog.file.entity.VirtualFile;
 import com.zyd.blog.file.exception.GlobalFileException;
-import com.zyd.blog.file.util.FileUtil;
+import com.zyd.blog.file.util.BlogFileUtil;
 import com.zyd.blog.plugin.file.GlobalFileUploader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -53,7 +53,7 @@ public class ImageDownloadUtil {
     @Deprecated()
     public static String download(String imgUrl, String referer, String localPath) {
 
-        String fileName = localPath + File.separator + UUID.randomUUID().toString() + FileUtil.getSuffixByUrl(imgUrl);
+        String fileName = localPath + File.separator + UUID.randomUUID().toString() + BlogFileUtil.getSuffixByUrl(imgUrl);
         try (InputStream is = getInputStreamByUrl(imgUrl, referer);
              FileOutputStream fos = new FileOutputStream(fileName)) {
             if (null == is) {
