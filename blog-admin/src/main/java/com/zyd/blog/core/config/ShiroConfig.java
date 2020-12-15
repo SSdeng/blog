@@ -43,11 +43,7 @@ import java.util.Map;
 public class ShiroConfig {
 
     @Autowired
-    private ShiroService shiroService;//Shiro业务层
-    @Autowired
     private RedisProperties redisProperties;//redis属性配置文件
-    @Autowired
-    private ShiroProperties shiroProperties;//Shiro属性配置文件
 
     /**
      * 用来管理shiro一些bean的生命周期
@@ -82,7 +78,7 @@ public class ShiroConfig {
      * 3、部分过滤器可指定参数，如perms，roles
      */
     @Bean(name = "shiroFilter")
-    public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
+    public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager,ShiroProperties shiroProperties, ShiroService shiroService) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         // 必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
