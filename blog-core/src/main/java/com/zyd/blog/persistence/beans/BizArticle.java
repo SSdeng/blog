@@ -18,7 +18,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class BizArticle extends AbstractDO {
     @Transient
-    List<BizTags> tags;
+    private List<BizTags> tags;
     @Transient
     BizType bizType;
     private String title;

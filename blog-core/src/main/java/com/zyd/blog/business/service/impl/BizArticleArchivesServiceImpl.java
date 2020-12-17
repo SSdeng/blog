@@ -38,7 +38,7 @@ public class BizArticleArchivesServiceImpl implements BizArticleArchivesService 
      * @return 归档目录列表
      */
     @Override
-    public Map<String, List> listArchives() {
+    public Map<String, List<Object> > listArchives() {
         // 获取文章档案列表
         List<BizArticleArchives> articleArchivesList = articleArchivesMapper.listArchives();
         // 若列表为空 返回空
@@ -46,7 +46,7 @@ public class BizArticleArchivesServiceImpl implements BizArticleArchivesService 
             return null;
         }
         // 生成归档目录对象
-        Map<String, List> resultMap = new HashMap<String, List>();
+        Map<String, List<Object> > resultMap = new HashMap<>();
         // 生成存储年份的列表
         List<String> years = new LinkedList<>();
         // 遍历文章档案列表
@@ -69,7 +69,7 @@ public class BizArticleArchivesServiceImpl implements BizArticleArchivesService 
             addToList(resultMap.get(datetime), new ArticleArchives(bizArticleArchives), resultMap, datetime);
         }
         // 将年份列表加入Map中
-        resultMap.put("years", years);
+        resultMap.put("years", (List<Object>)(List)years);
         return resultMap;
     }
 
@@ -82,7 +82,7 @@ public class BizArticleArchivesServiceImpl implements BizArticleArchivesService 
      * @param key list在map中的键值
      * @param <T> 泛型
      */
-    private <T> void addToList(List<T> list, T value, Map<String, List> map, String key) {
+    private <T> void addToList(List<T> list, T value, Map<String, List<Object>> map, String key) {
         // 若list为空
         if (null == list) {
             // 初始化后保存
@@ -90,7 +90,7 @@ public class BizArticleArchivesServiceImpl implements BizArticleArchivesService 
             list.add(value);
             // Map中没有对应键值的列表 存入该列表
             if (null != map && !StringUtils.isEmpty(key)) {
-                map.put(key, list);
+                map.put(key, (List<Object>) list);
             }
         } else {
             // 去重

@@ -13,6 +13,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,9 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 public class BeanConvertUtil {
+	private BeanConvertUtil() {
+		throw new IllegalStateException();
+	}
 
     /**
      * sourceList --> targetList 转换
@@ -35,9 +39,9 @@ public class BeanConvertUtil {
      */
     public static <T> List<T> doConvert(List<?> sourceArray, Class<T> target) {
         if (CollectionUtils.isEmpty(sourceArray) || null == target) {
-            return null;
+            return Collections.emptyList();
         }
-        return sourceArray.stream().map((bo) -> doConvert(bo, target)).collect(Collectors.toList());
+        return sourceArray.stream().map(bo -> doConvert(bo, target)).collect(Collectors.toList());
     }
 
     /**
@@ -135,7 +139,7 @@ public class BeanConvertUtil {
 
                                     writeMethod.invoke(target, value);
                                 }
-                            } catch (Throwable var15) {
+                            } catch (Exception var15) {
                                 throw new FatalBeanException("Could not copy property '" + targetPd.getName() + "' from source to target", var15);
                             }
                         }

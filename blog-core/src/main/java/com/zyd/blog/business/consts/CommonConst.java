@@ -10,6 +10,9 @@ package com.zyd.blog.business.consts;
  * @since 1.0
  */
 public class CommonConst {
+	private CommonConst() {
+		throw new IllegalStateException("CommonConst class");
+	}
     /**
      * 安全密码(UUID生成)，作为盐值用于用户密码的加密
      */

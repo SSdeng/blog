@@ -47,6 +47,9 @@ public class ErrorPagesController implements ErrorController {
     @Autowired
     private ServerProperties serverProperties;
 
+    private static String QUERY_STRING = "queryString";
+
+
     /**
      * 初始化ExceptionController，获取错误信息
      * @param errorAttributes
@@ -77,7 +80,7 @@ public class ErrorPagesController implements ErrorController {
         Map<String, Object> model = getErrorAttributes(webRequest, isIncludeStackTrace(request, MediaType.TEXT_HTML));
 
         //getQueryString 获取请求的URL字符串
-        model.put("queryString", request.getQueryString());
+        model.put(QUERY_STRING, request.getQueryString());
 
         //ModelAndView是WebMVC框架中模型和视图的持有者。
         //创建一个新的ModelAndView，给定一个视图名和model
@@ -97,7 +100,7 @@ public class ErrorPagesController implements ErrorController {
 
         //getQueryString 获取请求的URL字符串
         // 404拦截规则，如果是静态文件发生的404则不记录到DB
-        model.put("queryString", request.getQueryString());
+        model.put(QUERY_STRING, request.getQueryString());
 
         if (!String.valueOf(model.get("path")).contains(".")) {
             model.put("status", HttpStatus.FORBIDDEN.value());
@@ -119,7 +122,7 @@ public class ErrorPagesController implements ErrorController {
         Map<String, Object> model = getErrorAttributes(webRequest, isIncludeStackTrace(request, MediaType.TEXT_HTML));
 
         //getQueryString 获取请求的URL字符串
-        model.put("queryString", request.getQueryString());
+        model.put(QUERY_STRING, request.getQueryString());
 
         //ModelAndView是WebMVC框架中模型和视图的持有者。
         //创建一个新的ModelAndView，给定一个视图名和model
@@ -137,7 +140,7 @@ public class ErrorPagesController implements ErrorController {
         Map<String, Object> model = getErrorAttributes(webRequest, isIncludeStackTrace(request, MediaType.TEXT_HTML));
 
         //getQueryString 获取请求的URL字符串
-        model.put("queryString", request.getQueryString());
+        model.put(QUERY_STRING, request.getQueryString());
 
         //ModelAndView是WebMVC框架中模型和视图的持有者。
         //创建一个新的ModelAndView，给定一个视图名和model
@@ -155,7 +158,7 @@ public class ErrorPagesController implements ErrorController {
         Map<String, Object> model = getErrorAttributes(webRequest, isIncludeStackTrace(request, MediaType.TEXT_HTML));
 
         //getQueryString 获取请求的URL字符串
-        model.put("queryString", request.getQueryString());
+        model.put(QUERY_STRING, request.getQueryString());
 
         //ModelAndView是WebMVC框架中模型和视图的持有者。
         //创建一个新的ModelAndView，给定一个视图名和model

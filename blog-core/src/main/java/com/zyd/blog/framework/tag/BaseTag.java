@@ -22,11 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 所有自定义标签的父类，负责调用具体的子类方法
  *
- * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
- * @version 1.0
- * @website https://www.zhyd.me
- * @date 2018/9/18 16:19
- * @since 1.8
  */
 @Slf4j
 public abstract class BaseTag implements TemplateDirectiveModel {

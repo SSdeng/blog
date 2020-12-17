@@ -14,6 +14,9 @@ import java.text.MessageFormat;
  * @since 1.0
  */
 public class UrlBuildUtil {
+	private UrlBuildUtil() {
+		throw new IllegalStateException();
+	}
 
     private static final String GET_LOCATION_BY_IP = "{0}?ak={1}&coor=gcj02&ip={2}";
     private static final String BAIDU_PUSH_URL_PATTERN = "{0}{1}?site={2}&token={3}";

@@ -8,6 +8,9 @@ package com.zyd.blog.business.consts;
  * @since 1.0
  */
 public class SessionConst {
+	private SessionConst() {
+		throw new IllegalStateException("SessionConst class");
+	}
     /**
      * User 的 session key;k
      */
@@ -16,5 +19,5 @@ public class SessionConst {
     /**
      * kaptcha 的 session key
      */
-    public final static String KAPTCHA_SESSION_KEY = "KAPTCHA_SESSION_KEY";
+    public static final String KAPTCHA_SESSION_KEY = "KAPTCHA_SESSION_KEY";
 }

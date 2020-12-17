@@ -9,10 +9,7 @@ import com.zyd.blog.file.alioss.entity.RefererEntity;
 import com.zyd.blog.file.exception.OssApiException;
 import org.springframework.util.CollectionUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -293,8 +290,8 @@ public class OssApi {
      * @param folder     目录名
      * @param bucketName 存储空间
      */
-    public void createFolder(String folder, String bucketName) throws OssApiException {
-        try {
+    public void createFolder(String folder, String bucketName) throws IOException {
+        try (InputStream inputStream = new ByteArrayInputStream(new byte[0])){
 
             //存储空间名为空时抛出异常
             if (null == bucketName) {
@@ -308,7 +305,7 @@ public class OssApi {
             //创建目录名
             folder = folder.endsWith("/") ? folder : folder + "/";
             //上传模拟文件
-            this.client.putObject(bucketName, folder, new ByteArrayInputStream(new byte[0]));
+            this.client.putObject(bucketName, folder, inputStream);
         } finally {
             //关闭客户端
             this.shutdown();
@@ -390,9 +387,9 @@ public class OssApi {
      * @param bucket    需要上传到的目标bucket
      */
     public String uploadFile(File localFile, String fileName, String bucket) {
-        try {
-            //新建本地文件的输入流
-            InputStream inputStream = new FileInputStream(localFile);
+        try (
+                InputStream inputStream = new FileInputStream(localFile)
+        ){
             //上传本地文件并返回结果
             return this.uploadFile(inputStream, fileName, bucket);
         } catch (Exception e) {

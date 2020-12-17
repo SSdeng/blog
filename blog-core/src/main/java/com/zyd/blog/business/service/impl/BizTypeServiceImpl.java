@@ -1,7 +1,8 @@
 package com.zyd.blog.business.service.impl;
 
-import com.github.pagehelper.PageHelper;
+
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.zyd.blog.business.entity.Type;
 import com.zyd.blog.business.service.BizTypeService;
 import com.zyd.blog.business.vo.TypeConditionVO;
@@ -46,7 +47,7 @@ public class BizTypeServiceImpl implements BizTypeService {
     @Override
     public PageInfo<Type> findPageBreakByCondition(TypeConditionVO vo) {
         // 分页
-        PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(), vo.getPageSize());
         // 按条件搜索
         List<BizType> list = bizTypeMapper.findPageBreakByCondition(vo);
         // 转换元素类型
@@ -55,11 +56,8 @@ public class BizTypeServiceImpl implements BizTypeService {
         if (boList == null) {
             return null;
         }
-        // 封装list到pageInfo对象实现分页
-        PageInfo bean = new PageInfo<BizType>(list);
-        // 将boList放入pageInfo
-        bean.setList(boList);
-        return bean;
+        // 封装boList到pageInfo对象实现分页
+        return new PageInfo<>(boList);
     }
 
     /**
@@ -89,7 +87,7 @@ public class BizTypeServiceImpl implements BizTypeService {
         // 设定分页大小
         vo.setPageSize(100);
         // 分页
-        PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(), vo.getPageSize());
         // 获取类型菜单
         List<BizType> entityList = bizTypeMapper.listTypeForMenu();
         // 转换类型并返回
@@ -209,7 +207,7 @@ public class BizTypeServiceImpl implements BizTypeService {
         // 分页大小
         vo.setPageSize(100);
         // 分页
-        PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(), vo.getPageSize());
         // 获取所有分类
         List<BizType> entityList = bizTypeMapper.selectAll();
 

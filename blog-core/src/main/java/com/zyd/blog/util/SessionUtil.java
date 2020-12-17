@@ -16,6 +16,9 @@ import java.util.UUID;
  * @since 1.0
  */
 public class SessionUtil {
+	private SessionUtil() {
+		throw new IllegalStateException();
+	}
 
     /**
      * 当前是否登录

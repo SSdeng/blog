@@ -1,7 +1,7 @@
 package com.zyd.blog.business.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.zyd.blog.business.annotation.RedisCache;
 import com.zyd.blog.business.entity.Link;
 import com.zyd.blog.business.enums.ConfigKeyEnum;
@@ -18,6 +18,7 @@ import com.zyd.blog.persistence.mapper.SysLinkMapper;
 import com.zyd.blog.util.HtmlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -45,7 +46,9 @@ public class SysLinkServiceImpl implements SysLinkService {
     private MailService mailService;
     @Autowired
     private SysConfigService configService;
-
+    @Autowired
+    @Lazy
+    private SysLinkService sysLinkService;
     /**
      * 分页查询
      * 使用PageHelper开源项目
@@ -55,7 +58,7 @@ public class SysLinkServiceImpl implements SysLinkService {
     @Override
     public PageInfo<Link> findPageBreakByCondition(LinkConditionVO vo) {
         // 设置分页参数，开启分页
-        PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(), vo.getPageSize());
         // 紧跟着的第一个数据查询会被分页
         List<SysLink> list = sysLinkMapper.findPageBreakByCondition(vo);
         // 结果列表为空，则返回null
@@ -69,9 +72,7 @@ public class SysLinkServiceImpl implements SysLinkService {
             boList.add(new Link(sysLink));
         }
         // 用PageInfo包装结果集
-        PageInfo bean = new PageInfo<SysLink>(list);
-        bean.setList(boList);
-        return bean;
+        return new PageInfo<>(boList);
     }
 
     /**
@@ -156,7 +157,7 @@ public class SysLinkServiceImpl implements SysLinkService {
      */
     @Override
     @RedisCache(flush = true)
-    public boolean autoLink(Link link) throws ZhydLinkException {
+    public boolean autoLink(Link link) {
         // 获取友链url，并根据url调用getOneByUrl（）查找数据库
         String url = link.getUrl();
         Link bo = getOneByUrl(url);
@@ -165,7 +166,7 @@ public class SysLinkServiceImpl implements SysLinkService {
             throw new ZhydLinkException("本站已经添加过贵站的链接！");
         }
         // 获取配置信息实体
-        Map config = configService.getConfigs();
+        Map<String,Object> config = configService.getConfigs();
         // 获取配置信息实体中的域名信息
         String domain = (String) config.get(ConfigKeyEnum.DOMAIN.getKey());
         // 如果该url未添加本站友情链接，抛出异常并提示
@@ -197,7 +198,7 @@ public class SysLinkServiceImpl implements SysLinkService {
             link.setDescription(HtmlUtil.html2Text(link.getDescription()));
         }
         // 调用insert（）方法插入友链
-        this.insert(link);
+        sysLinkService.insert(link);
         log.info("友联自动申请成功,开始发送邮件通知...");
         // 发送邮件通知
         mailService.send(link, TemplateKeyEnum.TM_LINKS);

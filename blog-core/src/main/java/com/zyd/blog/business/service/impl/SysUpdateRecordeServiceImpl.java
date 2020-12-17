@@ -2,6 +2,7 @@ package com.zyd.blog.business.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.zyd.blog.business.entity.UpdateRecorde;
 import com.zyd.blog.business.service.SysUpdateRecordeService;
 import com.zyd.blog.business.vo.UpdateRecordeConditionVO;
@@ -41,7 +42,7 @@ public class SysUpdateRecordeServiceImpl implements SysUpdateRecordeService{
     @Override
     public PageInfo<UpdateRecorde>findPageBreakByCondition(UpdateRecordeConditionVO vo){
         // 设置分页参数，开启分页
-        PageHelper.startPage(vo.getPageNumber(),vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(),vo.getPageSize());
         // 紧跟着的第一个数据查询会进行分页
         List<SysUpdateRecorde>list=sysUpdateRecordeMapper.findPageBreakByCondition(vo);
         if (CollectionUtils.isEmpty(list)) {
@@ -52,9 +53,7 @@ public class SysUpdateRecordeServiceImpl implements SysUpdateRecordeService{
             boList.add(new UpdateRecorde(sysUpdateRecorde));
         }
         // 用PageInfo对查询结果进行包装
-        PageInfo bean = new PageInfo<SysUpdateRecorde>(list);
-        bean.setList(boList);
-        return bean;
+        return new PageInfo<>(boList);
     }
 
     /**

@@ -1,8 +1,8 @@
 package com.zyd.blog.util;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+
 
 import java.security.MessageDigest;
 
@@ -17,6 +17,9 @@ import java.security.MessageDigest;
  */
 @Slf4j
 public class Md5Util {
+	private Md5Util() {
+		throw new IllegalStateException();
+	}
     /**
      * 通过盐值对字符串进行MD5加密
      *
@@ -26,8 +29,8 @@ public class Md5Util {
      *         盐值
      * @return
      */
-    public static String MD5(String param, String salt) {
-        return MD5(param + salt);
+    public static String doMD5(String param, String salt) {
+        return doMD5(param + salt);
     }
 
     /**
@@ -37,7 +40,7 @@ public class Md5Util {
      *         字符串
      * @return
      */
-    public static String MD5(String s) {
+    public static String doMD5(String s) {
         char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
         try {
             byte[] btInput = s.getBytes();

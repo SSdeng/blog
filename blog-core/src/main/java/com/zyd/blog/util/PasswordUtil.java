@@ -7,6 +7,9 @@ import com.zyd.blog.business.consts.CommonConst;
  * @date: 2017/12/15 17:03
  */
 public class PasswordUtil {
+	private PasswordUtil() {
+		throw new IllegalStateException();
+	}
 
     /**
      * AES 加密
@@ -18,7 +21,7 @@ public class PasswordUtil {
      * @throws Exception
      */
     public static String encrypt(String password, String salt) throws Exception {
-        return AesUtil.encrypt(Md5Util.MD5(salt + CommonConst.ZYD_SECURITY_KEY), password);
+        return AesUtil.encrypt(Md5Util.doMD5(salt + CommonConst.ZYD_SECURITY_KEY), password);
     }
 
     /**
@@ -31,6 +34,6 @@ public class PasswordUtil {
      * @throws Exception
      */
     public static String decrypt(String encryptPassword, String salt) throws Exception {
-        return AesUtil.decrypt(Md5Util.MD5(salt + CommonConst.ZYD_SECURITY_KEY), encryptPassword);
+        return AesUtil.decrypt(Md5Util.doMD5(salt + CommonConst.ZYD_SECURITY_KEY), encryptPassword);
     }
 }

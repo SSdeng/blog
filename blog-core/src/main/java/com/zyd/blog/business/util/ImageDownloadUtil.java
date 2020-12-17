@@ -4,7 +4,7 @@ import com.zyd.blog.business.enums.FileUploadType;
 import com.zyd.blog.file.FileUploader;
 import com.zyd.blog.file.entity.VirtualFile;
 import com.zyd.blog.file.exception.GlobalFileException;
-import com.zyd.blog.file.util.FileUtil;
+import com.zyd.blog.file.util.BlogFileUtil;
 import com.zyd.blog.plugin.file.GlobalFileUploader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -12,13 +12,16 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.springframework.data.keyvalue.core.event.KeyValueEvent;
+
 
 import java.io.*;
 import java.util.UUID;
 
 @Slf4j
 public class ImageDownloadUtil {
+	private ImageDownloadUtil() {
+		throw new IllegalStateException("ImageDownloadUtil class");
+	}
 
     /**
      * 将网络图片转存到云存储中
@@ -47,10 +50,10 @@ public class ImageDownloadUtil {
      * @param referer   为了预防某些网站做了权限验证，不加referer可能会403
      * @param localPath 待保存的本地地址
      */
-    @Deprecated
+    @Deprecated()
     public static String download(String imgUrl, String referer, String localPath) {
 
-        String fileName = localPath + File.separator + UUID.randomUUID().toString() + FileUtil.getSuffixByUrl(imgUrl);
+        String fileName = localPath + File.separator + UUID.randomUUID().toString() + BlogFileUtil.getSuffixByUrl(imgUrl);
         try (InputStream is = getInputStreamByUrl(imgUrl, referer);
              FileOutputStream fos = new FileOutputStream(fileName)) {
             if (null == is) {
@@ -60,7 +63,8 @@ public class ImageDownloadUtil {
             if (!file.exists()) {
                 file.mkdirs();
             }
-            int bytesWritten = 0, byteCount = 0;
+            int bytesWritten = 0;
+            int byteCount = 0;
             byte[] b = new byte[1024];
             while ((byteCount = is.read(b)) != -1) {
                 fos.write(b, bytesWritten, byteCount);
@@ -102,11 +106,17 @@ public class ImageDownloadUtil {
             log.error(e.getMessage(), e);
         } finally {
             try {
+            	if(httpclient!=null) {
                 httpclient.close();
+            	}
+            	if(response!=null) {
                 response.close();
+            	}
+            	if(in!=null) {
                 in.close();
+            	}
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         }
         return in;
@@ -120,10 +130,10 @@ public class ImageDownloadUtil {
      */
     private static String parseInputStream(InputStream in) throws IOException {
         String result = "";
-        StringBuffer content = null;
+        StringBuilder content = null;
         if (null != in) {
             BufferedReader r = new BufferedReader(new InputStreamReader(in));
-            content = new StringBuffer();
+            content = new StringBuilder();
             String line = "";
             while ((line = r.readLine()) != null) {
                 content.append(line);

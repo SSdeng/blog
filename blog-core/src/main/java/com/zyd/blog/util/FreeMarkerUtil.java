@@ -24,6 +24,9 @@ import java.util.Set;
  */
 @Slf4j
 public class FreeMarkerUtil {
+	private FreeMarkerUtil() {
+		throw new IllegalStateException();
+	}
 
     private static final String LT = "<";//定义LT为<
     private static final String LT_CHAR = "&lt;";//定义LT_CHAR为&lt
@@ -55,7 +58,7 @@ public class FreeMarkerUtil {
          //设置键
         Set<String> keySet = map.keySet();
         //如果键大小大于0
-        if (keySet.size() > 0) {
+        if (!keySet.isEmpty()) {
             for (String key : keySet) {
                 //获取键
                 Object o = map.get(key);
@@ -88,10 +91,7 @@ public class FreeMarkerUtil {
             log.error("TemplateUtil -> template2String IOException.", e);
         } catch (TemplateException e) {
             log.error("TemplateUtil -> template2String TemplateException.", e);
-        } finally {
-            newMap.clear();
-            newMap = null;
-        }
+        } 
         return null;
     }
 
@@ -99,11 +99,11 @@ public class FreeMarkerUtil {
         if (null == str) {
             return null;
         }
-        str = str.replaceAll(LT, LT_CHAR);//用LT_CHAR替换LT
-        str = str.replaceAll(GT, GT_CHAR);//用GT_CHAR替换GT
-        str = str.replaceAll(AMP, AMP_CHAR);//用AMP_CHAR替换AMP
-        str = str.replaceAll(APOS, APOS_CHAR);//用APOS_CHAR替换APOS
-        str = str.replaceAll(QUOT, QUOT_CHAR);//用QUOT_CHAR替换QUOT
+        str = str.replace(LT, LT_CHAR);//用LT_CHAR替换LT
+        str = str.replace(GT, GT_CHAR);//用GT_CHAR替换GT
+        str = str.replace(AMP, AMP_CHAR);//用AMP_CHAR替换AMP
+        str = str.replace(APOS, APOS_CHAR);//用APOS_CHAR替换APOS
+        str = str.replace(QUOT, QUOT_CHAR);//用QUOT_CHAR替换QUOT
         return str;
     }
 }

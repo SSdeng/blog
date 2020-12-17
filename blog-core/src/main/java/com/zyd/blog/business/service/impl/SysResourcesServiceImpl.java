@@ -2,6 +2,7 @@ package com.zyd.blog.business.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.zyd.blog.business.entity.Resources;
 import com.zyd.blog.business.service.SysResourcesService;
 import com.zyd.blog.business.vo.ResourceConditionVO;
@@ -38,7 +39,7 @@ public class SysResourcesServiceImpl implements SysResourcesService {
     @Override
     public PageInfo<Resources> findPageBreakByCondition(ResourceConditionVO vo) {
         // 设置分页参数，开启分页
-        PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(), vo.getPageSize());
         // 紧跟着的第一个数据查询会被分页
         List<SysResources> sysResources = resourceMapper.findPageBreakByCondition(vo);
         // 结果列表为空，则返回null
@@ -48,9 +49,7 @@ public class SysResourcesServiceImpl implements SysResourcesService {
         // 调用内部私有函数，将业务实体列表转换为数据实体列表
         List<Resources> resources = this.getResources(sysResources);
         // 用PageInfo对查询结果进行包装
-        PageInfo bean = new PageInfo<SysResources>(sysResources);
-        bean.setList(resources);
-        return bean;
+        return new PageInfo<>(resources);
     }
 
     /**
@@ -86,10 +85,10 @@ public class SysResourcesServiceImpl implements SysResourcesService {
             return null;
         }
         // 非空，遍历结果集，将其中的信息加入map集合
-        List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> mapList = new ArrayList<>();
         Map<String, Object> map = null;
         for (SysResources resources : sysResources) {
-            map = new HashMap<String, Object>(3);
+            map = new HashMap<>(3);
             map.put("id", resources.getId());
             map.put("pId", resources.getParentId());
             map.put("checked", resources.getChecked());

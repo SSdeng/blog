@@ -2,6 +2,7 @@ package com.zyd.blog.business.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.zyd.blog.business.entity.User;
 import com.zyd.blog.business.entity.UserPwd;
 import com.zyd.blog.business.enums.UserNotificationEnum;
@@ -17,6 +18,7 @@ import com.zyd.blog.persistence.mapper.SysUserMapper;
 import com.zyd.blog.util.IpUtil;
 import com.zyd.blog.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -42,6 +44,10 @@ public class SysUserServiceImpl implements SysUserService {
     // 注入用户mapper类
     @Autowired
     private SysUserMapper sysUserMapper;
+
+    @Autowired
+    @Lazy
+    private SysUserService sysUserService;
 
     /**
      * 插入单个用户
@@ -172,7 +178,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public PageInfo<User> findPageBreakByCondition(UserConditionVO vo) {
         // 设置分页参数，开启分页
-        PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(), vo.getPageSize());
         // 紧跟着的第一个数据查询会被分页
         List<SysUser> sysUsers = sysUserMapper.findPageBreakByCondition(vo);
         // 结果列表为空，则返回null
@@ -185,9 +191,7 @@ public class SysUserServiceImpl implements SysUserService {
             users.add(new User(su));
         }
         // 用PageInfo对查询结果进行包装
-        PageInfo bean = new PageInfo<SysUser>(sysUsers);
-        bean.setList(users);
-        return bean;
+        return new PageInfo<>(users);
     }
 
     /**
@@ -205,7 +209,7 @@ public class SysUserServiceImpl implements SysUserService {
             // 调用Ip工具类和RequestHolder类获取实际IP
             user.setLastLoginIp(IpUtil.getRealIp(RequestHolder.getRequest()));
             user.setPassword(null);
-            this.updateSelective(user);
+            sysUserService.updateSelective(user);
         }
         return user;
     }
@@ -253,6 +257,7 @@ public class SysUserServiceImpl implements SysUserService {
      * @return 修改密码成功/失败
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean updatePwd(UserPwd userPwd) throws Exception {
         // 验证两次密码输入是否一致
         if (!userPwd.getNewPassword().equals(userPwd.getNewPasswordRepeat())) {

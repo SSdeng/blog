@@ -43,7 +43,7 @@ public class FreemarkerSharedVariableMonitorAspects {
     @After("pointcut()")
     public void after(JoinPoint joinPoint) {
         //获取config服务的config
-        Map config = configService.getConfigs();
+        Map<String,Object> config = configService.getConfigs();
         //判断config是否为空
         if (null == config) {
             log.error("config为空");

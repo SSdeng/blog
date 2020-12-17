@@ -45,7 +45,7 @@ public enum ResponseStatus {
      */
     public static ResponseStatus getResponseStatus(String message) {
         for (ResponseStatus ut : ResponseStatus.values()) {
-            if (ut.getMessage() == message) {
+            if (ut.getMessage() .equals(message)) {
                 return ut;
             }
         }

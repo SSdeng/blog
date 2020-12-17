@@ -10,7 +10,9 @@ package com.zyd.blog.business.consts;
  * @since 1.0
  */
 public class ApiUrlConst {
-
+      private ApiUrlConst() {
+    	  throw new IllegalStateException("ggdgg");
+      }
     /**
      * 通过百度API 根据ip获取定位的接口
      */

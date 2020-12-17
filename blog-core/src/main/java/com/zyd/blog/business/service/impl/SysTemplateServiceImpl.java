@@ -2,6 +2,7 @@ package com.zyd.blog.business.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.zyd.blog.business.entity.Template;
 import com.zyd.blog.business.enums.TemplateKeyEnum;
 import com.zyd.blog.business.service.SysTemplateService;
@@ -43,7 +44,7 @@ public class SysTemplateServiceImpl implements SysTemplateService {
     @Override
     public PageInfo<Template> findPageBreakByCondition(TemplateConditionVO vo) {
         // 设置分页参数，开启分页
-        PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(), vo.getPageSize());
         // 分页查询结果
         List<SysTemplate> list = sysTemplateMapper.findPageBreakByCondition(vo);
         // 判断是否为null
@@ -55,9 +56,8 @@ public class SysTemplateServiceImpl implements SysTemplateService {
         for (SysTemplate sysTemplate : list) {
             boList.add(new Template(sysTemplate));
         }
-        PageInfo bean = new PageInfo<SysTemplate>(list);
-        bean.setList(boList);
-        return bean;
+        // 用PageInfo对查询结果进行包装
+        return new PageInfo<>(boList);
     }
 
     /**

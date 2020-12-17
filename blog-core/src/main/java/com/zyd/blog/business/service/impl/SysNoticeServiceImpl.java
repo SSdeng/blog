@@ -2,6 +2,7 @@ package com.zyd.blog.business.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.zyd.blog.business.dto.SysNoticeDTO;
 import com.zyd.blog.business.entity.Notice;
 import com.zyd.blog.business.enums.NoticeStatusEnum;
@@ -44,7 +45,7 @@ public class SysNoticeServiceImpl implements SysNoticeService {
     @Override
     public PageInfo<Notice> findPageBreakByCondition(NoticeConditionVO vo) {
         // 设置分页参数，开启分页
-        PageHelper.startPage(vo.getPageNumber(), vo.getPageSize());
+        PageMethod.startPage(vo.getPageNumber(), vo.getPageSize());
         // 紧跟着的第一个数据查询会被分页
         List<SysNotice> list = sysNoticeMapper.findPageBreakByCondition(vo);
         // 结果列表为空，则返回null
@@ -57,9 +58,7 @@ public class SysNoticeServiceImpl implements SysNoticeService {
             boList.add(new Notice(sysNotice));
         }
         // 用PageInfo对查询结果进行包装
-        PageInfo bean = new PageInfo<SysNotice>(list);
-        bean.setList(boList);
-        return bean;
+        return new PageInfo<>(boList);
     }
 
     /**

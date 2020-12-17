@@ -33,8 +33,10 @@ public class RedisConfig extends CachingConfigurerSupport {
     /**
      * 缓存数据时Key的生成器，可以依据业务和技术场景自行定制
      *
+     * @deprecated
      * @return 重载generate方法后的KeyGenerator
      */
+
     @Bean
     @Override
     @Deprecated

@@ -1,7 +1,6 @@
 package com.zyd.blog.core.config;
 
 import com.zyd.blog.core.shiro.ShiroService;
-import com.zyd.blog.core.shiro.ShiroServiceImpl;
 import com.zyd.blog.core.shiro.credentials.RetryLimitCredentialsMatcher;
 import com.zyd.blog.core.shiro.realm.ShiroRealm;
 import com.zyd.blog.framework.property.RedisProperties;
@@ -43,14 +42,8 @@ import java.util.Map;
 @Order(1)
 public class ShiroConfig {
 
-
-
     @Autowired
-    /*
-    redis属性配置文件
-     */
-    private RedisProperties redisProperties;
-
+    private RedisProperties redisProperties;//redis属性配置文件
 
     /**
      * 用来管理shiro一些bean的生命周期
@@ -85,9 +78,7 @@ public class ShiroConfig {
      * 3、部分过滤器可指定参数，如perms，roles
      */
     @Bean(name = "shiroFilter")
-    public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
-        ShiroService shiroService = new ShiroServiceImpl();
-        ShiroProperties shiroProperties = new ShiroProperties();
+    public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager,ShiroProperties shiroProperties, ShiroService shiroService) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         // 必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
@@ -95,7 +86,7 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setLoginUrl(shiroProperties.getLoginUrl());
         // 登录成功后要跳转的链接
         shiroFilterFactoryBean.setSuccessUrl(shiroProperties.getSuccessUrl());
-        // 未授权界面
+        // 未授权界面;
         shiroFilterFactoryBean.setUnauthorizedUrl(shiroProperties.getUnauthorizedUrl());
         // 配置数据库中的resource
         Map<String, String> filterChainDefinitionMap = shiroService.loadFilterChainDefinitions();

@@ -24,6 +24,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotNull;
 import java.io.PrintWriter;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -144,7 +145,7 @@ public class RemoverServiceImpl implements RemoverService {
      * @param virtualArticle 虚拟文章
      * @return
      */
-    private Article saveArticle(Long typeId, boolean isConvertImg, HunterPrintWriter writerUtil, User user, VirtualArticle virtualArticle) {
+    private Article saveArticle(Long typeId, boolean isConvertImg, HunterPrintWriter writerUtil, User user, @NotNull VirtualArticle virtualArticle) {
         Article article = new Article();
         // 设置文章属性
         article.setContent(isConvertImg ? parseImgForHtml(virtualArticle, writerUtil) : virtualArticle.getContent());
@@ -225,16 +226,15 @@ public class RemoverServiceImpl implements RemoverService {
                     resImgPath = ImageDownloadUtil.saveToCloudStorage(imageLink.getSrcLink(), source);
                     if (StringUtils.isEmpty(resImgPath)) {
                         writerUtil.print("图片转存失败，请确保云存储已经配置完毕！请查看控制台详细错误信息...");
-                        continue;
+                    } else {
+                        // 转存之后需要替换原来的链接
+                        html = html.replace(imageLink.getSrcLink(), resImgPath);
+                        writerUtil.print(String.format("<a href=\"%s\" target=\"_blank\">原图片</a> 已经转存到 <a href=\"%s\" target=\"_blank\">云存储</a>...", imageLink.getSrcLink(), resImgPath));
                     }
                 } catch (Exception e) {
                     writerUtil.print(e.getMessage());
                     it.remove();
-                    continue;
                 }
-                // 转存之后需要替换原来的链接
-                html = html.replace(imageLink.getSrcLink(), resImgPath);
-                writerUtil.print(String.format("<a href=\"%s\" target=\"_blank\">原图片</a> 已经转存到 <a href=\"%s\" target=\"_blank\">云存储</a>...", imageLink.getSrcLink(), resImgPath));
             }
         }
         return html;

@@ -33,8 +33,16 @@ import java.io.IOException;
 @RequestMapping("/oauth")
 public class OAuthController {
 
+    /**
+     * 授权登录服务
+     */
     @Autowired
     private AuthService authService;
+
+    /**
+     * 回调地址属性名
+     */
+    private static final String HISTORYURL = "historyUrl";
 
     /**
      * 授权跳转
@@ -48,7 +56,7 @@ public class OAuthController {
     public void renderAuth(@PathVariable("source") String source, HttpServletResponse response, HttpSession session) throws IOException {
         AuthRequest authRequest = RequestFactory.getInstance(source).getRequest();
         //设置回调地址
-        session.setAttribute("historyUrl", RequestUtil.getReferer());
+        session.setAttribute(HISTORYURL, RequestUtil.getReferer());
         //重定向至第三方
         response.sendRedirect(authRequest.authorize(AuthStateUtils.createState()));
     }
@@ -64,8 +72,8 @@ public class OAuthController {
     public ModelAndView login(@PathVariable("source") String source, AuthCallback callback, HttpSession session) {
         authService.login(source, callback);
         //获取回调地址
-        String historyUrl = (String) session.getAttribute("historyUrl");
-        session.removeAttribute("historyUrl");
+        String historyUrl = (String) session.getAttribute(HISTORYURL);
+        session.removeAttribute(HISTORYURL);
         //url为空时跳转至首页
         if (StringUtils.isEmpty(historyUrl)) {
             return ResultUtil.redirect("/");
@@ -83,10 +91,10 @@ public class OAuthController {
      * @throws IOException
      */
     @RequestMapping("/revoke/{source}/{token}")
-    public ModelAndView revokeAuth(@PathVariable("source") String source, @PathVariable("token") String token) throws IOException {
+    public ModelAndView revokeAuth(@PathVariable("source") String source, @PathVariable("token") String token) {
         AuthRequest authRequest = RequestFactory.getInstance(source).getRequest();
         //回收授权令牌
-        AuthResponse response = authRequest.revoke(AuthToken.builder().accessToken(token).build());
+        AuthResponse<? extends Object> response = authRequest.revoke(AuthToken.builder().accessToken(token).build());
         //应该是响应码返回200时跳回首页
         if (response.getCode() == 2000) {
             return ResultUtil.redirect("/");
