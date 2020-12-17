@@ -103,7 +103,7 @@ public class SpecCaptcha extends Captcha {
             out.flush();
             ok = true;
         } catch (IOException e) {
-            ok = false;
+            e.printStackTrace();
         } finally {
             try {
                 out.close();
