@@ -8,6 +8,7 @@ import javax.persistence.Transient;
 import java.util.List;
 
 /**
+ * 文章的实体类
  * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
  * @website https://www.zhyd.me
  * @version 1.0
